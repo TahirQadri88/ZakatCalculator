@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- CRITICAL: Ensure proper scaling on all devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="app-title">Zakat Calculator & Nisab Check</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Add Noto Nastaliq Urdu font import */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap');
+
+        /* 1. Global Reset for robust responsiveness: CRITICAL FOR FIXING OVERFLOW */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* Prevent all horizontal scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            overflow-x: hidden; 
+        }
+        
+        /* Main Container setup */
+        .container-main {
+            max-width: 768px; 
+            margin: auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Apply font to Urdu content */
+        .nastaliq-font {
+            font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Times New Roman', serif;
+            font-size: 1.05rem; /* Slightly larger base size */
+            line-height: 2.5; /* Good spacing for paragraphs */
+            padding-top: 8px; /* Extra padding for top characters */
+            padding-bottom: 4px;
+            
+            /* V5 FIX: AGGRESSIVE WORD WRAPPING for mobile stability */
+            max-width: 100%;
+            word-break: break-word; /* Standard break-word behavior */
+            overflow-wrap: break-word; /* Ensure long words break */
+            hyphens: auto; /* Allow soft hyphens */
+        }
+        
+        /* Special override for compact areas like Summary */
+        .nastaliq-compact {
+            line-height: 1.8 !important;
+            padding-top: 4px !important;
+        }
+
+        /* 2. New robust input structure for dynamic items (Mobile First: Column) */
+        .input-item-row {
+            display: flex;
+            flex-direction: column; /* Default: always stack vertically on mobile */
+            gap: 6px; 
+            padding: 8px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            /* Ensure the row itself does not overflow */
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .input-item-row > label {
+            /* Ensure the label takes full width but wraps, and never shrinks vertically */
+            flex-shrink: 0; 
+            width: 100%;
+            /* Ensure label content wraps within the 100% width */
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* 3. Desktop/Tablet (>= 640px) Layout */
+        @media (min-width: 640px) {
+            .input-item-row {
+                flex-direction: row; /* LTR Desktop: label then input */
+                align-items: center;
+                gap: 1rem;
+            }
+            .input-item-row.rtl-row-desktop {
+                /* For Urdu (RTL), reverse the order ONLY on desktop */
+                flex-direction: row-reverse; 
+            }
+
+            .input-item-row > label {
+                flex: 0 0 auto; /* Prevent label from shrinking */
+                white-space: normal; /* Ensure label can wrap */
+                width: auto;
+                max-width: 45%;
+            }
+
+            .input-item-row > input,
+            .input-item-row > select {
+                flex: 1 1 auto; /* Input takes remaining space */
+                min-width: 0; /* Allow flex shrink for input */
+            }
+        }
+
+        /* Input styling */
+        input[type="number"], input[type="text"], select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Button styling */
+        button {
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+        }
+
+        button:active {
+            background-color: #1d4ed8;
+        }
+
+        /* Section styling */
+        .section-header {
+            background-color: #e0e7ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        /* Summary box styling */
+        .summary-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 16px;
+        }
+
+        .summary-box.error {
+            background-color: #fef2f2;
+            border-left-color: #ef4444;
+        }
+
+        /* Utility classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .p-4 {
+            padding: 1rem;
+        }
+
+        .py-3 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 640px) {
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container-main py-6 px-4">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Zakat Calculator</h1>
+            <p class="text-gray-600">Calculate your Zakat obligation according to Hanafi Jurisprudence</p>
+            <p class="text-sm text-gray-500 mt-2">Developed by Abul Laith Muhammad Tahir Qadri</p>
+        </div>
+
+        <!-- Language Toggle -->
+        <div class="text-center mb-4">
+            <button onclick="toggleLanguage()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+                <span id="lang-toggle">اردو میں</span>
+            </button>
+        </div>
+
+        <!-- Main Form -->
+        <form id="zakatForm">
+            <!-- Section: Personal Information -->
+            <div class="section-header" id="personal-info-header">Personal Information</div>
+
+            <div class="input-item-row">
+                <label for="name" id="label-name">Full Name:</label>
+                <input type="text" id="name" placeholder="Enter your name">
+            </div>
+
+            <div class="input-item-row">
+                <label for="age" id="label-age">Age:</label>
+                <input type="number" id="age" min="0" max="120" placeholder="Enter your age">
+            </div>
+
+            <!-- Section: Asset Information -->
+            <div class="section-header" id="assets-header">Assets</div>
+
+            <div class="input-item-row">
+                <label for="cash" id="label-cash">Cash & Bank Balance (PKR):</label>
+                <input type="number" id="cash" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="gold" id="label-gold">Gold (Grams):</label>
+                <input type="number" id="gold" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="silver" id="label-silver">Silver (Grams):</label>
+                <input type="number" id="silver" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="property-value" id="label-property">Property Value (PKR):</label>
+                <input type="number" id="property-value" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="business-assets" id="label-business">Business Assets (PKR):</label>
+                <input type="number" id="business-assets" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="investments" id="label-investments">Investments/Stocks (PKR):</label>
+                <input type="number" id="investments" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <!-- Section: Liabilities -->
+            <div class="section-header" id="liabilities-header">Liabilities</div>
+
+            <div class="input-item-row">
+                <label for="debts" id="label-debts">Total Debts (PKR):</label>
+                <input type="number" id="debts" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="expenses" id="label-expenses">Monthly Expenses (PKR):</label>
+                <input type="number" id="expenses" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <!-- Section: Income -->
+            <div class="section-header" id="income-header">Income</div>
+
+            <div class="input-item-row">
+                <label for="salary" id="label-salary">Monthly Salary (PKR):</label>
+                <input type="number" id="salary" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <div class="input-item-row">
+                <label for="other-income" id="label-other-income">Other Monthly Income (PKR):</label>
+                <input type="number" id="other-income" min="0" step="0.01" placeholder="0">
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-2 mt-4 mb-4">
+                <button type="button" onclick="calculateZakat()" class="flex-1" id="calc-button">Calculate</button>
+                <button type="reset" class="flex-1 bg-gray-400 hover:bg-gray-500" id="reset-button">Reset</button>
+            </div>
+        </form>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden">
+            <div class="section-header" id="results-header">Zakat Calculation Results</div>
+            
+            <div class="summary-box">
+                <p class="font-bold text-lg mb-2" id="result-title">Your Zakat Obligation:</p>
+                <p class="text-2xl font-bold text-green-700 mb-4" id="zakat-amount">PKR 0</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-600" id="nisab-label">Nisab Value:</p>
+                        <p class="font-bold" id="nisab-value">PKR 0</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600" id="total-assets-label">Total Assets:</p>
+                        <p class="font-bold" id="total-assets">PKR 0</p>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-600" id="zakat-status">Status: Zakat not applicable</p>
+            </div>
+
+            <div class="summary-box mt-4">
+                <p class="font-bold mb-2" id="breakdown-header">Breakdown:</p>
+                <div id="breakdown" class="text-sm space-y-1"></div>
+            </div>
+
+            <button onclick="printResults()" class="w-full mt-4" id="print-button">Print Results</button>
+        </div>
+
+        <!-- Error Message -->
+        <div id="error" class="hidden summary-box error">
+            <p class="font-bold text-red-700" id="error-message"></p>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 text-gray-500 text-sm">
+            <p id="footer-text">© 2025 Zakat Calculator. All rights reserved.</p>
+            <p id="footer-disclaimer">This calculator is for educational purposes. Consult with Islamic scholars for official Zakat obligations.</p>
+        </div>
+    </div>
+
+    <script>
+        // Constants for Nisab calculation (Hanafi)
+        const GOLD_RATE_PKR = 300000; // Per tola (approximate)
+        const SILVER_RATE_PKR = 5000; // Per tola (approximate)
+        const NISAB_GOLD_GRAMS = 87.48; // Approx 7.5 tolas
+        const NISAB_SILVER_GRAMS = 612.36; // Approx 52.5 tolas
+        const ZAKAT_RATE = 0.025; // 2.5%
+
+        let currentLanguage = 'en'; // 'en' or 'ur'
+
+        const translations = {
+            en: {
+                'personal-info-header': 'Personal Information',
+                'label-name': 'Full Name:',
+                'label-age': 'Age:',
+                'assets-header': 'Assets',
+                'label-cash': 'Cash & Bank Balance (PKR):',
+                'label-gold': 'Gold (Grams):',
+                'label-silver': 'Silver (Grams):',
+                'label-property': 'Property Value (PKR):',
+                'label-business': 'Business Assets (PKR):',
+                'label-investments': 'Investments/Stocks (PKR):',
+                'liabilities-header': 'Liabilities',
+                'label-debts': 'Total Debts (PKR):',
+                'label-expenses': 'Monthly Expenses (PKR):',
+                'income-header': 'Income',
+                'label-salary': 'Monthly Salary (PKR):',
+                'label-other-income': 'Other Monthly Income (PKR):',
+                'calc-button': 'Calculate',
+                'reset-button': 'Reset',
+                'results-header': 'Zakat Calculation Results',
+                'result-title': 'Your Zakat Obligation:',
+                'nisab-label': 'Nisab Value:',
+                'total-assets-label': 'Total Assets:',
+                'zakat-status': 'Status: Zakat not applicable',
+                'breakdown-header': 'Breakdown:',
+                'print-button': 'Print Results',
+                'footer-text': '© 2025 Zakat Calculator. All rights reserved.',
+                'footer-disclaimer': 'This calculator is for educational purposes. Consult with Islamic scholars for official Zakat obligations.',
+                'lang-toggle': 'اردو میں'
+            },
+            ur: {
+                'personal-info-header': 'ذاتی معلومات',
+                'label-name': 'مکمل نام:',
+                'label-age': 'عمر:',
+                'assets-header': 'اثاثے',
+                'label-cash': 'نقد رقم اور بینک بیلنس (پاکستانی روپے):',
+                'label-gold': 'سونا (گرام):',
+                'label-silver': 'چاندی (گرام):',
+                'label-property': 'جائیداد کی قیمت (پاکستانی روپے):',
+                'label-business': 'کاروباری اثاثے (پاکستانی روپے):',
+                'label-investments': 'سرمایہ ��اری/اسٹاک (پاکستانی روپے):',
+                'liabilities-header': 'ذمہ داریاں',
+                'label-debts': 'کل قرض (پاکستانی روپے):',
+                'label-expenses': 'ماہانہ اخراجات (پاکستانی روپے):',
+                'income-header': 'آمدنی',
+                'label-salary': 'ماہانہ تنخواہ (پاکستانی روپے):',
+                'label-other-income': 'دیگر ماہانہ آمدنی (پاکستانی روپے):',
+                'calc-button': 'حساب کریں',
+                'reset-button': 'دوبارہ سیٹ کریں',
+                'results-header': 'زکوۃ کے حساب کے نتائج',
+                'result-title': 'آپ کی زکوۃ کی ذمہ داری:',
+                'nisab-label': 'نصاب کی قیمت:',
+                'total-assets-label': 'کل اثاثے:',
+                'zakat-status': 'حالت: زکوۃ لاگو نہیں',
+                'breakdown-header': 'تفصیل:',
+                'print-button': 'نتائج پرنٹ کریں',
+                'footer-text': '© 2025 زکوۃ کیلکولیٹر۔ تمام حقوق محفوظ ہیں۔',
+                'footer-disclaimer': 'یہ کیلکولیٹر تعلیمی مقاصد کے لیے ہے۔ آفیشل زکوۃ کی ذمہ داریوں کے لیے اسلامی علماء سے رجوع کریں۔',
+                'lang-toggle': 'English'
+            }
+        };
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'ur' : 'en';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            for (const [key, value] of Object.entries(translations[currentLanguage])) {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = value;
+                }
+            }
+            document.documentElement.dir = currentLanguage === 'ur' ? 'rtl' : 'ltr';
+        }
+
+        function calculateNisab() {
+            const goldValue = NISAB_GOLD_GRAMS * (GOLD_RATE_PKR / 1000); // Convert to PKR
+            const silverValue = NISAB_SILVER_GRAMS * (SILVER_RATE_PKR / 1000);
+            return Math.min(goldValue, silverValue); // Hanafi uses the lower value
+        }
+
+        function calculateZakat() {
+            try {
+                // Get all input values
+                const cash = parseFloat(document.getElementById('cash').value) || 0;
+                const gold = parseFloat(document.getElementById('gold').value) || 0;
+                const silver = parseFloat(document.getElementById('silver').value) || 0;
+                const propertyValue = parseFloat(document.getElementById('property-value').value) || 0;
+                const businessAssets = parseFloat(document.getElementById('business-assets').value) || 0;
+                const investments = parseFloat(document.getElementById('investments').value) || 0;
+                const debts = parseFloat(document.getElementById('debts').value) || 0;
+                const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+                const salary = parseFloat(document.getElementById('salary').value) || 0;
+                const otherIncome = parseFloat(document.getElementById('other-income').value) || 0;
+
+                // Calculate total assets
+                const goldValue = (gold * GOLD_RATE_PKR) / 1000;
+                const silverValue = (silver * SILVER_RATE_PKR) / 1000;
+                const totalAssets = cash + goldValue + silverValue + propertyValue + businessAssets + investments;
+
+                // Calculate Nisab
+                const nisab = calculateNisab();
+
+                // Calculate net worth (assets minus debts and monthly living expenses for 1 month)
+                const monthlyLivingExpenses = expenses;
+                const netWorth = totalAssets - debts - monthlyLivingExpenses;
+
+                // Clear error
+                document.getElementById('error').classList.add('hidden');
+
+                // Check if Nisab threshold is met
+                if (netWorth < nisab) {
+                    document.getElementById('results').classList.remove('hidden');
+                    document.getElementById('zakat-amount').textContent = 'PKR 0 (Below Nisab)';
+                    document.getElementById('nisab-value').textContent = `PKR ${nisab.toFixed(2)}`;
+                    document.getElementById('total-assets').textContent = `PKR ${totalAssets.toFixed(2)}`;
+                    document.getElementById('zakat-status').textContent = currentLanguage === 'en' 
+                        ? 'Status: Zakat not applicable (below Nisab)' 
+                        : 'حالت: زکوۃ لاگو نہیں (نصاب سے کم)';
+                    document.getElementById('breakdown').innerHTML = '';
+                    return;
+                }
+
+                // Calculate Zakat (2.5% of zakatable assets)
+                const zakatAmount = netWorth * ZAKAT_RATE;
+
+                // Update results
+                document.getElementById('results').classList.remove('hidden');
+                document.getElementById('zakat-amount').textContent = `PKR ${zakatAmount.toFixed(2)}`;
+                document.getElementById('nisab-value').textContent = `PKR ${nisab.toFixed(2)}`;
+                document.getElementById('total-assets').textContent = `PKR ${totalAssets.toFixed(2)}`;
+                document.getElementById('zakat-status').textContent = currentLanguage === 'en'
+                    ? 'Status: Zakat is applicable'
+                    : 'حالت: زکوۃ لاگو ہے';
+
+                // Display breakdown
+                const breakdown = document.getElementById('breakdown');
+                breakdown.innerHTML = `
+                    <p><strong>Cash & Bank:</strong> PKR ${cash.toFixed(2)}</p>
+                    <p><strong>Gold Value:</strong> PKR ${goldValue.toFixed(2)}</p>
+                    <p><strong>Silver Value:</strong> PKR ${silverValue.toFixed(2)}</p>
+                    <p><strong>Property Value:</strong> PKR ${propertyValue.toFixed(2)}</p>
+                    <p><strong>Business Assets:</strong> PKR ${businessAssets.toFixed(2)}</p>
+                    <p><strong>Investments:</strong> PKR ${investments.toFixed(2)}</p>
+                    <hr class="my-2">
+                    <p><strong>Total Assets:</strong> PKR ${totalAssets.toFixed(2)}</p>
+                    <p><strong>Less: Debts:</strong> PKR ${debts.toFixed(2)}</p>
+                    <p><strong>Less: 1 Month Expenses:</strong> PKR ${monthlyLivingExpenses.toFixed(2)}</p>
+                    <hr class="my-2">
+                    <p><strong>Net Zakatable Assets:</strong> PKR ${netWorth.toFixed(2)}</p>
+                    <p><strong>Zakat Rate (2.5%):</strong> PKR ${zakatAmount.toFixed(2)}</p>
+                `;
+            } catch (error) {
+                document.getElementById('error').classList.remove('hidden');
+                document.getElementById('error-message').textContent = 'Error: ' + error.message;
+                document.getElementById('results').classList.add('hidden');
+            }
+        }
+
+        function printResults() {
+            window.print();
+        }
+
+        // Initialize language
+        updateLanguage();
+    </script>
+</body>
+</html>

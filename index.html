@@ -2,1086 +2,1328 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- CRITICAL: Ensure proper scaling on all devices -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="app-title">Zakat Calculator & Nisab Check</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- PWA SETTINGS & NAME -->
+    <meta name="theme-color" content="#064E3B">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Zakat Calculator">
+    <meta name="application-name" content="Zakat Calculator">
+    <title>Zakat Calculator</title>
+    
+    <!-- LINK TO EXTERNAL MANIFEST (Best for Master Folder) -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Add Noto Nastaliq Urdu font import */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap');
-
-        /* 1. Global Reset for robust responsiveness: CRITICAL FOR FIXING OVERFLOW */
-        *, *::before, *::after {
-            box-sizing: border-box;
+        /* --- 1. FONT EMBEDDING --- */
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: local('Jameel Noori Nastaleeq'), url('https://fonts.cdnfonts.com/s/15467/JameelNooriNastaleeq.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
 
-        /* Prevent all horizontal scrolling */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            overflow-x: hidden; 
-        }
-        
-        /* Main Container setup */
-        .container-main {
-            max-width: 768px; 
-            margin: auto;
-            background-color: #ffffff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Apply font to Urdu content */
-        .nastaliq-font {
-            font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Times New Roman', serif;
-            font-size: 1.05rem; /* Slightly larger base size */
-            line-height: 2.5; /* Good spacing for paragraphs */
-            padding-top: 8px; /* Extra padding for top characters */
-            padding-bottom: 4px;
+        /* --- 2. DESIGN TOKENS --- */
+        :root {
+            --primary: #064E3B; /* Emerald Green */
+            --primary-dark: #043629;
+            --accent: #C5A059; /* Gold */
+            --label-gold: #B45309; /* Contrast Golden/Bronze for Labels */
+            --slate: #1F2937;
+            --text-muted: #6B7280;
+            --bg: #F9FAFB;
+            --white: #FFFFFF;
+            --border: #E5E7EB;
+            --danger: #991B1B;
             
-            /* V5 FIX: AGGRESSIVE WORD WRAPPING for mobile stability */
-            max-width: 100%;
-            word-break: break-word; /* Standard break-word behavior */
-            overflow-wrap: break-word; /* Ensure long words break */
-            hyphens: auto; /* Allow soft hyphens */
-        }
-        
-        /* Special override for compact areas like Summary */
-        .nastaliq-compact {
-            line-height: 1.8 !important;
-            padding-top: 4px !important;
+            /* Fonts */
+            --font-english: 'Playfair Display', serif; 
+            --font-urdu: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
+            --font-urdu-title: 'Scheherazade New', serif; 
         }
 
-        /* 2. New robust input structure for dynamic items (Mobile First: Column) */
-        .input-item-row {
-            display: flex;
-            flex-direction: column; /* Default: always stack vertically on mobile */
-            gap: 6px; 
-            padding: 8px 0;
-            border-bottom: 1px dashed #e5e7eb;
-            /* Ensure the row itself does not overflow */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        
+        body {
+            font-family: var(--font-english);
+            background-color: var(--bg);
+            color: var(--slate);
+            line-height: 1.4;
+            overflow-x: hidden;
             width: 100%;
-            overflow: hidden;
         }
 
-        .input-item-row > label {
-            /* Ensure the label takes full width but wraps, and never shrinks vertically */
-            flex-shrink: 0; 
-            width: 100%;
-            /* Ensure label content wraps within the 100% width */
-            max-width: 100%;
-            box-sizing: border-box;
+        /* --- TYPOGRAPHY --- */
+        
+        /* Main Urdu Labels */
+        .urdu-label-main {
+            font-family: var(--font-urdu) !important;
+            font-size: 1.25rem; 
+            color: var(--primary); 
+            font-weight: normal; 
+            direction: rtl;
+            display: block;
+            text-align: center;
+            line-height: 1.5;
+            margin-top: 1px;
+            margin-bottom: 4px;
         }
         
-        /* 3. Desktop/Tablet (>= 640px) Layout */
-        @media (min-width: 640px) {
-            .input-item-row {
-                flex-direction: row; /* LTR Desktop: label then input */
-                align-items: center;
-                gap: 1rem;
-            }
-            .input-item-row.rtl-row-desktop {
-                /* For Urdu (RTL), reverse the order ONLY on desktop */
-                flex-direction: row-reverse; 
-            }
-            .input-item-row > label {
-                width: auto; /* Allow label to size naturally horizontally */
-            }
+        /* Subtitles */
+        .urdu-subtitle {
+            font-family: var(--font-urdu) !important;
+            color: #4B5563;
+            font-size: 1.1rem; 
+            text-align: center;
+            display: block;
+            direction: rtl;
+            margin-bottom: 4px;
+            line-height: 1.4;
         }
-        
-        /* Standard input styles */
-        input[type="text"] {
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem; 
-            padding: 0.5rem;
-            width: 100%; /* Must be 100% to take full space in column mode */
-            transition: border-color 0.15s ease-in-out;
+
+        /* Body Text (Notes) */
+        .urdu-body {
+            font-family: var(--font-urdu) !important;
+            direction: rtl;
+            unicode-bidi: embed;
+            line-height: 2.1;
             text-align: right;
-            background-color: #f9fafb;
-        }
-        input[type="text"]:focus {
-            border-color: #10b981; 
-            outline: none;
+            font-size: 1.1rem;
+            color: #374151;
         }
 
-        /* Aesthetic styles */
-        .section-header {
-            background-color: #059669; 
+        /* --- LAYOUT --- */
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             color: white;
-            padding: 0.75rem 1rem;
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-        .section-header:first-of-type {
-            margin-top: 0;
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
-        }
-        .ruling-card {
-            background-color: #ecfdf5; 
-            border-left: 4px solid #059669;
-            transition: all 0.2s;
-            margin-bottom: 1rem !important;
-        }
-        .share-button {
+            padding: 10px;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
             display: flex;
-            align-items: center;
+            justify-content: space-between;
+            align-items: center; 
+        }
+
+        /* Header Content: Left Aligned Stack */
+        .header-content {
+            flex: 0 1 auto; 
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
             justify-content: center;
-            padding: 1rem;
-            font-weight: bold;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
         }
-        .share-button.primary {
-            background-color: #10b981;
-            color: white;
+
+        header h1 { 
+            font-family: var(--font-english);
+            font-size: 1.25rem; 
+            font-weight: 800; 
+            margin: 0; 
+            line-height: 1.1; 
+            color: #FEF3C7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
-        .share-button.secondary {
-            background-color: #4f46e5;
-            color: white;
+        .header-urdu-title {
+            font-family: var(--font-urdu-title);
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            margin-top: 0px;
+            line-height: 1.2;
+            font-weight: 700;
         }
-        .lang-toggle {
-            background-color: #047857;
-            color: white;
-            padding: 0.5rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
+        .header-urdu-subtitle {
+            font-family: var(--font-urdu-title);
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-top: 0px;
+            font-weight: 700;
         }
         
+        /* History Button */
+        .hist-btn-top {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.1;
+            min-width: 65px;
+            text-align: center;
+            margin-left: 10px;
+        }
+        .hist-btn-top .icon { font-size: 1rem; margin-bottom: 0px; }
+        .hist-btn-top .txt-en { font-family: var(--font-english); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+        .hist-btn-top .txt-ur { font-family: var(--font-urdu); font-size: 0.8rem; margin-top: 0px; }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 8px;
+            padding-bottom: 60px;
+        }
+
+        /* --- FIELD CARDS --- */
+        .field-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        /* Section Titles */
+        .step-title { 
+            color: var(--primary); 
+            font-family: var(--font-english);
+            font-weight: 700; 
+            font-size: 1.35rem; 
+            border-bottom: 2px solid #E5E7EB; 
+            padding-bottom: 6px; 
+            margin-bottom: 10px;
+            text-align: center; 
+            background: white;
+            padding-top: 4px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        /* English Labels */
+        label { 
+            display: block; 
+            font-weight: 700; 
+            font-size: 0.95rem; 
+            margin-bottom: 1px; 
+            color: var(--label-gold); 
+            text-align: center; 
+            font-family: var(--font-english); 
+            letter-spacing: 0.3px; 
+            text-transform: uppercase;
+        }
+        
+        /* Inputs */
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 1.15rem;
+            text-align: center;
+            background: #FAFAFA;
+            color: #111;
+            font-weight: 500;
+            font-family: var(--font-english);
+            margin-top: 2px;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--primary); background: white; }
+        
+        /* --- ACCORDIONS --- */
+        .accordion-header, .sub-acc-header {
+            font-size: 0.9rem;
+            padding: 8px 10px;
+            background: #F3F4F6; 
+            border: 1px solid #E5E7EB;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: right;
+            color: var(--primary);
+            font-family: var(--font-urdu);
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            direction: rtl;
+        }
+        .accordion-header:hover { background: #E5E7EB; }
+        .accordion-header.active, .sub-acc-header.active {
+            background: #ECFDF5; 
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+        .accordion-header::after, .sub-acc-header::after { content: '▼'; font-size: 0.8rem; color: #6B7280; margin-right: 10px; }
+        .accordion-header.active::after, .sub-acc-header.active::after { content: '✕'; font-size: 1rem; color: var(--danger); font-weight: bold; }
+        
+        .accordion-content, .sub-acc-body {
+            display: none;
+            padding: 10px;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-top: none;
+            text-align: right;
+            font-family: var(--font-urdu);
+            line-height: 2.1;
+            font-size: 1.1rem;
+            color: #374151;
+            border-radius: 0 0 6px 6px;
+            margin-bottom: 5px;
+        }
+
+        /* Read First Button */
+        .read-first-btn {
+            background: #FFFBEB; color: #92400E; padding: 10px; text-align: center; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            border: 1px solid #FCD34D; border-radius: 8px; margin-bottom: 10px;
+        }
+        .read-first-btn span.en { font-family: var(--font-english); font-weight: 700; font-size: 0.9rem; }
+        .read-first-btn span.ur { font-family: var(--font-urdu); font-weight: 400; font-size: 1.1rem; margin-top:4px; }
+        .read-first-content { display: none; border: 1px solid #FCD34D; border-top: none; padding: 10px; background: #FFF; border-radius: 0 0 8px 8px; margin-bottom: 15px; }
+
+        /* Notes */
+        .advice-box-single-line {
+            background: #F0F9FF; border-left: 4px solid #3B82F6; padding: 8px; border-radius: 6px;
+            font-size: 1.05rem; margin: 6px 0; color: #1E40AF; text-align: right; font-family: var(--font-urdu);
+            line-height: 1.8; 
+        }
+        .warning-box { background: #FFFBEB; border-left: 4px solid #F59E0B; padding: 10px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 8px; font-family: var(--font-english); color: #78350F; }
+        .warning-box .urdu { font-family: var(--font-urdu) !important; font-size: 1.1rem; display: block; margin-top: 4px; text-align: right; line-height: 2.0; color: #92400E; }
+
+        /* --- SKETCH BOX --- */
+        .nisab-sketch-container {
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            background: white;
+            position: relative;
+        }
+        .sketch-title-box {
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            padding: 5px 12px;
+            text-align: center;
+            margin: -28px auto 8px auto;
+            width: 85%;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .sketch-title-en { font-family: var(--font-english); font-size: 1rem; font-weight: 700; color: var(--primary); display: block; }
+        .sketch-title-ur { font-family: var(--font-urdu); font-size: 1.25rem; color: var(--primary); display: block; line-height: 1.2; }
+        .sketch-instruction { font-family: var(--font-urdu); font-size: 1.1rem; text-align: center; line-height: 1.5; color: var(--slate); margin-bottom: 10px; }
+        .sketch-input-row { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; }
+        .sketch-result-box { border: 2px solid var(--primary); border-radius: 6px; padding: 8px; text-align: center; background: #F0FDF4; }
+
+        /* --- SUMMARY TABLE --- */
+        .statement-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #E5E7EB; border-radius: 8px; overflow: hidden; margin-bottom: 12px; background: white; }
+        .statement-table th { background: #F9FAFB; padding: 8px 10px; text-align: left; font-weight: 700; color: var(--slate); font-size: 0.9rem; text-transform: uppercase; font-family: var(--font-english); }
+        .statement-table td { padding: 8px 10px; border-bottom: 1px solid #E5E7EB; vertical-align: top; }
+        .row-header { font-weight: 600; color: var(--slate); font-size: 0.95rem; display: block; font-family: var(--font-english); }
+        .row-urdu { font-family: var(--font-urdu); color: var(--text-muted); font-size: 1rem; font-weight: normal; display: block; text-align: right; direction: rtl; line-height: 1.3; margin-top: 2px; }
+        .row-val { font-weight: 700; color: var(--primary); text-align: right; font-size: 1.1rem; vertical-align: middle; font-family: var(--font-english); }
+        .row-final { background: var(--primary); color: white; }
+        .row-final .row-header, .row-final .row-val, .row-final .row-urdu { color: white !important; }
+
+        /* FAQs */
+        .faq-item { margin-bottom: 10px; border-bottom: 1px dashed #E5E7EB; padding-bottom: 10px; }
+        .faq-q { color: #991B1B; font-weight: bold; font-family: var(--font-urdu); font-size: 1.1rem; text-align: right; margin-bottom: 4px; line-height: 1.6; }
+        .faq-a { color: #064E3B; font-family: var(--font-urdu); font-size: 1.05rem; text-align: right; line-height: 2.0; }
+
+        /* Buttons */
+        .btn-row { display: flex; gap: 8px; margin-top: 15px; }
+        .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-family: var(--font-english); }
+        .btn span.en { font-size: 0.95rem; }
+        .btn span.ur { font-family: var(--font-urdu); font-size: 0.9rem; font-weight: normal; margin-top: 0px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-prev { background: #E5E7EB; color: var(--slate); }
+        .btn-gold { background: var(--accent); color: var(--primary-dark); width: 100%; margin-top: 10px; font-weight: 700; }
+        
+        .btn-clear { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-family: var(--font-english); font-size: 0.9rem; }
+
+        /* Install Button */
+        #installBtn { 
+            display: none; 
+            width: 100%; 
+            background: #B45309; 
+            color: white; 
+            padding: 10px; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: 700; 
+            margin-bottom: 15px; 
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .hidden { display: none !important; }
+        #toast { visibility: hidden; min-width: 250px; background: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 1rem; }
+        #toast.show { visibility: visible; }
+        
+        /* History Modal & Detailed Cards */
+        #historyModal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background-color: white; margin: 5% auto; padding: 20px; border-radius: 12px; width: 95%; max-width: 500px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; width: 36px; height: 36px; background: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        
+        .history-card { 
+            background: #FFFFFF; 
+            border: 1px solid #E5E7EB; 
+            border-radius: 10px; 
+            padding: 15px; 
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+        }
+        .hist-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #F3F4F6;
+        }
+        .hist-name { font-family: var(--font-english); font-size: 1.2rem; font-weight: 800; color: var(--primary-dark); }
+        .hist-date { font-family: var(--font-english); font-size: 0.85rem; color: #6B7280; }
+        
+        .hist-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;
+        }
+        .hist-item { background: #F9FAFB; padding: 8px; border-radius: 6px; text-align: center; }
+        .hist-lbl { display: block; font-size: 0.75rem; color: #6B7280; font-weight: 600; text-transform: uppercase; }
+        .hist-val { display: block; font-size: 1rem; font-weight: 700; color: var(--slate); }
+        .hist-total-box { 
+            background: #ECFDF5; padding: 10px; border-radius: 6px; text-align: center; margin-top: 5px; border: 1px solid #D1FAE5;
+        }
+        
+        .hist-actions-row { display: flex; gap: 10px; margin-top: 10px; }
+        .h-btn { 
+            flex: 1; padding: 8px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .h-btn-edit { background: #EFF6FF; color: #1E40AF; }
+        .h-btn-share { background: #FFF7ED; color: #9A3412; }
+        .h-btn-del { background: #FEF2F2; color: #991B1B; }
+
+        footer { text-align: center; padding: 20px 10px; color: #6B7280; font-size: 0.8rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 15px; font-family: var(--font-english); }
+        
+        /* UPDATED FOOTER COLOR CONTRAST */
+        footer strong { color: var(--label-gold); font-weight: 900; }
+
+        .hijri-panel { background: var(--primary-dark); color: white; padding: 8px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
+        .adj-btn { background: var(--accent); border: none; color: var(--primary-dark); width: 30px; height: 30px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        
+        /* RTL LIST STYLE */
+        .rtl-list {
+            padding-right: 25px;
+            padding-left: 0;
+            margin: 0;
+            list-style-type: decimal;
+            direction: rtl;
+            text-align: right;
+        }
+        .rtl-list li {
+            margin-bottom: 6px;
+            padding-right: 5px;
+        }
     </style>
 </head>
-<body class="p-4">
+<body>
 
-    <div id="main-content" class="container-main rounded-xl overflow-hidden shadow-2xl">
-        <header class="bg-emerald-700 p-4 text-white rounded-t-xl">
-            <div class="flex justify-between items-start">
-                <div class="flex-grow text-center pr-10">
-                    <h1 id="main-title" class="text-3xl font-extrabold mb-1">Zakat Calculator</h1>
-                    <p id="main-subtitle" class="text-sm">Simple And Easy App to Calculate Zakat for Most Businesses and Salaried Individuals !</p>
-                </div>
-                <button id="lang-toggle-btn" onclick="switchLanguage()" class="lang-toggle">
-                    اردو / Urdu
-                </button>
+<header>
+    <div class="header-content">
+        <h1>ZAKAT CALCULATOR APP</h1>
+        <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
+        <div class="header-urdu-subtitle">دارُالإفتاء النّور</div>
+    </div>
+    <div class="hist-btn-top" onclick="openHistory()">
+        <span class="icon">📜</span>
+        <span class="txt-en">History</span>
+        <span class="txt-ur">گزشتہ ریکارڈ</span>
+    </div>
+</header>
+
+<div class="container">
+    
+    <!-- INSTALL BUTTON (Hidden by default, shown via JS) -->
+    <button id="installBtn" onclick="installApp()">📲 Install App</button>
+
+    <!-- STEP 1 -->
+    <div id="step-1">
+        <div class="step-title">Step 1: Profile, Eligibility & Nisab</div>
+        <div class="urdu-label-main">پروفائل، اہلیت اور نصاب</div>
+
+        <div class="field-card">
+            <!-- Full Name Single Line -->
+            <div style="display:flex; justify-content:center; gap:8px; align-items:center;">
+                <label style="margin-bottom:0;">Full Name</label>
+                <span class="urdu-label-main" style="margin:0; font-size:1.1rem;">پورا نام</span>
             </div>
-        </header>
+            <input type="text" id="u_name" placeholder="Enter Full Name" style="margin-top:5px;">
+        </div>
 
-        <main class="p-4 space-y-6">
-
-            <!-- Zakat Date and Nisab Info -->
-            <div class="bg-white p-4 rounded-lg shadow-md border border-gray-100 space-y-3">
-                <!-- Date Input -->
-                <div class="input-item-row !border-none">
-                    <label id="label-zakat-date" for="lunar-date" class="text-sm text-gray-700 font-medium">Zakat Year End Date (Lunar)</label>
-                    <input type="text" id="lunar-date" value="" class="text-right text-sm" placeholder="e.g., 1st of Ramadan 1447 AH">
-                </div>
-                
-                <div id="nisab-card" class="bg-blue-50 border border-blue-200 p-3 rounded-lg text-sm text-blue-800 space-y-2">
-                    <p id="nisab-criteria-text" class="font-medium mb-1">Nisab Eligibility Criteria (52.5 Tolas Silver)</p>
-                    
-                    <!-- Silver Price Input - Note: This input row MUST use the same robust layout -->
-                    <div id="silver-price-row" class="input-item-row !gap-4 !border-none">
-                        <label id="label-silver-price" for="silver-price" class="text-xs text-blue-600 font-medium">1. Price of 1 gram of Silver:</label>
-                        <input type="text" id="silver-price" inputmode="numeric" placeholder="0" value="" class="text-right text-sm">
-                    </div>
-                    
-                    <div class="flex justify-between items-center border-t border-blue-300 pt-2">
-                        <span id="label-calculated-nisab" class="text-sm font-bold">2. Calculated Nisab Value:</span>
-                        <span id="nisab-value" class="font-extrabold text-lg">0</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Part I: Core Assets Liable for Zakat -->
-            <div class="bg-white rounded-lg shadow-md border border-gray-100">
-                <h2 id="part1-title" class="section-header rounded-t-lg">Part I: Core Assets Liable for Zakat (Inventory, Gold, Cash)</h2>
-                <div id="assets-list" class="p-4 space-y-0">
-                    <!-- Dynamic Asset Inputs -->
-                </div>
-                <div class="p-4 bg-emerald-50 rounded-b-lg border-t border-emerald-200 flex justify-between items-center font-bold text-lg text-emerald-800">
-                    <span id="total-assets-label" class="uppercase">A. Total Core Assets</span>
-                    <span id="total-assets">0</span>
-                </div>
+        <!-- READ IT FIRST SECTION -->
+        <div class="read-first-btn" onclick="toggleReadFirst(this)">
+            <span class="en">Read it First</span>
+            <span class="ur">پہلے اسے پڑھیں</span>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="read-first-content" id="readFirstContent">
+            
+            <div class="warning-box">
+                <strong>Wealth Purity:</strong> Wealth must be Halal. Completely Haram wealth is exempt from Zakat calculations but it should be returned to the original owners or given as charity without intention of reward (sawaab), after consulting scholars.
+                <div class="urdu">مال کا حلال ہونا شرط ہے۔ حرام مال پر زکوٰۃ نہیں، اسے اصل مالکان کو لوٹانا یا ثواب کی نیّت کے بغیر صدقہ کرنا واجب ہے۔</div>
             </div>
 
-            <!-- Part II: Accounts Receivable (Debts Owed to You) -->
-            <div class="bg-white rounded-lg shadow-md border border-gray-100">
-                <h2 id="part2-title" class="section-header bg-emerald-500">Part II: Accounts Receivable (Money Owed to You)</h2>
-                <div id="receivables-list" class="p-4 space-y-0">
-                    <!-- Dynamic Receivable Inputs -->
-                </div>
-                <div class="p-4 bg-emerald-50 rounded-b-lg border-t border-emerald-200 flex justify-between items-center font-bold text-lg text-emerald-800">
-                    <span id="total-receivables-label" class="uppercase">B. Total Accounts Receivable</span>
-                    <span id="total-receivables">0</span>
-                </div>
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">زکوٰۃ کس پر فرض ہے ؟</div>
+            <div class="sub-acc-body">
+                 <p>زکوٰۃ دینا ہر اُس عاقل، بالغ اور آزاد مسلمان پر فرض ہے جس میں یہ شرائط پائی جائیں :</p>
+                <ol class="rtl-list">
+                    <li>نصاب کا مالک ہو ۔</li>
+                    <li>یہ نصاب نامی ہو ۔</li>
+                    <li>نصاب اس کے قبضے میں ہو ۔</li>
+                    <li>نصاب اس کی حاجت ِ اصلیہ(یعنی ضروریاتِ زندگی)سے زائد ہو۔</li>
+                    <li>نصاب دَین سے فارغ ہو</li>
+                    <li>اس نصاب پر ایک سال گزر جائے ۔(ملخصاً، بہارشریعت، ج۱ حصہ۵، ص ۸۷۵تا۸۸۴ )</li>
+                </ol>
             </div>
 
-            <!-- Part III: Deductible Liabilities -->
-            <div class="bg-white rounded-lg shadow-md border border-gray-100">
-                <h2 id="part3-title" class="section-header bg-red-600">Part III: Deductible Liabilities (All Payables Are Deducted)</h2>
-                <div id="liabilities-list" class="p-4 space-y-0">
-                    <!-- Dynamic Liability Inputs -->
-                </div>
-                <div class="p-4 bg-red-50 rounded-b-lg border-t border-red-200 flex justify-between items-center font-bold text-lg text-red-800">
-                    <span id="total-liabilities-label" class="uppercase">C. Total Deductible Liabilities</span>
-                    <span id="total-liabilities">0</span>
-                </div>
+            <!-- UPDATED TEXT: Meaning of Owner of Nisab -->
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">نصاب کا مالک ہونے سے کیا مراد ہے؟</div>
+            <div class="sub-acc-body">
+                <p>شریعت نے جتنے مال پر زکوۃ کو فرض قرار دیا ہے اس کو نصاب کہتے ہیں اور جو اس مال کا مالک ہو اس کو مالکِ نصاب یا صاحبِ نصاب کہتے ہیں۔</p>
+                <p>زکوٰۃ کے باب میں مالک ِ نصاب ہونے سے مراد یہ ہے کہ اس شخص کے پاس ساڑھے سات تولے سونا ، یا ساڑھے باون تولے چاندی ، یا اِتنی مالیت کی رقم ، یا اتنی مالیت کا مال ِ تجارت ہو ۔</p>
+                <p>اگر کوئی عاقل بالغ مسلمان اس نصاب کا مالک ہو ،  یہ نصاب ’’نامی‘‘ (یعنی: بڑھنے والامال ہو  خواہ حقیقۃً بڑھے یا حکماً)، نصاب اس کے قبضے میں ہو، اس کی حاجت ِ اصلیہ(یعنی ضروریاتِ زندگی)سے زائد ہو، اور  ’’دَین‘‘ سے فارغ ہو(یعنی اس پر ایسا قرض نہ ہو جس کا مطالبہ بندوں کی جانب سے ہو ، کہ اگر وہ قرض ادا کرے تو اس کا نصاب باقی نہ رہے)، اور اس نصاب پر ایک سال گزر جائے ، تو اس پر زکوٰۃ فرض ہوگی۔</p>
+                <p>نوٹ:  قربانی، صدقہ فطر اور زکوٰۃ لینے کے مستحق ہونے کے باب میں مالکِ نصاب ہونے کا معیار کچھ مختلف ہے۔ جس کی تفصیل علماء سے معلوم کی جاسکتی ہیں۔</p>
             </div>
 
-            <!-- Part IV: Summary and Results -->
-            <div class="bg-emerald-700 p-4 text-white rounded-lg shadow-xl">
-                <h2 id="part4-title" class="text-xl font-bold mb-3">Part IV: Zakat Summary</h2>
-                
-                <div class="space-y-4">
-                    <!-- Nisab Eligibility Status -->
-                    <div id="nisab-status-container" class="py-2 px-3 rounded-md mb-2 font-medium bg-gray-500 text-center">
-                        <span id="nisab-status-text">Enter Silver Price to Check Nisab...</span>
-                    </div>
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">سال کب مکمل ہوگا ؟</div>
+            <div class="sub-acc-body">
+                 <p>جس تاریخ اوروقت پر آدمی صاحبِ نصاب ہُوا جب تک نصاب رہے وہی تاریخ اوروقت جب آئے گا ۔۔ سال مکمل ہوگا۔(ماخوذ از فتاویٰ رضویہ مُخَرَّجَہ ، ج۱۰، ص۲۰۲)</p>
+            </div>
+        </div>
 
-                    <!-- Summary Item 1: Total Zakat-able -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-emerald-500 pb-2">
-                        <span id="total-zakat-able-label" class="text-emerald-100 text-sm sm:text-base mb-1 sm:mb-0">Total Zakat-able Wealth (A + B)</span>
-                        <span id="total-zakat-able-wealth" class="font-extrabold text-xl self-end sm:self-auto">0</span>
-                    </div>
+        <!-- How to Calculate Dropdown (Separate) -->
+        <div class="accordion-header" onclick="toggleAccordion('howToCalc', this)">زكوة كس طرح نکالی جائے ؟</div>
+        <div class="accordion-content" id="howToCalc">
+            <p>سب سے پہلے زکوۃ واجب ہونے کی قمری تاریخ کا تعین کر لیں۔</p>
+            <p>زکوۃ واجب ہونے کی قمری / اسلامی تاریخ کو ملکیت میں موجود قابل زکوۃ اثاثوں کی مارکیٹ ریٹ کے مطابق مالیت کا تعیّن کرکے ایپلی کیشن میں درج کریں</p>
+        </div>
 
-                    <!-- Summary Item 2: Net Wealth -->
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-emerald-500 pb-2">
-                        <span id="net-wealth-label" class="text-emerald-100 text-sm sm:text-base mb-1 sm:mb-0">Net Zakat-able Wealth (Total Wealth - C)</span>
-                        <span id="net-wealth" class="font-extrabold text-xl self-end sm:self-auto">0</span>
-                    </div>
-                    
-                    <!-- Final Zakat Box -->
-                    <div class="bg-emerald-800 rounded-lg p-4 mt-2 flex flex-col items-center text-center shadow-inner">
-                        <span id="final-zakat-label" class="text-lg sm:text-xl font-bold text-emerald-100 mb-1">FINAL ZAKAT PAYABLE (2.5%):</span>
-                        <span id="zakat-payable" class="font-extrabold text-3xl sm:text-4xl text-yellow-300 tracking-wide mt-1">0</span>
-                    </div>
-                </div>
+        <div class="field-card">
+            <label>Currency</label><span class="urdu-label-main">کرنسی منتخب کریں</span>
+            <!-- Left Aligned Text -->
+            <select id="currency_pref" onchange="updateCurrency()" style="text-align: left;">
+                <option value="Rs.">PKR (Rs.)</option>
+                <option value="SAR">SAR (﷼)</option>
+                <option value="AED">AED (د.إ)</option>
+                <option value="USD">USD ($)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="INR">INR (₹)</option>
+                <option value=" ">Not Specified</option>
+            </select>
+        </div>
 
-                <div class="mt-6 space-y-3">
-                    <!-- Share Button -->
-                    <button onclick="shareResults()" id="share-button" class="share-button primary">
-                        <!-- Lucide Share2 SVG Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
-                        <span id="share-button-text">Share Zakat Summary</span>
-                    </button>
-                    
-                    <!-- App Installation Info Button (PWA) -->
-                    <button onclick="showPwaInfo()" id="pwa-info-button" class="share-button secondary">
-                        <!-- Lucide Download SVG Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                        <span id="pwa-info-button-text">App Installation Info (PWA)</span>
-                    </button>
-                </div>
+        <div class="field-card">
+            <label>Zakat Year End Date</label>
+            <span class="urdu-label-main">زکوٰۃ کے سال کے اختتام کی تاریخ</span>
+            <input type="date" id="g_date" onchange="updateHijri()">
+            <div class="hijri-panel">
+                <button class="adj-btn" onclick="adjH(-1)">-</button>
+                <div style="font-size:1rem; font-weight:600;"><span id="hijriOutput">Pick a Date</span></div>
+                <button class="adj-btn" onclick="adjH(1)">+</button>
+            </div>
+            <!-- Hijri Note Centered -->
+            <div class="urdu-body" style="text-align:center; font-size:0.95rem; margin-top:6px; color:var(--text-muted); line-height:1.6;">سال گزرنے میں قَمری(یعنی چاند کے )مہینوں کا اعتبار ہوگا۔</div>
+        </div>
 
+        <div class="nisab-sketch-container">
+            <div class="sketch-title-box">
+                <span class="sketch-title-en">Nisaab Calculator</span>
+                <span class="sketch-title-ur">نصاب کی مقدار کیا ہے؟</span>
+            </div>
+            <div class="sketch-instruction">
+                اوپر لکھی ہوئی تاریخ پر نصاب کی مقدار کا تعین کرنے کے لئے چاندی کا ریٹ درج کریں
+            </div>
+            <div class="sketch-input-row">
+                <!-- UPDATED INPUT MODE FOR DECIMALS -->
+                <input type="text" id="s_rate" class="num-fmt" placeholder="Enter Silver Rate" inputmode="decimal" style="flex:2" oninput="calcNisab()">
+                <select id="s_unit" style="flex:1.5; padding:8px 2px;" onchange="calcNisab()">
+                    <option value="tola">Per Tola</option>
+                    <option value="10g">Per 10 Grams</option>
+                    <option value="1g">Per Gram</option>
+                    <option value="oz">Troy Ounce (oz)</option>
+                </select>
+            </div>
+            <div class="sketch-result-box">
+                <!-- UPDATED LABEL TEXT -->
+                <div class="urdu-body" style="font-size:1.1rem; color:var(--text-muted); text-align:center;">Nisaab Threshold - نصاب کی مقدار</div>
+                <div id="nisabVal" style="font-size:1.6rem; font-weight:800; color:var(--accent); font-family:var(--font-english);">0</div>
             </div>
             
-            <!-- Essential Zakat Rulings -->
-            <div class="bg-white rounded-xl p-4 shadow-lg">
-                <h2 id="rulings-header" class="text-xl font-bold text-emerald-800 mb-4 border-b pb-2">📌 Essential Zakat Rulings & Principles</h2>
-                <div id="rulings-content" class="space-y-4 text-gray-700">
-                    <!-- Rulings will be inserted here -->
+            <div style="margin-top: 15px;">
+                <div class="sub-acc-header" style="font-size: 1rem;" onclick="toggleSubAcc(this)">ایپلی کیشن میں چاندی کا نصاب کیوں بنیادی معیار بنایا گیا ہے؟</div>
+                <div class="sub-acc-body">
+                    <!-- REMOVED 'PRIZE BOND' from list below -->
+                    <p>اصول یہ ہے کہ اگر صرف سونا ہو اور اس کے ساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجودنہ ہو، توزکوٰۃ تب ہی فرض ہو گی کہ جب سونا وزن کے اعتبار سے ساڑھے سات تولے ہو، لیکن اگر سونا ساڑھے سات تولےسے کم ہواور اس کےساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجود ہو، تو اس صورت میں فرضیتِ زکوۃ کا نصاب ’’ساڑھے52 تولے چاندی کی مالیت‘‘ہے،پھر اگر قرض ہو، تو اسےسونے اور دیگراموالِ زکوٰۃ کی کل مالیت میں سے مائنس کرنے کے بعد بچنے والی رقم ساڑھے 52 تولہ چاندی کی مالیت کے برابر پہنچتی ہو، تو قرض کے علاوہ اس تمام مال کی زکوٰۃ فرض ہو گی اور اگر نہیں پہنچتی ، تو زکوٰۃ فرض نہیں ہو گی۔</p>
                 </div>
             </div>
+        </div>
 
-        </main>
-        
-        <footer class="bg-gray-100 p-4 text-center text-xs text-gray-500 border-t">
-            <p id="footer-text" class="text-gray-500">Zakat Calculator according to Hanafi Fiqh by Darul Ifta AnNoor / Jamiat e Ishaat e Ahlesunnat Pakistan.</p>
-            <p id="developed-by-text" class="mt-1 font-medium text-gray-600">Developed by Abul Laith Muhammad Tahir Qadri</p>
-        </footer>
-
-    </div>
-
-    <!-- Custom Message Overlay (Modal) -->
-    <div id="message-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full text-center space-y-4">
-            <h3 id="modal-title" class="text-xl font-bold text-indigo-700">App Information</h3>
-            <p id="modal-content" class="text-gray-700"></p>
-            <button onclick="hideModal()" id="modal-close-button" class="w-full py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition">
-                Close
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="nav(2)">
+                <span class="en">Next: Assets &rarr;</span>
+                <span class="ur">اگلا: اثاثہ جات</span>
             </button>
         </div>
     </div>
 
-
-    <script>
-        // --- Global State and Constants ---
-        const NISAB_GRAMS = 52.5 * 11.664; // 612.36 grams (52.5 Tolas)
-        let currentNisabValue = 0;
-        let currentLang = 'en'; // Default language is English
-
-        // --- Utility Functions ---
+    <!-- STEP 2 -->
+    <div id="step-2" class="hidden">
+        <div class="step-title">Step 2: Core Assets Eligible for Zakat<br><span style="font-size:1rem; font-weight:500;">(Pay their Zakat Immediately)</span></div>
+        <div class="urdu-label-main">اثاثے جن پر زکوٰۃ کی ادائیگی فی الفور لازم ہے</div>
         
-        /**
-         * Formats a raw number value for display (with commas).
-         * @param {number} value - The numeric value to format.
-         * @returns {string} The formatted string, or '0' if invalid.
-         */
-        const formatCurrency = (value) => {
-            if (isNaN(value) || value < 0) return '0';
-            return Math.round(value).toLocaleString('en-US');
-        };
+        <div class="accordion-header" onclick="toggleAccordion('priceDef', this)" style="margin-bottom:12px;">قیمت کی تعریف:</div>
+        <div class="accordion-content" id="priceDef">
+            <p>شرعاً قیمت اس کو کہتے ہیں جو اس چیز کا بازار میں بھاؤہو ، اتفاقی طور پر یا بھاؤتاؤ کرنے کے بعد کمی یا زیادتی کے ساتھ کوئی چیز خرید لی جائے تو اس کو قیمت نہیں کہیں گے (بلکہ ثَمَن کہیں گے )۔(فتاویٰ امجدیہ ج ۱ص۳۸۲)</p>
+        </div>
 
-        /**
-         * Cleans the input field value (removing commas) and returns the pure numeric value.
-         * @param {string} id - The ID of the input element.
-         * @returns {number} The cleaned numeric value.
-         */
-        const cleanInput = (id) => {
-            const input = document.getElementById(id);
-            if (!input) return 0; // Safety check
-            const cleaned = input.value.replace(/,/g, '').replace(/[^0-9.]/g, '');
-            return parseFloat(cleaned) || 0;
-        };
+        <div class="field-card">
+            <label>Gold Total Value</label><span class="urdu-label-main">سونے کی کل مالیت</span>
+            <input type="text" class="c-in num-fmt" id="v_gold" inputmode="decimal" placeholder="Enter Market Value">
+            <div class="accordion-header" onclick="toggleAccordion('goldNoteContent', this)">سونے چاندی اور ہیروں سے متعلق اہم نکات</div>
+            <div class="accordion-content" id="goldNoteContent">
+                <p><strong>قیمت کس دن کی معتبر ہے؟</strong> زکوٰۃ کا سال جس دن پورا ہوا اسی وقت کی قیمت کا حساب لگایا جائے گا۔ (ماخوذازفتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ص۱۳۳)</p>
+                <p><strong>ہیروں پر زکوٰۃ:</strong> ہیروں اور موتی پر زکوٰۃ واجب نہیں ، ہاں ! اگر تجارت کی نیت سے لئے تو زکوٰۃ واجب ہے۔ (الدرالمختار، ج۳، ص۲۳۰)</p>
+            </div>
+        </div>
+
+        <div class="field-card"><label>Silver Total Value</label><span class="urdu-label-main">چاندی کی کل مالیت</span><input type="text" class="c-in num-fmt" id="v_silver" inputmode="decimal" placeholder="Enter Market Value"></div>
+        <div class="field-card"><label>Cash in Hand (Home/Business)</label><span class="urdu-label-main">نقد رقم (گھر یا کاروبار میں)</span><input type="text" class="c-in num-fmt" id="v_cash" inputmode="decimal" placeholder="Enter Total Amount"></div>
+        <div class="field-card"><label>Bank Balance - Non-Interest</label><span class="urdu-label-main">بینک بیلنس (بغیر سود)</span><input type="text" class="c-in num-fmt" id="v_bank" inputmode="decimal" placeholder="Enter Total Amount"></div>
+        <div class="field-card"><label>Foreign Currency (Local Value)</label><span class="urdu-label-main">غیر ملکی کرنسی کی مقامی ویلیو</span><input type="text" class="c-in num-fmt" id="v_forex" inputmode="decimal" placeholder="Enter Market Value"></div>
+        <div class="field-card"><label>Finished Goods / Inventory</label><span class="urdu-label-main">بیچنے کے لیے تیار سامان کی مارکیٹ ویلیو</span><input type="text" class="c-in num-fmt" id="v_inv" inputmode="decimal" placeholder="Enter Market Value"></div>
+        <div class="field-card"><label>Raw Materials</label><span class="urdu-label-main">خام مال</span><input type="text" class="c-in num-fmt" id="v_raw" inputmode="decimal" placeholder="Enter Market Value"></div>
+        <div class="field-card">
+            <label>Property for Resale</label><span class="urdu-label-main">بیچنے کی نیت سے خریدی ہوئی جائیداد کی قیمت</span>
+            <input type="text" class="c-in num-fmt" id="v_re" inputmode="decimal" placeholder="Enter Market Value">
+            <div class="accordion-header" onclick="toggleAccordion('propertyNote', this)">مکانات اور گاڑیوں پر زکوٰۃ</div>
+            <div class="accordion-content" id="propertyNote">
+                <p><strong>کرائے کا مکان:</strong> کرائے پر دیئے گئے مکانات پر زکوٰۃ نہیں، ہاں ! حاصل ہونے والا نفع اگر نصاب کو پہنچ جائے تو اس پر زکوٰۃ ہوگی۔ (فتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ص۱۶۱ ملخصاً)</p>
+                <p><strong>استعمال کی گاڑیاں:</strong> گھریلو استعمال یا کرائے کی گاڑیوں/بسوں پر زکوٰۃ نہیں ہے۔ (وقارالفتاویٰ)</p>
+            </div>
+        </div>
+
+        <div class="field-card"><label>Shares & Tradable Certificates</label><span class="urdu-label-main">شیئرز اور قابلِ فروخت انویسٹمنٹ سرٹیفیکیٹ کی مارکیٹ ویلیو</span><input type="text" class="c-in num-fmt" id="v_sh" inputmode="decimal" placeholder="Enter Market Value"></div>
+        <div class="field-card"><label>Private Business Share</label><span class="urdu-label-main">پرائیویٹ کاروبارمیں آپ کے حصّے کے قابلِ زکوٰۃ اثاثے</span><input type="text" class="c-in num-fmt" id="v_pb" inputmode="decimal" placeholder="Enter Market Value"></div>
+
+        <!-- FAQ Area -->
+        <div style="margin-top:20px;">
+            <div class="accordion-header" onclick="toggleAccordion('faqContent', this)" style="background:#fff; border:1px solid #6EE7B7; color:var(--primary); padding:10px;">زکوٰۃ کے بارے میں عام طور پر پوچھے جانے والے سوالات: FAQs</div>
+            <div class="accordion-content" id="faqContent" style="background:#fff;">
+                <div class="faq-item">
+                    <div class="faq-q">سوال (1) سوناچاندی پہننے کا ہو تو بھی زکوٰۃ ہوگی؟</div>
+                    <div class="faq-a">جواب: جی ہاں نصاب کو پہنچتا ہو اور شرائط پائی جاتی ہوں تو زکوٰۃ ہوگی۔</div>
+                </div>
+                <!-- UPDATED FAQ ANSWER -->
+                <div class="faq-item">
+                    <div class="faq-q">سوال (2)سونے کی زکوٰۃ شوہر نکالے گا یا بیوی؟</div>
+                    <div class="faq-a">جواب : جو سونے کا مالک ہے وہ زکوٰۃ نکالے گا ۔عورت کو جو سونا میکے سے ملا وہ اس کی ملکیت ہے۔ جو لڑکے نے پہلی رات دیا وہ بھی گفٹ ہو کر ملکیت ہوگیا۔ لیکن جو سسرال سے لڑکی کو دیا جاتا ہے اس میں مختلف برادریوں کے مختلف عرف ہیں، ان کا پتا خاص کر طلاق ہونے پر چلتا ہے کہ واپس لیا جاتا ہے یا نہیں الغرض لڑکی کے سسرال سے صریح الفاظ هبہ نہ کہے گئے ہوں تو برادری کے عرف کے مطابق لڑکے یا لڑکی کی ملکیت تصور ہوگا۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال (3)عورت کے پاس پیسے ہی نہ ہوں لیکن سونا نصاب سے زائد اور باقی شرائط بھی پائی جاتی ہوں تو کیا کرے ؟</div>
+                    <div class="faq-a">جواب : قرض لے کر زکوٰۃادا کرے یا پھر سونے کو بیچ کر زکوٰۃ تو دینی ہوگی۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال (4)مال تجارت سے کیا مراد ہے؟؟</div>
+                    <div class="faq-a">جواب: وہ چیز جس کو خریدتے وقت بیچنے کی نیّت کی ہو۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال (5)جو چیز کرایہ پر چلانے کے لئے خریدی کیا اس پر زکوٰۃہوگی؟</div>
+                    <div class="faq-a">جواب: جی نہیں ایسی چیز پر زکوٰۃنہیں ہوگی خواہ ٹرانسپورٹ ہو یا پراپرٹی جس کو کرایہ پر چلانے کے لئے خریدا اس پر زکوٰۃ نہیں۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال: (6)جس چیز کو بیچنے کے لئے خریدا مگر بعد میں بیچنے کی نیّت بدل گئی اپنے یا بچوں کے استعمال یا کرایہ پر چلانے کی نیّت ہو گئی تو کیا زکوٰۃہوگی ؟؟</div>
+                    <div class="faq-a">جواب: جی نہیں ان سب صورتوں میں یہ چیز اب مال تجارت نہ رہی .نصاب کا سال پورا ہونے کے بعد نیّت بدلی ہے تو پچھلے سال کی زکوٰۃ بنے گی لیکن آئندہ کی نہیں۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال: (7) بیچنے کے لئے نہیں خریدی تھی،بعد میں بیچنے کی نیّت ہو گئی اس پر زکوٰۃفرض ہوگی ؟</div>
+                    <div class="faq-a">جواب: جی نہیں ایسے مال پر زکوٰۃفرض نہیں صرف نیّت کرنے سے کوئی چیز مال تجارت نہیں بن جاتی</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال: (8) ہم نےکسی اور کا جو مال بطور امانت لیا ہو، کیا اس پر ہم زکوٰۃ دیں گے ؟ جیسے ہماری کرایہ پر دی ہوئی  پراپرٹی کا ایڈوانس ہمارے پاس جمع ہو--کوئی بی سی بھرتا ہو اس کے پاس لوگوں کی امانت جمع ہو --ہم نے کسی سے قرضہ لے رکھا ہو وغیرہ وغیرہ</div>
+                    <div class="faq-a">جواب: ان تمام صورتوں میں آپ اس مال کے مالک نہیں تو آپ پر اس مال کی زکوٰۃنہیں جو مالک ہے وہ خود اپنا حساب لگائے گا اور شرائط پائے جانے پر زکوٰۃدے گا۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال: (9)چرائی کے جانور کے علاوہ جو چیزیں قابلِ زکوٰۃ  آپ نے بیان کی ہیں اگر یہ تھوڑی تھوڑی ہوں تو کیا زکوٰۃفرض ہوگی ؟</div>
+                    <div class="faq-a">جواب: ہاں! سونا، چاندی، کرنسی ،پرائز بانڈ اور مال تجارت جب نصاب سے کم کم ہوں مثلاً: سونا ساڑهے سات تولہ پورا نہ ہو یا چاندی ساڑهے باون تولہ نہ ہو تو ایسی صورت میں ان اموال زکوٰۃکی مالیت کو ملائیں گے اگر پانچوں میں چیزوں میں سے کوئی بھی دو یا زائد اموال مل کر ساڑهے باون تولہ چاندی کے نصاب کو پہنچتے ہوں اور بقیہ شرائط پائی جائیں تو زکوٰۃفرض ہوگی۔</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">سوال: (10)دکان کا فرنیچر اور فیکٹری میں مال بنانے والی مشین پر زکوٰۃہوگی ؟</div>
+                    <div class="faq-a">جواب: جی نہیں عام طور سے دکان کا فرنیچر آفس کے کمپیوٹر وغیرہ بیچنے کے لئے نہیں خریدے جاتے اور نہ ہی فیکٹری کی مشین اس نیّت سے خریدی جاتی ہے لهذا ان چیزوں پر زکوٰۃنہیں البتہ دکان ہی اگر فرنیچر کی ہو تو اس میں بھی جو چیزیں بیچنے کے لئے ہوں صرف اس پر زکوٰۃہوگی۔ (فتاویٰ اہلسنت)</div>
+                </div>
+            </div>
+        </div>
         
-        /**
-         * Cleans the input value in real-time, formats it with commas for display, 
-         * and ensures proper handling of the decimal point.
-         * Then triggers the calculation.
-         * @param {Event} e - The input event object.
-         */
-        const formatAndCleanInput = (e) => {
-            const input = e.target;
-            const originalValue = input.value;
-            const selectionStart = input.selectionStart;
+        <div class="btn-row">
+            <button class="btn btn-prev" onclick="nav(1)"><span class="en">&larr; Back</span><span class="ur">واپس</span></button>
+            <button class="btn btn-primary" onclick="nav(3)"><span class="en">Next: Receivables &rarr;</span><span class="ur">اگلا: واجب الوصول رقوم</span></button>
+        </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step-3" class="hidden">
+        <div class="step-title">Step 3: RECEIVABLES</div>
+        <div class="urdu-label-main">قابلِ وصول رُقوم</div>
+        <div class="urdu-subtitle">
+            اِن رقوم کی زکوٰۃ کی ادائیگی چند اُصولوں کا خیال کرتے ہوئے  وصولی تک مُؤخَر کی جا سکتی ہے۔
+        </div>
+
+        <div class="accordion-header" onclick="toggleAccordion('receivableTypes', this)" style="margin-bottom:15px; margin-top:10px;">مختلف قسم کے دَین (قابلِ وصول رُقوم)</div>
+        <div class="accordion-content" id="receivableTypes">
+             <p>ہماری جو رقم کسی کے ذمے ہو اسے’’ دَین‘‘  کہتے ہیں۔</p>
+             <p>اس کی 3 قسمیں ہیں۔قوی؛ متوَسّط اور ضعیف۔  اور ہر ایک کا حکم الگ الگ ہے  </p>
+        </div>
+
+        <div class="field-card">
+            <label>Trade and Business-Related Receivables and Loans</label>
+            <div class="urdu-subtitle">تجارتی  قرض اور قابلِ وُصول ادھار (دَین قوی)</div>
+            <input type="text" class="r-in num-fmt" id="v_ds" inputmode="decimal" placeholder="Enter Amount in Local Currency">
             
-            // 1. Remove all non-digit/non-decimal characters
-            let cleanedValue = originalValue.replace(/[^0-9.]/g, '');
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۱)دَین قوِی  کیا  ہے؟</div>
+            <div class="sub-acc-body">
+                <p>دَین قَوِی اسے کہتے ہیں جو ہم نے کسی کو قرض دیا ہوا ہو، …یاتجارت کا مال اُدھاربیچا ہو، …یاکوئی زمین یا مکان تجارت کی غرض سے خرید کر کرائے پر دیا اور وہ کرایہ کسی کے ذمے ہو ۔</p>
+                <p><strong>حکم:</strong> اس کی زکوٰۃ ہرسال فرض ہوتی رہے گی لیکن ادا کرنا اس وقت واجب ہو گا جب مقدارِ نصاب کا کم ازکم پانچواں حصہ وصول ہوجائے تو اس پانچویں حصے کی زکوٰۃ دینا ہوگی ، مثلاً 50,000روپے نصاب ہو تو جب اس کا پانچواں حصہ 10,000روپے وصول ہوجائیں تو اس کا چالیسواں حصہ 250روپے بطورِ زکوٰۃ دینا واجب ہوگا۔البتہ آسانی اس میں ہے کہ ہر سال اس کی بھی زکوٰۃ ادا کر دی جائے ۔</p>
+            </div>
+        </div>
 
-            const oldLength = originalValue.length;
+        <div class="field-card">
+            <label>Non-Business or Private Receivables</label>
+            <div class="urdu-subtitle">غیر تجارتی    قابلِ وُصول ادھار (دَین متوسط)</div>
+            <div class="urdu-body" style="font-size:1.0rem; color:#6B7280; text-align:center; margin-bottom:5px;">مثلاً:  گھر کا سامان بیچا اور اس کی قیمت لینے والے پر اُدھار ہو۔</div>
+            <input type="text" class="r-in num-fmt" id="v_dm" inputmode="decimal" placeholder="Enter Amount in Local Currency">
 
-            // 2. Separate integer and potential fractional parts
-            const parts = cleanedValue.split('.');
-            let integerPart = parts[0];
-            let fractionalPart = parts[1] !== undefined ? parts[1] : '';
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۲)دَین مُتَوَسِّط کیا ہے؟ :</div>
+            <div class="sub-acc-body">
+                <p>دَین مُتَوَسِّط اسے کہتے ہیں جو غیرتجارتی مال کا عوض یا بدل ہو جیسے گھر کی کرسی یا چارپائی یا دیگر سامان بیچا اور اس کی قیمت لینے والے پر اُدھار ہو۔</p>
+                <p><strong>حکم:</strong> اس میں بھی زکوٰۃ فرض ہوگی مگر ادائیگی اُس وقت واجب ہوگی جب بقدرِ نصاب پوری رقم آجائے ۔</p>
+            </div>
+        </div>
 
-            let newValue = '';
+        <div class="field-card">
+            <label>WEAK RECEIVABLES AGAINST SERVICES<br><em style="font-weight:400; font-size:0.9rem;">(Not Eligible for Zakat)</em></label>
+            <div class="urdu-subtitle">دَینِ ضعیف وہ ہے جو غیرِ مال کا بدل ہو جیسے مہر مؤجّل وغیرہ</div>
+            <input type="text" class="num-fmt" id="v_dw" inputmode="decimal" placeholder="(Not Zakatable yet)" disabled>
 
-            // Handle non-empty integer part
-            if (integerPart) {
-                if (integerPart.length > 1 && integerPart.startsWith('0')) {
-                    integerPart = integerPart.replace(/^0+/, '');
-                }
-                if (integerPart === '') integerPart = '0'; 
-
-                try {
-                    // Format the integer part with commas (using US locale)
-                    const formattedInteger = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(parseInt(integerPart));
-                    newValue = formattedInteger;
-                } catch (error) {
-                    newValue = integerPart;
-                }
-            }
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۳) دَین ضعیف کیا ہے؟ :</div>
+            <div class="sub-acc-body">
+                <p>وہ ہے جو غیرِ مال کا بدل ہو جیسے مہر مؤجّل اور مکان یا دکان کا کرایہ کہ نفع کا بدلہ ہے مال کا نہیں۔</p>
+                <p><strong>حکم:</strong> اس میں گزشتہ سالوں کی زکوٰۃ فرض نہیں ہے ۔جب قبضہ میں آجائے اور شرائطِ زکوٰۃ پائی جائیں تو سال گزرنے پر زکوٰۃ فرض ہوگی۔(الدرالمختار، کتاب الزکوٰۃ ، باب زکوٰۃالمال ج۳، ص۲۸۱ملخصاً :  بہار ِ شریعت ، حصہ ۵، ص۹۰۶)</p>
+            </div>
             
-            // 3. Reconstruct the value with the fractional part
-            if (originalValue.includes('.')) {
-                if (originalValue.endsWith('.') && parts.length === 2 && fractionalPart === '') {
-                    newValue += '.';
-                } else if (fractionalPart) {
-                    newValue += '.' + fractionalPart;
-                }
-            } else if (originalValue === '') {
-                newValue = '';
-            } else if (originalValue === '.') {
-                newValue = '0.';
-            }
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">قرض کی واپسی کی امید نہ ہوتو؟</div>
+            <div class="sub-acc-body">
+                <p>جس کے ذمے ہمارا دَین(قوی یا ضعیف )ہو اور وہ لاپتہ ہوگیا ، یا اس نے ہمارا مقروض ہونے سے انکار کردیا اور ہمارے پاس گواہ بھی نہیں ، الغرض قرض کی واپسی کی کوئی امید نہ رہی تو اب ہم پر زکوٰۃ دینا واجب نہیں۔</p>
+                <p>پھر اگر خوش قسمتی سے اس نے قرض لوٹادیا تو ایسی صورت میں گزشتہ سالوں کی زکوٰۃ فرض نہیں ہے ۔(الدر المختار وردالمحتار، کتاب الزکوٰۃ، مطلب فی زکوٰۃ ثمن المبیع، ج۳، ص۲۱۸)</p>
+            </div>
 
-            input.value = newValue;
+             <div class="sub-acc-header" onclick="toggleSubAcc(this)">عورت پر اس کے مہر کی زکوٰۃ:</div>
+            <div class="sub-acc-body">
+                <p>مہر دو قسم کا ہوتا ہے ، مُعَجَّل (یعنی خلوت سے پہلے مہر دینا قرار پایا ہے )اور غیرِ مُعَجَّل(جس کے لئے کوئی میعاد مقرر ہو)، اگر عورت کا مہر معجل نصاب کے بقدر ہو تواس کا کم از کم پانچواں حصہ وصول ہونے پر اس کی زکوٰۃ ادا کرنا واجب ہو گا اور غیر معجل مہر میں عموماًادائیگی کا وقت طے نہیں ہو تا اور اس کا مطالبہ عورت طلاق یا شوہر کی موت سے پہلے نہیں کر سکتی۔ اس پروصول کرنے کے بعد شرائط پوری ہونے کی صورت میں زکوٰۃ فرض ہوگی ۔(ماخوذ از فتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ص۱۶۹)</p>
+            </div>
+        </div>
 
-            // 4. Adjust the cursor position to keep it stable
-            const newLength = newValue.length;
-            const cursorDifference = newLength - oldLength;
+        <h4 style="color:var(--primary); font-family:var(--font-english); text-align:center; margin-top:20px;">Other Receivables</h4>
+        <div class="urdu-subtitle" style="margin-bottom:15px;">(With Deferred Zakat Payment Option)</div>
+
+        <div class="field-card">
+            <label>Amount in Committee / BC</label>
+            <div class="urdu-subtitle">کمیٹی / بیسی میں جمع  شدہ رقم</div>
+            <div class="advice-box-single-line" style="text-align:center; color:#991B1B; background:#FEF2F2; border-color:#FCA5A5;">
+                نوٹ: اگر ابھی تک آپ کی کمیٹی نہیں کھلی تو یہ رقم درج کریں۔
+            </div>
+            <input type="text" class="r-in num-fmt" id="v_bc" inputmode="decimal" placeholder="Enter Amount in Local Currency">
+        </div>
+
+        <div class="field-card">
+            <label>Provident Fund (Halal Balance on Zakat Date)</label>
+            <div class="urdu-subtitle">پراویڈنٹ فنڈ میں جمع شدہ قابلِ وُصول حلال  رقم</div>
+            <input type="text" class="r-in num-fmt" id="v_pf" inputmode="decimal" placeholder="Enter Amount in Local Currency">
             
-            if (cursorDifference !== 0 && selectionStart !== null) {
-                input.setSelectionRange(selectionStart + cursorDifference, selectionStart + cursorDifference);
-            }
-            
-            // 5. Trigger the calculation
-            calculateZakat();
-        };
-
-
-        // --- Core Calculator Logic ---
-        function calculateZakat() {
-            // 1. Get Nisab Value
-            const silverPrice = cleanInput('silver-price');
-            currentNisabValue = silverPrice * NISAB_GRAMS;
-            document.getElementById('nisab-value').innerText = formatCurrency(currentNisabValue);
-
-            // 2. Calculate Total Assets (A)
-            let totalAssets = 0;
-            assetsData.forEach(item => {
-                const value = cleanInput(item.id);
-                item.value = value;
-                totalAssets += value;
-            });
-            document.getElementById('total-assets').innerText = formatCurrency(totalAssets);
-
-            // 3. Calculate Total Receivables (B)
-            let totalReceivables = 0;
-            receivablesData.forEach(item => {
-                const value = cleanInput(item.id);
-                item.value = value;
-                totalReceivables += value;
-            });
-            document.getElementById('total-receivables').innerText = formatCurrency(totalReceivables);
-
-            // 4. Calculate Total Liabilities (C)
-            let totalLiabilities = 0;
-            liabilitiesData.forEach(item => {
-                const value = cleanInput(item.id);
-                item.value = value;
-                totalLiabilities += value;
-            });
-            document.getElementById('total-liabilities').innerText = formatCurrency(totalLiabilities);
-
-            // 5. Calculate Summary
-            const totalZakatAbleWealth = totalAssets + totalReceivables;
-            document.getElementById('total-zakat-able-wealth').innerText = formatCurrency(totalZakatAbleWealth);
-
-            const netWealth = totalZakatAbleWealth - totalLiabilities;
-            document.getElementById('net-wealth').innerText = formatCurrency(netWealth);
-
-            // 6. Nisab Check and Final Zakat Calculation
-            const nisabStatusContainer = document.getElementById('nisab-status-container');
-            const nisabStatusText = document.getElementById('nisab-status-text');
-            let zakatPayable = 0;
-            const cleanedSilverPrice = cleanInput('silver-price');
-            let nisabIsSet = cleanedSilverPrice > 0;
-            
-            nisabStatusContainer.className = 'py-2 px-3 rounded-md mb-2 font-medium text-center';
-
-            if (!nisabIsSet) {
-                nisabStatusContainer.classList.add('bg-gray-500');
-                nisabStatusText.innerText = langStrings[currentLang].nisabPlaceholder;
-            } else if (netWealth >= currentNisabValue) {
-                // Zakat is due
-                zakatPayable = netWealth * 0.025;
-                nisabStatusContainer.classList.add('bg-green-600', 'text-white');
-                nisabStatusText.innerText = langStrings[currentLang].nisabEligible;
-            } else {
-                // Zakat is not due
-                nisabStatusContainer.classList.add('bg-red-600', 'text-white');
-                nisabStatusText.innerText = langStrings[currentLang].nisabNotEligible;
-                zakatPayable = 0;
-            }
-            
-            document.getElementById('zakat-payable').innerText = formatCurrency(zakatPayable);
-        }
-
-        // --- Language Strings and Data (Rulings content omitted for brevity) ---
-        // (The language strings and data from V3 are retained here in the actual code)
-        const langStrings = {
-            en: {
-                title: "Zakat Calculator", subtitle: "Simple And Easy App to Calculate Zakat for Most Businesses and Salaried Individuals !", toggle: "اردو / Urdu",
-                zakatDate: "Zakat Year End Date (Lunar)", silverPriceLabel: "1. Price of 1 gram of Silver:", nisabCriteria: "Nisab Eligibility Criteria (52.5 Tolas Silver)",
-                calculatedNisab: "2. Calculated Nisab Value:", part1Title: "Part I: Core Assets Liable for Zakat (Inventory, Gold, Cash)",
-                totalAssets: "A. Total Core Assets", part2Title: "Part II: Accounts Receivable (Money Owed to You)", totalReceivables: "B. Total Accounts Receivable",
-                part3Title: "Part III: Deductible Liabilities (All Payables Are Deducted)", totalLiabilities: "C. Total Deductible Liabilities",
-                part4Title: "Part IV: Zakat Summary", totalZakatAble: "Total Zakat-able Wealth (A + B)", netWealth: "Net Zakat-able Wealth (Total Wealth - C)",
-                finalZakat: "FINAL ZAKAT PAYABLE (2.5%):", shareText: "Share Zakat Summary", pwaInfoText: "App Installation Info (PWA)",
-                modalTitle: "App Information", modalContent: "This is a Progressive Web App (PWA). You can install it on your device (mobile/desktop) by using the 'Add to Home Screen' or 'Install App' option, usually found in your browser's main menu (e.g., the three-dot menu). This will allow the calculator to run quickly and offline.",
-                modalClose: "Close", nisabPlaceholder: "Enter Silver Price to Check Nisab...", nisabEligible: "ELIGIBLE FOR ZAKAT: Net Wealth is above Nisab",
-                nisabNotEligible: "NOT ELIGIBLE FOR ZAKAT: Net Wealth is below Nisab", footer: "Zakat Calculator according to Hanafi Fiqh by Darul Ifta AnNoor / Jamiat e Ishaat e Ahlesunnat Pakistan.",
-                developedBy: "Developed by Abul Laith Muhammad Tahir Qadri", rulingsHeader: "📌 Essential Zakat Rulings & Principles",
-            },
-            ur: {
-                title: "زکوٰۃ کیلکولیٹر", subtitle: "کاروباری اور تنخواہ دار افراد کے لیے زکوٰۃ کا آسان ترین حساب لگانے والی ایپ !", toggle: "English / انگریزی",
-                zakatDate: "زکوٰۃ کا سال مکمل ہونے کی تاریخ (قمری)", silverPriceLabel: "1. چاندی کی فی گرام قیمت:", nisabCriteria: "نصاب کی اہلیت (52.5 تولہ چاندی)",
-                calculatedNisab: "2. حساب شدہ نصاب کی مالیت:", part1Title: "حصہ اول: بنیادی قابلِ زکوٰۃ اثاثے (مال تجارت، سونا، نقد)",
-                totalAssets: "الف. کُل بنیادی اثاثے", part2Title: "حصہ دوم: واجب الوصول رقوم (آپ کو دوسروں سے وصول ہونے والی رقم)", totalReceivables: "ب. کُل واجب الوصول رقوم",
-                part3Title: "حصہ سوم: قابل کٹوتی واجبات (قابلِ ادا تمام قرضے)", totalLiabilities: "ج. کُل قابل کٹوتی واجبات",
-                part4Title: "حصہ چہارم: زکوٰۃ کا حتمی خلاصہ", totalZakatAble: "کُل قابلِ زکوٰۃ مالیت (الف + ب)", netWealth: "خالص قابلِ زکوٰۃ مالیت (کُل مال - ج)",
-                finalZakat: "واجب الادا حتمی زکوٰۃ (2.5%):", shareText: "زکوٰۃ کا خلاصہ شئیر کریں", pwaInfoText: "ایپ انسٹالیشن معلومات (PWA)",
-                modalTitle: "ایپ کی معلومات", modalContent: "یہ ایک پروگریسیو ویب ایپ (PWA) ہے۔ آپ اسے اپنے ڈیوائس پر اپنے براؤزر کے مین مینو (جیسے تین نقطوں والا مینو) میں موجود 'Add to Home Screen' یا 'Install App' آپشن کے ذریعے انسٹال کر سکتے ہیں۔ اس سے کیلکولیٹر تیزی سے اور آف لائن چل سکے گا۔",
-                modalClose: "بند کریں", nisabPlaceholder: "نصاب کی جانچ کے لیے چاندی کی قیمت درج کریں...", nisabEligible: "زکوٰۃ کے لیے اہل: خالص مال نصاب سے زائد ہے",
-                nisabNotEligible: "زکوٰۃ کے لیے اہل نہیں: خالص مال نصاب سے کم ہے", footer: "یہ زکوٰۃ کیلکولیٹر فقہ حنفی کے مطابق تیار کیا گیا ہے۔",
-                developedBy: "ڈویلپر: ابو اللیث محمد طاہر قادری", rulingsHeader: "📌 زکوٰۃ کے اہم احکام و اصول",
-            }
-        };
-
-        const assetsData = [
-            { id: 'gold', label_en: '1. Gold (Jewelry, Bars, Ornaments)', label_ur: '1. سونا (زیورات، بارز، آرائشی اشیاء)', value: 0 },
-            { id: 'silver', label_en: '2. Silver (Jewelry, Utensils, Ornaments)', label_ur: '2. چاندی (زیورات، برتن، آرائشی اشیاء)', value: 0 },
-            { id: 'cash', label_en: '3. Cash & Currency (Local and Foreign)', label_ur: '3. نقد رقم اور کرنسی (مقامی و غیر ملکی)', value: 0 },
-            { id: 'bankFunds', label_en: '4. Funds in Bank Accounts', label_ur: '4. بینک اکاؤنٹس میں موجود فنڈز', value: 0 }, 
-            { id: 'prizeBonds', label_en: '5. Prize Bonds / Investment Certificates', label_ur: '5. پرائز بانڈز / سرمایہ کاری کے سرٹیفیکیٹ', value: 0 },
-            { id: 'pfFunds', label_en: '6. Provident Fund (PF) Funds', label_ur: '6. پراویڈنٹ فنڈ (PF) میں جمع شدہ رقم', value: 0 },
-            { id: 'committeeMoney', label_en: '7. Money in Committee or Group Schemes', label_ur: '7. کمیٹی یا گروپ اسکیموں میں جمع شدہ رقم', value: 0 },
-            { id: 'rawMaterials', label_en: '8. Trade Goods: Raw Materials', label_ur: '8. مال تجارت: خام مال کی مالیت', value: 0 },
-            { id: 'finishedProducts', label_en: '9. Trade Goods: Finished Products / Stock', label_ur: '9. مال تجارت: تیار شدہ مصنوعات / اسٹاک کی مالیت', value: 0 },
-            { id: 'assetsResale', label_en: '10. Assets Purchased for Resale (Land, Property)', label_ur: '10. برائے فروخت اثاثے (زمین، جائيداد)', value: 0 },
-            { id: 'partnershipShare', label_en: '11. Your Share in Business Partnership Assets', label_ur: '11. کاروباری شراکت داری کے اثاثوں میں آپ کا حصہ', value: 0 },
-        ];
-
-        const receivablesData = [
-            { id: 'loansGiven', label_en: '12. Loans Given to Others (You are the creditor)', label_ur: '12. دوسروں کو دیے گئے قرضے (واجب الوصول)', value: 0 },
-            { id: 'accountReceivable', label_en: '13. Accounts Receivable (Money owed by customers)', label_ur: '13. گاہکوں سے واجب الوصول کھاتے (Accounts Receivable)', value: 0 },
-            { id: 'otherReceivables', label_en: '14. Other Receivables (Refunds Due, etc.)', label_ur: '14. دیگر واجب الوصول رقوم (جیسے واجب الادا ریفنڈز)', value: 0 },
-        ];
-
-        const liabilitiesData = [
-            { id: 'personalLoans', label_en: 'Outstanding Personal Loans', label_ur: 'واجب الادا ذاتی قرضے', value: 0 },
-            { id: 'dueInstallments', label_en: 'Due Installments (for property, car, etc.)', label_ur: 'واجب الادا قسطیں (جائيداد، کار، وغیرہ کی)', value: 0 },
-            { id: 'payableCommittee', label_en: 'Remaining Payable Committee Funds (If total fund received)', label_ur: 'واجب الادا کمیٹی فنڈز (اگر کل رقم وصول کر لی ہو)', value: 0 },
-            { id: 'utilityBills', label_en: 'Outstanding Utility Bills (received before Zakat Due Date)', label_ur: 'بقایا یوٹیلیٹی بلز (زکوٰۃ کی تاریخ سے پہلے کے)', value: 0 },
-            { id: 'supplierPayments', label_en: 'Payments Due to Suppliers / Dealers', label_ur: 'سپلائرز یا ڈیلرز کو قابلِ ادا رقوم', value: 0 },
-            { id: 'unpaidSalaries', label_en: 'Unpaid Salaries to Employees/Staff', label_ur: 'ملازمین/عملے کو واجب الادا تنخواہیں', value: 0 },
-            { id: 'unpaidZakat', label_en: 'Unpaid Zakat from the previous year', label_ur: 'پچھلے سال کی واجب الادا زکوٰۃ', value: 0 },
-        ];
+            <div class="accordion-header" onclick="toggleAccordion('pfNote', this)">پراویڈنٹ فنڈ پر زکوٰۃ کا مسئلہ:</div>
+            <div class="accordion-content" id="pfNote">
+                <p>پراویڈنٹ فنڈ پر زکوٰۃ کے مسائل میں اختلاف ہے، ہم نے احتیاطاً اسے زکوٰۃ میں شامل کیا ہے۔ کئی علماء کے مطابق چونکہ یہ فنڈ مالک کی مِلک ہوتا ہے ، اس لئے اگر ملازم مالکِ نصاب ہے توجب سے یہ رقم جمع ہونا شروع ہوئی اُسی وقت سے اِس رقم کی بھی زکوٰۃ ہر سال فرض ہوتی رہے گی۔ (فتاوی فیض الرسول ، حصّہ اوّل، ص ۴۷۹)لیکن ادائیگی اس وقت واجب ہوگی جب مقدارِ نصاب کا کم از کم پانچواں حصہ وصول ہوجائے ۔(ماخوذ از فتاوٰی فقیہ ملت ج۱، ص۳۲۰)</p>
+                <p>جو اصل رقم ملازم کی تنخواہ سے کاٹی جاتی ہے اور اس کٹوتی والی رقم کے برابر جو رقم ادارے کی طرف سے ملائی جاتی ہے یہ دونوں طرح کی رقم ملازم کی ہی ملکیت ہے اور اس کے لئے حلال ہے۔ لیکن جو سودی اضافہ ہے اس پر زکوٰۃ نہیں کہ زکوٰۃ پاک مال پر ہوتی ہے ۔</p>
+                <p>ہاں زکوٰۃ میں یہ رخصت ہے کہ جب تک وہ رقم مکمل یا کم از کم نصاب کے پانچویں حصے کے برابر وصول نہ ہوجائے اس وقت تک اس کی ادائیگی واجب نہیں ہوگی لیکن جب وصول ہوگی تو گزشتہ تمام سالوں کی زکوٰۃ ادا کرنی ہوگی اس لئے بہتر ہے کہ اگر کوئی شخص ایسا ہے جس پر دیگر اموال کی زکوٰۃ نکالنا فرض ہے تو وہ ہر سال اس رقم کی بھی زکوٰۃ نکالتا رہے جو فنڈ میں جمع ہوتی رہی ہے ،تاکہ بعد میں ایک ساتھ نکالنے کی دشواری نہ ہو۔</p>
+                <p>واضح رہے کہ ادارے کی طرف سے یہ رقم بینک وغیرہ میں رکھواکر اس پر جو نفع دیا جاتا ہے وہ نفع سود ہے کیونکہ بینک میں اس رقم کو رکھوانا قرض ہے اورقرض پر ملنے والا نفع سود ہوتا ہے۔ لہٰذا اس سود کی رقم کا حکم یہ ہے کہ ملازم کو جب کُل رقم ملے تو سودی رقم بِلانیتِ ثواب شرعی فقیر کو دے دی جائے۔ اور اگر کمپنی یا ادارہ یہ آپشن دیتا ہے کہ آپ کہہ سکتے ہیں کہ میری رقم پر سود کا اضافہ نہ کیا جائے تو ایسا کرنا ضروری ہوگا۔</p>
+            </div>
+        </div>
         
-        const rulingsData = [
-            {
-                title_en: "1. Obligation and Eligibility (Who Must Pay)",
-                title_ur: "1. فرضیت اور اہلیت (کون زکوٰۃ ادا کرے گا)",
-                content: `
-                    Zakat is <b>Fard (obligatory)</b> upon an individual who meets the following five conditions:<br/>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Status:</b> Must be a Muslim, sane, and adult (reached puberty).</li>
-                        <li><b>Possession (Nisab):</b> Must own wealth equal to or exceeding the minimum threshold (Sahib-e-Nisab).</li>
-                        <li><b>Ownership:</b> The wealth must be in the individual's absolute control (Full Ownership).</li>
-                        <li><b>Surplus:</b> The wealth must be surplus to basic, immediate living needs (e.g., personal residence, primary vehicle, necessary tools).</li>
-                        <li><b>Duration (Hawlan-e-Hawl):</b> One full lunar year must have passed since the Nisab was first acquired.</li>
-                    </ul>
-                `,
-                urdu: `
-                    زکوٰۃ ایک فرد پر <b>فرض (لازمی)</b> ہے جو مندرجہ ذیل پانچ شرائط پوری کرتا ہو:<br/>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>حیثیت:</b> مسلمان، عاقل اور بالغ (بلوغت کو پہنچا ہوا) ہو۔</li>
-                        <li><b>ملکیت (نصاب):</b> کم از کم حد (صاحبِ نصاب) کے برابر یا اس سے زیادہ مالیت کا مالک ہو۔</li>
-                        <li><b>ملکیت:</b> مال پر فرد کا مکمل کنٹرول ہو (کامل ملکیت)۔</li>
-                        <li><b>اضافی مال:</b> مال بنیادی، فوری ضروریات زندگی سے زائد ہو (مثلاً ذاتی رہائش، بنیادی گاڑی، ضروری اوزار)۔</li>
-                        <li><b>مدت (حولانِ حول):</b> نصاب حاصل کرنے کے بعد سے ایک مکمل قمری سال گزر چکا ہو۔</li>
-                    </ul>
-                `,
-                class: 'eligibility'
-            },
-            {
-                title_en: "2. The Nisab and Combination Rule",
-                title_ur: "2. نصاب اور اموال کو ملانے کا اصول",
-                content: `
-                    The Nisab for <b>Silver</b> is the default standard: <b>52.5 Tolas</b> (approx. 612.36 grams). Its current market value is used to calculate the Nisab for currency, mixed assets, and trade goods.<br/><br/>
-                    The Nisab for <b>Gold</b> is <b>7.5 Tolas</b> (approx. 87.48 grams) and applies only if the individual owns solely gold.<br/><br/>
-                    <b>The Combination Rule:</b> If an individual possesses a mixture of any Zakat-able assets (Gold, Silver, Currency, Trade Goods), the total value of these assets must be combined. If this combined total equals or exceeds the monetary value of the <b>Silver Nisab</b>, Zakat is due on the entire combined amount.
-                `,
-                urdu: `
-                    <b>چاندی کا نصاب</b> بنیادی معیار ہے: <b>ساڑھے باون تولہ</b> (تقریباً 612.36 گرام)۔ اس کی موجودہ بازاری قیمت کرنسی، مخلوط اثاثوں اور مالِ تجارت کے نصاب کا حساب لگانے کے لیے استعمال ہوتی ہے۔<br/><br/>
-                    <b>سونے کا نصاب</b> <b>ساڑھے سات تولہ</b> (تقریباً 87.48 گرام) ہے اور اس پر صرف اسی صورت میں زکوٰۃ واجب ہوتی ہے جب فرد کے پاس صرف سونا ہو۔<br/><br/>
-                    <b>اموال کو ملانے کا اصول:</b> اگر ایک فرد کے پاس قابلِ زکوٰۃ اثاثوں (سونا، چاندی، کرنسی، مال تجارت) کا مجموعہ ہو، تو ان سب کی کُل مالیت کو جمع کیا جائے گا۔ اگر یہ مجموعی مالیت <b>چاندی کے نصاب</b> کی قیمت کے برابر یا اس سے زیادہ ہو، تو پوری جمع شدہ رقم پر زکوٰۃ واجب ہو گی۔
-                `,
-                class: ''
-            },
-            {
-                title_en: "3. Zakat-able Assets (Amwal-e-Zakat)",
-                title_ur: "3. قابلِ زکوٰۃ اثاثے (اموالِ زکوٰۃ)",
-                content: `
-                    Zakat is due on wealth that has the potential for growth. The core categories are:<br/>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li>Gold, Silver (including jewelry, even if worn).</li>
-                        <li>Currency (cash, bank deposits, savings).</li>
-                        <li>Prize Bonds, Marketable Securities, or Investment Certificates.</li>
-                        <li>Trade Goods (inventory purchased with the <b>explicit intention to sell it</b>).</li>
-                        <li>Grazing Animals (livestock that graze freely for the majority of the year). <b>Consult a Mufti / Scholar for calculating their Zakat.</b></li>
-                    </ul>
-                `,
-                urdu: `
-                    زکوٰۃ صرف ایسے مال پر واجب ہے جو بڑھنے یا زیادہ ہونے کی صلاحیت رکھتا ہو۔ بنیادی زمرے یہ ہیں:<br/>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li>سونا، چاندی (بشمول پہنے جانے والے زیورات)۔</li>
-                        <li>کرنسی (نقد رقم، بینک میں جمع شدہ رقم، بچت)۔</li>
-                        <li>پرائز بانڈز، قابل فروخت سیکیورٹیز، یا سرمایہ کاری کے سرٹیفیکیٹ۔</li>
-                        <li>مالِ تجارت (اسٹاک جو <b>صریحاً بیچنے کی نیت سے خریدا گیا ہو</b>).</li>
-                        <li>چرائی کے جانور (وہ مویشی جو سال کا بیشتر حصہ مفت چارے پر گزارتے ہوں)۔ <b>اُن کی زکوٰۃ کا حساب کرنے کے لیے کسی مفتی / عالم سے مشورہ کریں۔</b></li>
-                    </ul>
-                `,
-                class: ''
-            },
-            {
-                title_en: "4. Rulings on Non-Zakat-able (Exempt) Assets",
-                title_ur: "4. غیر قابلِ زکوٰۃ (مستثنیٰ) اثاثوں کے احکام",
-                content: `
-                    Assets not held for the purpose of trade or growth are generally exempt. For example:<br/>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li>Personal residence, necessary tools, and primary vehicle.</li>
-                        <li>Fixed business assets like factory machinery, office computers, or shop furniture.</li>
-                    </ul>
-                    <p class="mt-2 mb-2 text-sm text-gray-700">
-                        <b>Important Clarification:</b> If the item itself is purchased with the <b>explicit intention of resale</b> (e.g., furniture in a furniture shop's inventory), it is Zakat-able as a Trade Good.
-                    </p>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li>Assets purchased only for <b>renting them out</b> (e.g., rental property) are exempt, but the <b>rental income</b> (if saved for a year) is Zakat-able.</li>
-                    </ul>
-                `,
-                urdu: `
-                    وہ اثاثے جو تجارت یا بڑھوتری کے مقصد کے لیے نہ ہوں، عام طور پر مستثنیٰ ہیں۔ مثال کے طور پر:<br/>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li>ذاتی رہائش، ضروری اوزار، اور بنیادی گاڑی۔</li>
-                        <li>کاروبار کے فکسڈ اثاثے جیسے فیکٹری کی مشینری، آفس کمپیوٹر، یا دکان کا فرنیچر۔</li>
-                    </ul>
-                    <p class="mt-2 mb-2 text-sm text-gray-700 text-right">
-                        <b>اہم وضاحت:</b> اگر کوئی چیز اصل میں ذاتی استعمال کے لیے خریدی گئی تھی اور مالک بعد میں اسے بیچنے کا فیصلہ کر لیتا ہے، تو اسے عام طور پر زکوٰۃ کے مقاصد کے لیے مالِ تجارت نہیں سمجھا جائے گا کیونکہ خریداری کے وقت بیچنے کی نیت موجود نہیں تھی۔
-                    </p>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li>صرف <b>کرایہ پر دینے کے لیے</b> خریدے گئے اثاثے (مثلاً کرائے کی پراپرٹی) مستثنیٰ ہیں، لیکن <b>کرایہ کی آمدنی</b> (اگر ایک سال تک بچت ہو) قابلِ زکوٰۃ ہے۔</li>
-                    </ul>
-                `,
-                class: ''
-            },
-            // Ruling 5
-            {
-                title_en: "5. Definition of Trade Goods (Mal-e-Tijarat) and Valuation",
-                title_ur: "5. مالِ تجارت کی تعریف اور قیمت کا تعین",
-                content: `
-                    <b>Intention at Purchase:</b> Goods are considered "trade goods" only if they were purchased with the explicit intention of selling them for profit.
-                    <br/><br/>
-                    <b>Change of Status:</b> If an item was originally purchased for personal use and the owner later decides to sell it, it is generally not considered a trade good for Zakah purposes because the intention was not present at the time of purchase.
-                    <br/><br/>
-                    <b>Determining the Value for Zakah:</b>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Current Market Price:</b> The value of the goods is based on their market price at the completion of the year, not the original purchase price.</li>
-                        <li><b>Wholesale vs. Retail:</b> Wholesalers use the wholesale price of their inventory. Retailers use the retail price.</li>
-                        <li><b>Location and Date:</b> The price considered is the one prevailing in the area where the goods are located on the specific day the Zakah year ends.</li>
-                    </ul>
-                `,
-                urdu: `
-                    <b>خریداری کے وقت نیت:</b> مال کو "مالِ تجارت" صرف اسی صورت میں سمجھا جائے گا جب اسے منافع کمانے کی صریح نیت سے خریدا گیا ہو۔
-                    <br/><br/>
-                    <b>حیثیت کی تبدیلی:</b> اگر کوئی چیز اصل میں ذاتی استعمال کے لیے خریدی گئی تھی اور مالک بعد میں اسے بیچنے کا فیصلہ کر لیتا ہے، تو اسے عام طور پر زکوٰۃ کے مقاصد کے لیے مالِ تجارت نہیں سمجھا جائے گا کیونکہ خریداری کے وقت بیچنے کی نیت موجود نہیں تھی۔
-                    <br/><br/>
-                    <b>زکوٰۃ کے لیے قیمت کا تعین:</b>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>موجودہ بازاری قیمت:</b> مال کی قیمت کا تعین سال کے اختتام پر اس کی بازاری قیمت کی بنیاد پر کیا جائے گا، نہ کہ اصل خرید قیمت پر۔</li>
-                        <li><b>تھوک بمقابلہ پرچون:</b> تھوک فروش اپنے اسٹاک کی مالیت تھوک قیمت پر لگائیں گے۔ پرچون فروش پرچون قیمت پر لگائیں گے۔</li>
-                        <li><b>مقام اور تاریخ:</b> جو قیمت معتبر ہے وہ ہے جو زکوٰۃ کا سال مکمل ہونے کے دن، اُس علاقے میں رائج ہو جہاں مال موجود ہے۔</li>
-                    </ul>
-                `,
-                class: 'important'
-            },
-            {
-                title_en: "6. Wife’s Zakat Liability", 
-                title_ur: "6. بیوی کی زکوٰۃ کی ذمہ داری", 
-                content: `
-                    If a woman owns gold or silver that meets the Nisab, she is responsible for paying its Zakat. If she lacks the necessary cash, she is obligated to either borrow the amount or sell a portion of the gold/silver to fulfill the obligation. <b>It is permissible for her husband to pay her Zakat from his own assets, provided he does so with her consent.</b>
-                `,
-                urdu: `
-                    اگر ایک عورت کے پاس سونا یا چاندی ہے جو نصاب کو پہنچ جائے، تو اس کی زکوٰۃ ادا کرنے کی ذمہ داری اسی پر ہے۔ اگر اس کے پاس زکوٰۃ کی ادائیگی کے لیے نقد رقم نہ ہو، تو اسے یا تو قرض لینا پڑے گا یا اپنی زکوٰۃ پوری کرنے کے لیے سونے/چاندی کا کچھ حصہ فروخت کرنا ہو گا۔ <b>شوہر کے لیے اپنی رقم سے بیوی کی زکوٰۃ ادا کرنا جائز ہے، بشرطیکہ وہ بیوی کی رضامندی سے کیا جائے</b>۔
-                `,
-                class: 'important'
-            },
-            {
-                title_en: "7. Zakat on Receivables (Dayn) - When it is Due (Hanafi)", 
-                title_ur: "7. واجب الوصول رقوم (دَین) پر زکوٰۃ - کب واجب ہو گی (فقہ حنفی)", 
-                content: `
-                    Zakat on receivables (debts owed to you) depends on the nature of the debt (Hanafi ruling):<br/>
-                    <br/>
-                    <b>1) Strong Receivable (Dayn Qawī)</b>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Definition:</b> Debt arising from loan or sale on credit (money or trade goods).</li>
-                        <li><b>Ruling:</b> Zakat is obligatory on the amount for all past years, but payment is due only after you actually receive it. When received, pay Zakat for the previous years (2.5% per year).</li>
-                    </ul>
-                    <hr class="my-3 border-gray-300"/>
-                    <b>2) Medium Receivable (Dayn Mutawassiṭ)</b>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Definition:</b> Debt from non-trade exchange (e.g., rent owed, wages owed).</li>
-                        <li><b>Ruling:</b> Zakat becomes obligatory only after receipt, and only for one year (not past years).</li>
-                    </ul>
-                    <hr class="my-3 border-gray-300"/>
-                    <b>3) Weak Receivable (Dayn Ḍaʿīf)</b>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Definition:</b> Debt not directly substituting wealth (e.g., mahr before possession, blood money, inheritance before division).</li>
-                        <li><b>Ruling:</b> No Zakat until received and a full lunar year passes thereafter.</li>
-                    </ul>
-                    <br/>
-                    <b>Practical Notes (Hanafi):</b>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Unlikely/recoverable debt:</b> If genuinely doubtful, no Zakat until received; then apply the category above.</li>
-                        <li><b>Partial recovery:</b> Zakat applies only to what is actually received.</li>
-                        <li><b>Intention:</b> Zakat intention is made at the time of payment after receipt.</li>
-                    </ul>
-                `,
-                urdu: `
-                    واجب الوصول رقوم (آپ کو دوسروں سے وصول ہونے والی رقم) پر زکوٰۃ کا انحصار قرض کی نوعیت پر ہے (فقہ حنفی کے مطابق):<br/>
-                    <br/>
-                    <b>1) قوی دَین (Dayn Qawī)</b>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>تعریف:</b> قرض یا ادھار پر فروخت (نقد رقم یا مال تجارت) سے پیدا ہونے والا قرض۔</li>
-                        <li><b>حکم:</b> کُل رقم پر پچھلے تمام سالوں کی زکوٰۃ فرض ہے، لیکن ادائیگی صرف وصولی کے بعد واجب ہو گی۔ وصول ہونے پر پچھلے سالوں کی زکوٰۃ (ہر سال کا 2.5%) ادا کریں۔</li>
-                    </ul>
-                    <hr class="my-3 border-gray-300"/>
-                    <b>2) متوسط دَین (Dayn Mutawassiṭ)</b>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>تعریف:</b> غیر تجارتی لین دین سے پیدا ہونے والا قرض (مثلاً واجب الادا کرایہ، واجب الادا اجرت/تنخواہ)۔</li>
-                        <li><b>حکم:</b> زکوٰۃ صرف وصولی کے بعد واجب ہوتی ہے، اور صرف ایک سال کی (پچھلے سالوں کی نہیں)۔</li>
-                    </ul>
-                    <hr class="my-3 border-gray-300"/>
-                    <b>3) ضعیف دَین (Dayn Ḍaʿīf)</b>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>تعریف:</b> وہ قرض جو براہ راست مال کا بدل نہ ہو (مثلاً قبضے سے پہلے مہر، دیت/خون کی رقم، تقسیم سے پہلے وراثت)۔</li>
-                        <li><b>حکم:</b> زکوٰۃ تب تک واجب نہیں جب تک کہ وصول نہ ہو جائے اور پھر اس پر ایک مکمل قمری سال نہ گزر جائے۔</li>
-                    </ul>
-                    <br/>
-                    <b>عملی نکات (فقہ حنفی):</b>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>ناقابل وصول/مشکوک قرض:</b> اگر وصولی میں واقعی شک ہو، تو وصولی تک زکوٰۃ نہیں؛ پھر وصولی کے بعد مندرجہ بالا اصول لاگو کریں۔</li>
-                        <li><b>جزوی وصولی:</b> زکوٰۃ صرف اسی رقم پر لاگو ہوتی ہے جو درحقیقت وصول کی گئی ہو۔</li>
-                        <li><b>نیت:</b> زکوٰۃ کی نیت وصولی کے بعد ادائیگی کے وقت کی جاتی ہے۔</li>
-                    </ul>
-                `,
-                class: 'eligibility' 
-            },
-            {
-                title_en: "8. Zakah on Provident Funds (PF)", 
-                title_ur: "8. پراویڈنٹ فنڈز (PF) پر زکوٰۃ", 
-                content: `
-                    <b>Ownership and Obligation:</b> A Provident Fund remains under the ownership of the employee. Therefore, if the employee is the owner of a Nisab (the minimum threshold of wealth), Zakah on this amount becomes Fard (obligatory) every year.
-                    <br/><br/>
-                    <b>Starting Point:</b> The obligation to pay Zakah on the fund begins from the time the money first started being saved in the account.
-                    <br/><br/>
-                    <b>Payment Timing:</b> While the Zakah is technically due every year, it is often treated as a debt that the employee will receive later. For such cases, the obligation to pay the calculated Zakah for previous years arises when the person actually receives at least one-fifth (1/5th) part of the amount of the Nisab.
-                `,
-                urdu: `
-                    <b>ملکیت اور فرضیت:</b> پراویڈنٹ فنڈ ملازم کی ملکیت میں رہتا ہے۔ لہٰذا، اگر ملازم صاحبِ نصاب (مال کی کم از کم حد) ہو تو اس رقم پر ہر سال زکوٰۃ فرض ہو جاتی ہے۔
-                    <br/><br/>
-                    <b>آغاز کا وقت:</b> فنڈ پر زکوٰۃ کی ادائیگی کی ذمہ داری اُس وقت سے شروع ہوتی ہے جب سے اکاؤنٹ میں پہلی بار رقم جمع ہونا شروع ہوئی ہو۔
-                    <br/><br/>
-                    <b>ادائیگی کا وقت:</b> اگرچہ زکوٰۃ تکنیکی طور پر ہر سال واجب ہوتی ہے، لیکن اسے اکثر ایک قرض سمجھا جاتا ہے جو ملازم کو بعد میں ملے گا۔ ایسے معاملات میں، پچھلے سالوں کی حساب شدہ زکوٰۃ ادا کرنے کی ذمہ داری اُس وقت عائد ہوتی ہے جب شخص نصاب کی رقم کا کم از کم پانچواں حصہ (1/5) درحقیقت وصول کر لے۔
-                `,
-                class: 'important'
-            },
-            {
-                title_en: "9. Zakat Recipients and Exclusions", 
-                title_ur: "9. زکوٰۃ کے مستحقین اور مستثنیٰ افراد", 
-                content: `
-                    Zakat must be paid to specific, designated recipients (Mustahiqqeen) defined in the Qur'an, such as the poor (Faqeer), the needy (Miskeen), and those overburdened by debt (Ghaarim).
-                    <br/><br/>
-                    <b>Exclusions:</b> Zakat cannot be given to your direct ascendants (Parents, Grandparents), direct descendants (Children, Grandchildren), your spouse (Husband/Wife), or the descendants of the Prophet (Banu Hashim/Syeds).
-                `,
-                urdu: `
-                    زکوٰۃ قرآن میں بیان کردہ مخصوص مستحقین (جیسے فقیر، مسکین اور مقروض) کو ادا کی جانی چاہیے۔
-                    <br/><br/>
-                    <b>استثنیٰ:</b> زکوٰۃ اپنے براہِ راست اصول (والدین، دادا/دادي)، فروع (اولاد، پوتے/پوتیاں)، اپنے شریک حیات (شوہر/بیوی)، أو النبي اکرم ﷺ کے خاندان (بنو ہاشم/سادات) کو نہیں دی جا سکتی۔
-                `,
-                class: 'eligibility'
-            },
-            {
-                title_en: "10. Mandatory Payment Requirements", 
-                title_ur: "10. ادائیگی کے لازمی شرائط", 
-                content: `
-                    The Zakat payment is only valid if two requirements are met:<br/>
-                    <ul class="list-disc ml-5 mt-2 space-y-1">
-                        <li><b>Intention (Niyyat):</b> The mandatory intention to pay Zakat must be present at the time of giving.</li>
-                        <li><b>Transfer of Ownership (Tamleek):</b> The wealth must be physically transferred to a legitimate recipient (Mustahiq), granting them full ownership.</li>
-                    </ul>
-                `,
-                urdu: `
-                    زکوٰۃ کی ادائیگی صرف دو شرائط پوری ہونے پر ہی درست ہو گی:<br/>
-                    <ul dir="rtl" class="list-disc mr-5 mt-2 space-y-1 text-right" style="list-style-position: inside;">
-                        <li><b>نیت (Niyyat):</b> زکوٰۃ دینے کے وقت زکوٰۃ کی ادائیگی کی لازمی نیت موجود ہو۔</li>
-                        <li><b>ملکیت سپرد کرنا (Tamleek):</b> مال کو کسی مستحق کو جسمانی طور پر سپرد کیا جائے، تاکہ وہ اس کا مکمل مالک بن جائے۔</li>
-                    </ul>
-                `,
-                class: 'important'
-            },
-        ];
+        <div class="field-card">
+            <label>Security Deposit (Refundable)</label>
+            <div class="urdu-subtitle">قابلِ واپسی سیکیورٹی ڈپازٹ</div>
+             <div class="urdu-body" style="font-size:1.0rem; color:#6B7280; text-align:center; margin-bottom:5px;">(e.g., Rental or Utility Deposit that will be returned)</div>
+            <input type="text" class="r-in num-fmt" id="v_sec" inputmode="decimal" placeholder="Enter Amount">
+        </div>
 
-        // --- UI Rendering Functions ---
+        <div class="btn-row">
+            <button class="btn btn-prev" onclick="nav(2)"><span class="en">&larr; Back</span><span class="ur">واپس</span></button>
+            <button class="btn btn-primary" onclick="nav(4)"><span class="en">Next: Liabilities &rarr;</span><span class="ur">اگلا: واجبات</span></button>
+        </div>
+    </div>
 
-        function createInputItem(dataItem, isUrdu) {
-            const container = document.createElement('div');
-            // Core class for stacking on mobile
-            container.className = 'input-item-row text-sm'; 
-            
-            // Add desktop-only reversal for RTL
-            if (isUrdu) {
-                container.classList.add('rtl-row-desktop');
-            }
-
-            const label = document.createElement('label');
-            // V5: Ensure nastaliq-font is applied to the label for aggressive wrapping CSS
-            label.className = `text-gray-700 font-medium ${isUrdu ? 'nastaliq-font text-right' : ''}`;
-            label.htmlFor = dataItem.id;
-            label.innerText = isUrdu ? dataItem.label_ur : dataItem.label_en;
-            
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.id = dataItem.id;
-            input.inputMode = 'numeric';
-            input.placeholder = '0';
-            input.className = 'text-right text-sm'; 
-            
-            input.value = dataItem.value === 0 ? '' : formatCurrency(dataItem.value); 
-            
-            input.addEventListener('input', formatAndCleanInput);
-
-            // Append order remains Label then Input, the CSS handles the row reversal for RTL on wide screens
-            container.appendChild(label);
-            container.appendChild(input);
-
-            return container;
-        }
+    <!-- STEP 4 -->
+    <div id="step-4" class="hidden">
+        <div class="step-title">Step 4: Liabilities (Deductions)</div>
+        <div class="urdu-label-main">واجب الاداء رقم (مِنہا کیے جانے والے واجبات)</div>
         
-        function renderInputs() {
-            const isUrdu = currentLang === 'ur';
+        <div class="field-card"><label>Loans & Personal Debts Payable</label><span class="urdu-label-main">واجب الاداء ذاتی قرضے</span><input type="text" class="l-in num-fmt" id="l_per" inputmode="decimal" placeholder="Enter Amount"></div>
+        <div class="field-card">
+            <label>Due Bills for Utilities (on Zakat Year End Date)</label>
+            <span class="urdu-label-main">زکوٰۃ کے سال کے آخری دن تک کے بقایا بجلی گیس اور دیگر یوٹیلیٹی کے بِلز</span>
+            <input type="text" class="l-in num-fmt" id="l_utility" inputmode="decimal" placeholder="Enter Amount">
+        </div>
+        <div class="field-card"><label>Trade and Business Payables:</label><span class="urdu-label-main">واجبُ الاداء تجارتی قرضہ اور اُدھار</span><input type="text" class="l-in num-fmt" id="l_trade" inputmode="decimal" placeholder="Enter Amount"></div>
+        <div class="field-card"><label>Unpaid Salaries Due</label><span class="urdu-label-main">ملازمین کی واجب الاداء تنخواہیں</span><input type="text" class="l-in num-fmt" id="l_salary" inputmode="decimal" placeholder="Enter Amount"></div>
+        <div class="field-card"><label>All Remaining Installments (for House, Car etc.)</label><span class="urdu-label-main">گھر مکان دکان وغیرہ کی بقایا اَقساط</span><input type="text" class="l-in num-fmt" id="l_installments" inputmode="decimal" placeholder="Enter Amount"></div>
+        <div class="field-card">
+            <label>Remaining BC Installments IF Full BC is Received</label><span class="urdu-label-main">بیسی کی بقایا اقساط (اگر کمیٹی مل چکی ہے)</span>
+            <div class="advice-box-single-line" style="text-align:center; color:#991B1B; background:#FEF2F2; border-color:#FCA5A5;">نوٹ: یہ رقم صرف اس صورت میں درج کریں اگر آپ کمیٹی وصول کر چکے ہوں۔</div>
+            <input type="text" class="l-in num-fmt" id="l_bc" inputmode="decimal" placeholder="Enter Amount">
+        </div>
+        <div class="field-card"><label>Unpaid Past Zakat</label><span class="urdu-label-main">گُزشتہ سالوں کی بقایا زکوٰۃ</span><input type="text" class="l-in num-fmt" id="l_past" inputmode="decimal" placeholder="Enter Amount"></div>
+        <div class="field-card">
+            <label>TAXES & GOVT. DUES PAYABLE</label>
+            <span class="urdu-label-main">واجب الاداء ٹیکس اور سرکاری واجبات</span>
+            <input type="text" class="l-in num-fmt" id="l_tax" inputmode="decimal" placeholder="Enter Amount">
+        </div>
 
-            const updateDataFromInputs = (dataArray) => {
-                dataArray.forEach(item => {
-                    const inputElement = document.getElementById(item.id);
-                    if (inputElement) {
-                        item.value = cleanInput(item.id);
-                    }
-                });
-            };
+        <div class="btn-row">
+            <button class="btn btn-prev" onclick="nav(3)"><span class="en">&larr; Back</span><span class="ur">واپس</span></button>
+            <button class="btn btn-primary" id="calcBtn"><span class="en">Calculate Result &rarr;</span><span class="ur">حساب لگائیں</span></button>
+        </div>
+    </div>
 
-            updateDataFromInputs(assetsData);
-            updateDataFromInputs(receivablesData);
-            updateDataFromInputs(liabilitiesData);
+    <!-- STEP 5 -->
+    <div id="step-5" class="hidden">
+        <div class="step-title">Zakaat Calculations Report</div>
+        
+        <div style="background:white; border-radius:12px; padding:15px; box-shadow:0 1px 3px rgba(0,0,0,0.05); margin-bottom:15px;">
+            <div id="res_header" style="text-align:center; margin-bottom:12px; border-bottom:1px solid #EEE; padding-bottom:10px;">
+                <div id="rpt_name" style="font-weight:900; color:var(--primary); font-size:1.3rem; font-family:var(--font-english);"></div>
+                <div style="font-size:0.9rem; color:#4B5563; margin-top:5px; font-family:var(--font-english);">Year Ending: <span id="rpt_date"></span></div>
+            </div>
 
-            document.getElementById('assets-list').innerHTML = '';
-            assetsData.forEach(item => {
-                document.getElementById('assets-list').appendChild(createInputItem(item, isUrdu));
-            });
+            <div id="elig_status_box" style="text-align:center; margin-bottom:15px; padding:10px; border-radius:6px; font-weight:bold; font-size:1.05rem; font-family:var(--font-english);"></div>
 
-            document.getElementById('receivables-list').innerHTML = '';
-            receivablesData.forEach(item => {
-                document.getElementById('receivables-list').appendChild(createInputItem(item, isUrdu));
-            });
+            <table class="statement-table">
+                <thead>
+                    <tr><th colspan="2">Details <span style="float:right; font-weight:normal;" class="urdu-label-main">تفصیلات</span></th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="row-item-container">
+                                <span class="row-header">A : Core Assets</span>
+                                <span class="row-urdu">الف: قابلِ زکوٰۃ بنیادی اثاثے</span>
+                            </div>
+                        </td>
+                        <td id="r_gross" class="row-val">0</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="row-item-container">
+                                <span class="row-header">B : Receivables</span>
+                                <span class="row-urdu">ب: قابلِ وصول رقوم</span>
+                            </div>
+                        </td>
+                        <td id="r_recv" class="row-val">0</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="row-item-container">
+                                <span class="row-header" style="color:var(--danger)">C : Liabilities</span>
+                                <span class="row-urdu">ج: کُل واجبات (مِنہا ہوں گے)</span>
+                            </div>
+                        </td>
+                        <td id="r_liab" class="row-val" style="color:var(--danger)">0</td>
+                    </tr>
+                    <tr style="background:#F0FDF4;">
+                        <td>
+                            <div class="row-item-container">
+                                <span class="row-header">D : Net Wealth (A+B-C)</span>
+                                <span class="row-urdu">کُل قابلِ زکوٰۃ مالیت</span>
+                            </div>
+                        </td>
+                        <td id="r_net" class="row-val">0</td>
+                    </tr>
+                    <tr style="background:#FFF;">
+                        <td style="border-bottom:none;"><div style="font-size:0.9rem; color:var(--text-muted); font-family:var(--font-english);">Nisab Value (Threshold)</div></td>
+                        <td id="r_nisab" style="text-align:right; font-size:1rem; color:var(--text-muted); border-bottom:none; font-family:var(--font-english);">0</td>
+                    </tr>
+                    <tr class="row-final">
+                        <td>
+                            <div class="row-item-container">
+                                <span class="row-header" style="color:#fff;">E : Total Zakat (2.5%)</span>
+                                <span class="row-urdu" style="color:#fff;">کُل واجب الاداء زکوٰۃ</span>
+                            </div>
+                        </td>
+                        <td id="r_total" class="row-val">0</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            document.getElementById('liabilities-list').innerHTML = '';
-            liabilitiesData.forEach(item => {
-                document.getElementById('liabilities-list').appendChild(createInputItem(item, isUrdu));
-            });
-            
-            // Handle Silver Price row class
-            const silverPriceRow = document.getElementById('silver-price-row');
-            silverPriceRow.classList.toggle('rtl-row-desktop', isUrdu);
-            
-            document.getElementById('silver-price').addEventListener('input', formatAndCleanInput);
-        }
-
-        function renderRulings() {
-            const isUrdu = currentLang === 'ur';
-            const rulingsContainer = document.getElementById('rulings-content');
-            rulingsContainer.innerHTML = '';
-            
-            const direction = isUrdu ? 'rtl' : 'ltr';
-            rulingsContainer.style.direction = direction;
-
-            rulingsData.forEach(ruling => {
-                const card = document.createElement('div');
-                card.className = `ruling-card p-4 rounded-lg shadow-sm ${ruling.class}`;
+            <div class="breakdown-box" style="background:#F9FAFB; border-radius:8px; padding:15px; border:1px solid #E5E7EB;">
+                <h4 style="margin:0 0 10px 0; font-size:1rem; color:var(--primary); text-transform:uppercase; font-family:var(--font-english);">Breakdown of Payment Schedule</h4>
                 
-                const title = document.createElement('h4');
-                title.className = `font-bold mb-1 ${isUrdu ? 'nastaliq-font text-xl text-right' : 'text-lg'}`;
-                title.innerText = isUrdu ? ruling.title_ur : ruling.title_en;
-
-                const content = document.createElement('div');
-                content.className = `text-sm ${isUrdu ? 'nastaliq-font text-right' : 'text-gray-700'}`;
-                content.innerHTML = isUrdu ? ruling.urdu : ruling.content;
-
-                card.appendChild(title);
-                card.appendChild(content);
-                rulingsContainer.appendChild(card);
-            });
-        }
-
-        function updateUIForLanguage() {
-            const strings = langStrings[currentLang];
-            const isUrdu = currentLang === 'ur';
-
-            // Set main text direction
-            document.getElementById('main-content').classList.toggle('nastaliq-font', isUrdu);
-            document.getElementById('main-content').style.direction = isUrdu ? 'rtl' : 'ltr';
+                <div class="breakdown-row" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                    <div>
+                        <span class="breakdown-label" style="font-family:var(--font-english); color:#374151;">E(i) Pay Immediately</span>
+                        <span class="urdu-body" style="display:block; font-size:1rem; color:#6B7280; text-align:left;">فوری واجب الاداء رقم</span>
+                    </div>
+                    <span class="breakdown-val" style="color:#065F46; font-weight:700; font-family:var(--font-english);" id="p_now">0</span>
+                </div>
+                
+                <div style="height:1px; background:#D1D5DB; margin:10px 0;"></div>
+                
+                <div class="breakdown-row" style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <span class="breakdown-label" style="font-family:var(--font-english); color:#374151;">E(ii) Delayed (Optional)</span>
+                        <span class="urdu-body" style="display:block; font-size:1rem; color:#6B7280; text-align:left;">مخصوص وقت تک تاخیر کا اختیار</span>
+                    </div>
+                    <span class="breakdown-val" style="color:#1E40AF; font-weight:700; font-family:var(--font-english);" id="p_def">0</span>
+                </div>
+            </div>
             
-            // Get references to static labels
-            const staticLabels = [
-                { id: 'label-zakat-date', isNastaliq: isUrdu, isCompact: false },
-                { id: 'nisab-criteria-text', isNastaliq: isUrdu, isCompact: false },
-                { id: 'label-silver-price', isNastaliq: isUrdu, isCompact: false },
-                { id: 'label-calculated-nisab', isNastaliq: isUrdu, isCompact: false },
-                { id: 'total-assets-label', isNastaliq: isUrdu, isCompact: false },
-                { id: 'total-receivables-label', isNastaliq: isUrdu, isCompact: false },
-                { id: 'total-liabilities-label', isNastaliq: isUrdu, isCompact: false },
-                { id: 'total-zakat-able-label', isNastaliq: isUrdu, isCompact: true },
-                { id: 'net-wealth-label', isNastaliq: isUrdu, isCompact: true },
-                { id: 'final-zakat-label', isNastaliq: isUrdu, isCompact: false },
-                { id: 'nisab-status-text', isNastaliq: isUrdu, isCompact: false },
-            ];
+            <div class="advice-box urdu-body" style="margin-top:20px; text-align:center; background:#F0F9FF; padding:10px; border-radius:6px; color:#1E40AF;">
+                نوٹ: مستند اہل علم کے مطابق واجب الوصول رقوم کی زکوٰۃ اگرچہ وصولی تک مؤخر کرنے کے مسائل موجود ہیں لیکن سال بہ سال ادا کر دینا بہتر ہے تاکہ حساب کتاب میں پیچیدگی نہ رہے۔
+            </div>
+        </div>
 
-            // Set all labels text and apply font class
-            staticLabels.forEach(item => {
-                const element = document.getElementById(item.id);
-                if (element) {
-                    element.classList.toggle('nastaliq-font', item.isNastaliq);
-                    // Apply special compact class for summary items in Urdu
-                    if (item.isCompact && item.isNastaliq) {
-                        element.classList.add('nastaliq-compact');
-                    } else {
-                        element.classList.remove('nastaliq-compact');
-                    }
-                }
-            });
+        <div class="btn-row">
+            <button class="btn btn-prev" onclick="nav(4)"><span class="en">Edit Data</span><span class="ur">تبدیل کریں</span></button>
+            <button class="btn btn-primary" onclick="saveToHistory()"><span class="en">Save Record</span><span class="ur">محفوظ کریں</span></button>
+        </div>
+        <button class="btn btn-gold" onclick="shareWhatsApp()"><span class="en">Share Detailed Report</span><span class="ur">واٹس ایپ پر شیئر کریں</span></button>
+    </div>
+</div>
 
+<!-- History Modal -->
+<div id="historyModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeHistory()">&times;</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid #EEE; padding-bottom:10px;">
+            <span class="urdu-label-main" style="font-size:1.2rem; margin:0;">گزشتہ ریکارڈ (History)</span>
+            <button type="button" class="btn-clear" onclick="clearAllHistory()">Clear All</button>
+        </div>
+        <div id="history_list"></div>
+    </div>
+</div>
 
-            // Set text content
-            document.getElementById('main-title').innerText = strings.title;
-            document.getElementById('main-subtitle').innerText = strings.subtitle;
-            document.getElementById('lang-toggle-btn').innerText = strings.toggle;
-            document.getElementById('label-zakat-date').innerText = strings.zakatDate;
-            document.getElementById('nisab-criteria-text').innerText = strings.nisabCriteria;
-            document.getElementById('label-silver-price').innerText = strings.silverPriceLabel;
-            document.getElementById('label-calculated-nisab').innerText = strings.calculatedNisab;
-            document.getElementById('part1-title').innerText = strings.part1Title;
-            document.getElementById('total-assets-label').innerText = strings.totalAssets;
-            document.getElementById('part2-title').innerText = strings.part2Title;
-            document.getElementById('total-receivables-label').innerText = strings.totalReceivables;
-            document.getElementById('part3-title').innerText = strings.part3Title;
-            document.getElementById('total-liabilities-label').innerText = strings.totalLiabilities;
-            document.getElementById('part4-title').innerText = strings.part4Title;
-            document.getElementById('total-zakat-able-label').innerText = strings.totalZakatAble;
-            document.getElementById('net-wealth-label').innerText = strings.netWealth;
-            document.getElementById('final-zakat-label').innerText = strings.finalZakat;
-            document.getElementById('share-button-text').innerText = strings.shareText;
-            document.getElementById('pwa-info-button-text').innerText = strings.pwaInfoText;
-            document.getElementById('rulings-header').innerText = strings.rulingsHeader;
-            document.getElementById('footer-text').innerText = strings.footer;
-            document.getElementById('developed-by-text').innerText = strings.developedBy;
-            
-            // Update Nisab card direction
-            document.getElementById('nisab-card').style.direction = isUrdu ? 'rtl' : 'ltr';
+<div id="toast"></div>
 
+<footer>
+    <div style="margin-bottom: 8px;">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
+    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong></div>
+</footer>
 
-            // Re-render dynamic content
-            renderInputs();
-            renderRulings();
-            calculateZakat(); // Recalculate to update status text
+<script>
+    let hijriOffset = 0, nisabLimit = 0, lastResult = null, currentCurr = "Rs.";
+    let deferredPrompt;
 
-            // Update placeholder/visibility for date input
-            document.getElementById('lunar-date').placeholder = isUrdu ? 'مثلاً: یکم رمضان ١٤٤٧ھ' : 'e.g., 1st of Ramadan 1447 AH';
-            document.getElementById('silver-price').classList.toggle('nastaliq-font', isUrdu);
-            document.getElementById('lunar-date').classList.toggle('nastaliq-font', isUrdu);
+    // Toggle Logic with Close Icon
+    function toggleReadFirst(btn) {
+        const c = document.getElementById('readFirstContent');
+        const icon = btn.querySelector('.toggle-icon');
+        if(c.style.display === "block") { 
+            c.style.display = "none"; 
+            btn.classList.remove('active'); 
+            icon.textContent = "▼";
+        } else { 
+            c.style.display = "block"; 
+            btn.classList.add('active'); 
+            icon.textContent = "✕";
         }
-
-        function switchLanguage() {
-            currentLang = currentLang === 'en' ? 'ur' : 'en';
-            updateUIForLanguage();
+    }
+    
+    // Generic Toggle for Sub-Accordions
+    function toggleSubAcc(h) {
+        const b = h.nextElementSibling;
+        if(b.style.display === "block") { 
+            b.style.display = "none"; 
+            h.classList.remove('active'); 
+        } else { 
+            b.style.display = "block"; 
+            h.classList.add('active'); 
         }
+    }
 
-
-        // --- Modal/Sharing Functions (Using custom modal instead of alert/confirm) ---
-
-        function showModal(title, content) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-content').innerHTML = content;
-            document.getElementById('message-overlay').classList.remove('hidden');
-            document.getElementById('message-overlay').classList.add('flex');
+    // Generic Toggle for Main Accordions
+    function toggleAccordion(id, h) {
+        const c = document.getElementById(id);
+        if(c.style.display === "block") { 
+            c.style.display = "none"; 
+            h.classList.remove('active'); 
+            // Reset icon
+            h.classList.remove('active');
+        } else { 
+            c.style.display = "block"; 
+            h.classList.add('active'); 
         }
+    }
 
-        function hideModal() {
-            document.getElementById('message-overlay').classList.add('hidden');
-            document.getElementById('message-overlay').classList.remove('flex');
-        }
+    // PWA Service Worker Registration & Install Logic
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker: Registered (Scope: ' + reg.scope + ')'))
+                .catch(err => console.log('Service Worker: Error: ' + err));
+        });
+    }
 
-        function showPwaInfo() {
-            const strings = langStrings[currentLang];
-            showModal(strings.modalTitle, strings.modalContent);
-        }
-
-        function shareResults() {
-            const netWealth = document.getElementById('net-wealth').innerText;
-            const zakatPayable = document.getElementById('zakat-payable').innerText;
-            const totalAssets = document.getElementById('total-assets').innerText;
-            const totalReceivables = document.getElementById('total-receivables').innerText;
-            const totalLiabilities = document.getElementById('total-liabilities').innerText;
-            const nisabStatus = document.getElementById('nisab-status-text').innerText;
-            const strings = langStrings[currentLang];
-            const isUrdu = currentLang === 'ur';
-            const date = new Date().toLocaleDateString();
-            
-            // Get Zakat Year End Date Value
-            const zakatDate = document.getElementById('lunar-date').value || (isUrdu ? "درج نہیں کی گئی" : "Not Specified");
-
-            // Constructing a formatted, emoji-enriched summary string
-            let summary = "";
-
-            if (isUrdu) {
-                summary = `🌙 *زکوٰۃ کیلکولیٹر - خلاصہ* 🌙\n` +
-                          `📅 حساب کی تاریخ: ${date}\n` +
-                          `🗓️ *زکوٰۃ کا سال مکمل:* ${zakatDate}\n` +
-                          `-----------------------------\n\n` +
-                          `💰 *کُل اثاثے:* ${totalAssets}\n` +
-                          `➕ *واجب الوصول:* ${totalReceivables}\n` +
-                          `📉 *کُل واجبات:* ${totalLiabilities}\n` +
-                          `-----------------------------\n` +
-                          `📊 *خالص مال:* ${netWealth}\n` +
-                          `(اثاثے + واجب الوصول - واجبات)\n\n` +
-                          `✨ *حیثیت:* ${nisabStatus}\n\n` +
-                          `🕋 *واجب الادا زکوٰۃ:* ${zakatPayable}\n\n` +
-                          `-----------------------------\n` +
-                          `⚠️ *وضاحت:* یہ نتائج آپ کے درج کردہ ڈیٹا پر مبنی ہیں۔ کسی بھی پیچیدہ صورتحال میں مستند مفتی سے رجوع کریں۔\n\n` +
-                          `📱 *زکوٰۃ کیلکولیٹر ایپ* - فقہ حنفی\n` +
-                          `تیار کردہ: دارالافتاء النور / ابو اللیث محمد طاہر قادری`;
-            } else {
-                summary = `🌙 *Zakat Calculator Summary* 🌙\n` +
-                          `📅 Calculation Date: ${date}\n` +
-                          `🗓️ *Zakat Year End:* ${zakatDate}\n` +
-                          `-----------------------------\n\n` +
-                          `💰 *Total Assets:* ${totalAssets}\n` +
-                          `➕ *Receivables:* ${totalReceivables}\n` +
-                          `📉 *Liabilities:* ${totalLiabilities}\n` +
-                          `-----------------------------\n` +
-                          `📊 *Net Wealth:* ${netWealth}\n` +
-                          `(Assets + Receivables - Liabilities)\n\n` +
-                          `✨ *Status:* ${nisabStatus}\n\n` +
-                          `🕋 *FINAL ZAKAT PAYABLE:* ${zakatPayable}\n\n` +
-                          `-----------------------------\n` +
-                          `⚠️ *Disclaimer:* Results are based on the data entered. Consult an authentic Mufti for detailed information in case of any confusion.\n\n` +
-                          `📱 *Calculated using Zakat Calculator App*\n` +
-                          `Developed by: Abul Laith Muhammad Tahir Qadri`;
-            }
-
-            // Use execCommand('copy') as navigator.clipboard.writeText may not work in iframes
-            const tempInput = document.createElement('textarea');
-            tempInput.value = summary;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            
-            let success = false;
-            try {
-                success = document.execCommand('copy');
-            } catch (err) {
-                console.error('Copy failed:', err);
-            }
-            document.body.removeChild(tempInput);
-
-            if (success) {
-                 showModal(
-                    currentLang === 'en' ? "Summary Copied!" : "خلاصہ کاپی ہو گیا!",
-                    currentLang === 'en' ? "The Zakat summary has been copied to your clipboard. You can now paste it into any message or note." : "زکوٰۃ کا خلاصہ آپ کے کلپ بورڈ میں کاپی کر لیا گیا ہے۔ اب آپ اسے کسی بھی پیغام أو نوٹ میں پیسٹ کر سکتے ہیں۔"
-                );
-            } else {
-                 showModal(
-                    currentLang === 'en' ? "Copy Failed" : "کاپی میں ناکامی",
-                    currentLang === 'en' ? "Could not automatically copy. Please manually select and copy the text." : "خودکار طریقے سے کاپی نہیں ہو سکا۔ برائے مہرباني متن کو دستی طور پر منتخب کر کے کاپي کریں۔"
-                );
-            }
-        }
-
-
-        // --- Initialization ---
-
-        window.onload = function() {
-            // Set up initial UI
-            updateUIForLanguage();
-        }
-
+    // Listen for install prompt (Android)
+    window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent default browser banner
+        e.preventDefault();
         
-    </script>
+        // SAFETY CHECK: If running as a standalone app (PWA/APK), do not show button
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            return;
+        }
+
+        deferredPrompt = e;
+        // Show our install button
+        document.getElementById('installBtn').style.display = 'block';
+    });
+
+    async function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            document.getElementById('installBtn').style.display = 'none';
+        } else {
+            // Manual Instructions for iOS or Desktop
+            alert("To install this app:\n\niOS: Tap 'Share' icon below ➡ 'Add to Home Screen'.\n\nAndroid/Desktop: Tap the menu (⋮) ➡ 'Install App' or 'Add to Home Screen'.");
+        }
+    }
+
+    // Logic
+    function formatNumber(n) { return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
+    function parseNumber(s) { return parseFloat(s.replace(/,/g, '')) || 0; }
+    function updateCurrency() { currentCurr = document.getElementById('currency_pref').value; calcNisab(); }
+    
+    document.querySelectorAll('.num-fmt').forEach(input => {
+        input.addEventListener('input', function() {
+            let original = this.value;
+            // Remove non-numeric/dot
+            let valStr = original.replace(/[^0-9.]/g, '');
+            
+            // Handle multiple dots
+            const parts = valStr.split('.');
+            if (parts.length > 2) {
+                 valStr = parts[0] + '.' + parts.slice(1).join('');
+            }
+            
+            // If ends with dot, keep it
+            if (valStr.endsWith('.')) {
+                this.value = valStr;
+                return;
+            }
+            
+            // If empty
+            if (valStr === '') {
+                this.value = '';
+                return;
+            }
+
+            // Simple formatting with commas for the integer part
+            const parts2 = valStr.split('.');
+            let intPart = parts2[0];
+            let decPart = parts2.length > 1 ? '.' + parts2[1] : '';
+            
+            // Add commas to intPart
+            intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            this.value = intPart + decPart;
+        });
+        
+        // Ensure precision on blur
+        input.addEventListener('blur', function() {
+             let val = parseFloat(this.value.replace(/,/g, ''));
+             if(!isNaN(val)) this.value = val.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        });
+    });
+
+    function getHijri(dateStr, offset) {
+        if(!dateStr) return "Pick a Date";
+        let date = new Date(dateStr); date.setDate(date.getDate() + offset);
+        let jd = Math.floor(date.getTime() / 86400000) + 2440588, l = jd - 1948440 + 10632, n = Math.floor((l - 1) / 10631);
+        l = l - 10631 * n + 354;
+        let j = (Math.floor((10985-l)/5316))*(Math.floor(50*l/17719))+(Math.floor(l/5670))*(Math.floor(43*l/15238));
+        l = l - (Math.floor((30-j)/15))*(Math.floor(17719*j/50))-(Math.floor(j/16))*(Math.floor(15238*j/43))+29;
+        let m = Math.floor(24*l/709), d = l - Math.floor(709*m/24), y = 30*n+j-30;
+        const months = ["Muharram", "Safar", "Rabi-I", "Rabi-II", "Jumada-I", "Jumada-II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu-al-Qi'dah", "Dhu-al-Hijjah"];
+        return `${d} ${months[m - 1]} ${y} AH`;
+    }
+    function updateHijri() { const g = document.getElementById('g_date').value; if(g) document.getElementById('hijriOutput').innerText = getHijri(g, hijriOffset); }
+    function adjH(v) { hijriOffset += v; updateHijri(); }
+
+    function calcNisab() {
+        const rate = parseNumber(document.getElementById('s_rate').value);
+        const unit = document.getElementById('s_unit').value;
+        let pricePerGram = 0;
+        
+        // 1 Tola = 11.664 grams
+        // 1 Troy Ounce = 31.1035 grams
+        
+        if (unit === 'tola') {
+            pricePerGram = rate / 11.664;
+        } else if (unit === '10g') {
+            pricePerGram = rate / 10;
+        } else if (unit === '1g') {
+            pricePerGram = rate;
+        } else if (unit === 'oz') {
+            pricePerGram = rate / 31.1035;
+        }
+        
+        // Total Nisab is 52.5 Tolas.
+        // 52.5 Tolas * 11.664 grams/tola = 612.36 Grams
+        const totalNisabGrams = 612.36;
+        
+        // NO ROUNDING OFF as requested
+        nisabLimit = pricePerGram * totalNisabGrams;
+        document.getElementById('nisabVal').innerText = currentCurr + " " + formatNumber(nisabLimit);
+    }
+
+    function nav(s) {
+        if(s===2 && (!document.getElementById('u_name').value || nisabLimit<=0)) { msg("Please Enter Name and Silver Rate"); return; }
+        for(let i=1; i<=5; i++) {
+            const el = document.getElementById('step-'+i);
+            if(el) el.classList.add('hidden');
+        }
+        document.getElementById('step-'+s)?.classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    function getInputMap() {
+        let m = {};
+        document.querySelectorAll('input, select').forEach(e => m[e.id] = e.value);
+        return m;
+    }
+    function loadInputMap(m) {
+        if(!m) return;
+        for(const [k,v] of Object.entries(m)) {
+            const e = document.getElementById(k);
+            if(e) e.value = v;
+        }
+        updateCurrency(); updateHijri(); calcNisab();
+    }
+
+    function calculate() {
+        let core=0, recv=0, liab=0;
+        document.querySelectorAll('.c-in').forEach(i => core += parseNumber(i.value));
+        document.querySelectorAll('.r-in').forEach(i => recv += parseNumber(i.value));
+        document.querySelectorAll('.l-in').forEach(i => liab += parseNumber(i.value));
+        
+        let net = (core + recv) - liab;
+        let payableTotal = (net >= nisabLimit) ? (net * 0.025) : 0;
+        let netCore = Math.max(0, core - liab);
+        let payNow = (netCore * 0.025);
+        let payDef = Math.max(0, payableTotal - payNow);
+
+        const p = currentCurr.trim() !== "" ? currentCurr + " " : "";
+        document.getElementById('r_total').innerText = p + formatNumber(payableTotal);
+        document.getElementById('p_now').innerText = p + formatNumber(payNow);
+        document.getElementById('p_def').innerText = p + formatNumber(payDef);
+        
+        document.getElementById('r_gross').innerText = p + formatNumber(core);
+        document.getElementById('r_recv').innerText = p + formatNumber(recv);
+        document.getElementById('r_liab').innerText = p + formatNumber(liab);
+        document.getElementById('r_net').innerText = p + formatNumber(net);
+        document.getElementById('r_nisab').innerText = p + formatNumber(nisabLimit);
+        
+        document.getElementById('rpt_name').innerText = document.getElementById('u_name').value;
+        const h = document.getElementById('hijriOutput').innerText;
+        document.getElementById('rpt_date').innerText = new Date(document.getElementById('g_date').value).toLocaleDateString('en-GB') + " | " + h;
+
+        const sb = document.getElementById('elig_status_box');
+        if(net >= nisabLimit) {
+            sb.style.backgroundColor = "#D1FAE5"; sb.style.color = "#065F46"; sb.innerText = "Status: Eligible for Zakat (Sahib-e-Nisab)";
+        } else {
+            sb.style.backgroundColor = "#FEE2E2"; sb.style.color = "#991B1B"; sb.innerText = "Status: Not Eligible for Zakat";
+        }
+
+        lastResult = {
+            id: Date.now(), inputs: getInputMap(), name: document.getElementById('u_name').value,
+            date: document.getElementById('g_date').value, formattedDate: document.getElementById('rpt_date').innerText,
+            hijri: h,
+            total: payableTotal, payNow: payNow, payDef: payDef, net: net, core: core, recv: recv, liab: liab, nisab: nisabLimit, curr: currentCurr
+        };
+        nav(5);
+    }
+
+    // History Logic
+    const STOR_KEY = 'z_history_v30'; 
+    function saveToHistory() {
+        if(!lastResult) return;
+        let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
+        log.unshift(lastResult);
+        localStorage.setItem(STOR_KEY, JSON.stringify(log.slice(0, 15)));
+        loadHistory();
+        msg("Record Saved");
+    }
+    function deleteRecord(id) {
+        let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
+        log = log.filter(i => i.id !== id);
+        localStorage.setItem(STOR_KEY, JSON.stringify(log));
+        loadHistory();
+    }
+    
+    // UPDATED CLEAR HISTORY FUNCTION v33
+    function clearAllHistory() {
+        if(confirm("Are you sure you want to delete all history records?")) {
+            try {
+                // 1. Force clear the key
+                localStorage.setItem(STOR_KEY, '[]');
+                
+                // 2. Immediate UI Update
+                const box = document.getElementById('history_list');
+                if(box) box.innerHTML = '<div style="text-align:center;color:#666; font-family:var(--font-english);">No records.</div>';
+                
+                // 3. Optional: Remove key entirely
+                localStorage.removeItem(STOR_KEY);
+                
+                // 4. Reload logic just in case
+                loadHistory();
+                
+                msg("History Cleared");
+            } catch (e) {
+                console.error("Error clearing history:", e);
+                alert("Error clearing history. Please check browser permissions.");
+            }
+        }
+    }
+    
+    function editRecord(id) {
+        let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
+        const item = log.find(x => x.id === id);
+        if(item) { loadInputMap(item.inputs); closeHistory(); nav(1); msg("Loaded for Editing"); }
+    }
+    function openHistory() { document.getElementById('historyModal').style.display = 'flex'; loadHistory(); }
+    function closeHistory() { document.getElementById('historyModal').style.display = 'none'; }
+    
+    function loadHistory() {
+        let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
+        const box = document.getElementById('history_list');
+        if(log.length === 0) { box.innerHTML = '<div style="text-align:center;color:#666; font-family:var(--font-english);">No records.</div>'; return; }
+        box.innerHTML = log.map(i => {
+            const p = i.curr.trim();
+            const d = i.formattedDate || i.date;
+            
+            // Safe fallbacks for older history format
+            const core = i.core || 0;
+            const recv = i.recv || 0;
+            const liab = i.liab || 0;
+            
+            return `
+            <div class="history-card">
+                <div class="hist-header">
+                    <div class="hist-name">${i.name}</div>
+                    <div class="hist-date">${d}</div>
+                </div>
+                
+                <div class="hist-grid">
+                    <div class="hist-item">
+                        <span class="hist-lbl">A: Assets</span>
+                        <span class="hist-val" style="color:#064E3B">${formatNumber(core)}</span>
+                    </div>
+                    <div class="hist-item">
+                        <span class="hist-lbl">B: Receivables</span>
+                        <span class="hist-val" style="color:#064E3B">${formatNumber(recv)}</span>
+                    </div>
+                    <div class="hist-item">
+                        <span class="hist-lbl">C: Liabilities</span>
+                        <span class="hist-val" style="color:#991B1B">-${formatNumber(liab)}</span>
+                    </div>
+                    <div class="hist-item">
+                        <span class="hist-lbl">D: Net Wealth</span>
+                        <span class="hist-val" style="color:#1F2937">${formatNumber(i.net)}</span>
+                    </div>
+                </div>
+                
+                <div class="hist-total-box">
+                    <span style="font-size:0.8rem; text-transform:uppercase; color:#047857; font-weight:700;">Total Zakat (E)</span>
+                    <div style="font-size:1.2rem; font-weight:900; color:#064E3B;">${p}${formatNumber(i.total)}</div>
+                </div>
+
+                <div class="hist-actions-row">
+                    <button class="h-btn h-btn-edit" onclick="editRecord(${i.id})">✎ Edit</button>
+                    <button class="h-btn h-btn-share" onclick="shareHistoryItem(${i.id})">➦ Share</button>
+                    <button class="h-btn h-btn-del" onclick="deleteRecord(${i.id})">✕ Delete</button>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    async function shareHistoryItem(id) {
+        let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
+        const item = log.find(x => x.id === id);
+        if(item) generateWhatsAppText(item);
+    }
+    async function shareWhatsApp() { if(lastResult) generateWhatsAppText(lastResult); }
+
+    async function generateWhatsAppText(i) {
+        const p = i.curr.trim() !== "" ? i.curr + " " : "";
+        const isEligible = i.net >= i.nisab ? "Eligible for Zakat" : "Not Eligible for Zakat";
+        const d = i.formattedDate || i.date;
+        const core = i.core || 0; 
+        const recv = i.recv || 0;
+        const liab = i.liab || 0;
+
+        let text = `✨ *Zakat Calculation Report* ✨\n` +
+            `_Prepared using Zakat Calculator App_\n\n` +
+            `👤 *Profile:* ${i.name}\n` +
+            `📅 *Date:* ${d}\n` +
+            `⚖️ *Nisab Value:* ${p}${formatNumber(i.nisab)}\n` +
+            `_Status: ${isEligible}_\n\n` +
+            `📊 *Financial Summary:*\n` +
+            `A: Core Assets = ${p}${formatNumber(core)}\n` +
+            `B: Receivables = ${p}${formatNumber(recv)}\n` +
+            `C: Liabilities = -${p}${formatNumber(liab)}\n` +
+            `----------------------------------\n` +
+            `💵 *D: Net Zakatable Wealth:* ${p}${formatNumber(i.net)}\n\n` +
+            `🕌 *E: TOTAL ZAKAT PAYABLE:* \n` +
+            `*${p}${formatNumber(i.total)}* ✅\n\n` +
+            `🔗 *Breakdown of Payment Schedule*\n` +
+            `Out of (E) Total Zakat Payable:\n` +
+            `E(i) Amount Payable Immediately = ${p}${formatNumber(i.payNow)}\n` +
+            `E(ii) Amount that can be delayed till specific time = ${p}${formatNumber(i.payDef)}\n\n` +
+            `📝 *نوٹ:* \n` +
+            `مستند اہل علم کے مطابق واجب الوصول رقوم کی زکوٰۃ اگرچہ وصولی تک مؤخر کرنے کے مسائل موجود ہیں لیکن سال بہ سال ادا کر دینا بہتر ہے تاکہ حساب کتاب میں پیچیدگی نہ رہے۔\n\n` +
+            `_Presented by Darul Ifta An Noor_\n` +
+            `_Jamiat e Ishaat e Ahlesunnat, Pakistan_`;
+
+        if (navigator.share) {
+            try { await navigator.share({ title: 'Zakat Report', text: text }); return; } catch (e) {}
+        }
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+    }
+
+    function msg(m) {
+        const t = document.getElementById("toast");
+        t.innerText = m; t.className = "show";
+        setTimeout(() => t.className = "", 3000);
+    }
+
+    window.onload = () => {
+        document.getElementById('g_date').valueAsDate = new Date();
+        updateCurrency();
+        loadHistory();
+        document.getElementById('calcBtn').onclick = calculate;
+        updateHijri();
+    };
+    
+    window.onclick = function(event) { if (event.target == document.getElementById('historyModal')) closeHistory(); }
+</script>
+
 </body>
 </html>
-
-

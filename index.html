@@ -11,9 +11,10 @@
     <meta name="application-name" content="Zakat Calculator">
     <title>Zakat Calculator</title>
     
-    <!-- EMBEDDED MANIFEST (Updated for Specific Icons) -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"Zakat Calculator","short_name":"Zakat Calculator","start_url":".","display":"standalone","background_color":"#F9FAFB","theme_color":"#064E3B","orientation":"portrait","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icon-512.png","sizes":"512x512","type":"image/png"}]}'>
-    <link rel="apple-touch-icon" href="icon.png">
+    <!-- PWA MANIFEST LINK (Restored to File) -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
     
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -677,145 +678,6 @@
             </div>
         </div>
         
-        <div class="btn-row">
-            <button class="btn btn-prev" onclick="nav(1)"><span class="en">&larr; Back</span><span class="ur">واپس</span></button>
-            <button class="btn btn-primary" onclick="nav(3)"><span class="en">Next: Receivables &rarr;</span><span class="ur">اگلا: واجب الوصول رقوم</span></button>
-        </div>
-    </div>
-
-    <!-- STEP 3 -->
-    <div id="step-3" class="hidden">
-        <div class="top-nav-row">
-            <button class="top-back-btn" onclick="nav(2)">← Back</button>
-        </div>
-        <div class="step-title">Step 3: RECEIVABLES</div>
-        <div class="urdu-label-main">قابلِ وصول رُقوم</div>
-        <div class="urdu-subtitle">
-            اِن رقوم کی زکوٰۃ کی ادائیگی چند اُصولوں کا خیال کرتے ہوئے  وصولی تک مُؤخَر کی جا سکتی ہے۔
-        </div>
-
-        <div class="accordion-header" onclick="toggleAccordion('receivableTypes', this)" style="margin-bottom:15px; margin-top:10px;">مختلف قسم کے دَین (قابلِ وصول رُقوم)</div>
-        <div class="accordion-content" id="receivableTypes">
-             <p>ہماری جو رقم کسی کے ذمے ہو اسے’’ دَین‘‘  کہتے ہیں۔</p>
-             <p>اس کی 3 قسمیں ہیں۔قوی؛ متوَسّط اور ضعیف۔  اور ہر ایک کا حکم الگ الگ ہے  </p>
-        </div>
-
-        <div class="field-card">
-            <label>Trade and Business-Related Receivables and Loans</label>
-            <div class="urdu-subtitle">تجارتی  قرض اور قابلِ وُصول ادھار (دَین قوی)</div>
-            <input type="text" class="r-in num-fmt" id="v_ds" inputmode="decimal" placeholder="Enter Amount in Local Currency">
-            
-            <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۱)دَین قوِی  کیا  ہے؟</div>
-            <div class="sub-acc-body">
-                <p>دَین قَوِی اسے کہتے ہیں جو ہم نے کسی کو قرض دیا ہوا ہو، …یاتجارت کا مال اُدھاربیچا ہو، …یاکوئی زمین یا مکان تجارت کی غرض سے خرید کر کرائے پر دیا اور وہ کرایہ کسی کے ذمے ہو ۔</p>
-                <p><strong>حکم:</strong> اس کی زکوٰۃ ہرسال فرض ہوتی رہے گی لیکن ادا کرنا اس وقت واجب ہو گا جب مقدارِ نصاب کا کم ازکم پانچواں حصہ وصول ہوجائے تو اس پانچویں حصے کی زکوٰۃ دینا ہوگی ، مثلاً 50,000روپے نصاب ہو تو جب اس کا پانچواں حصہ 10,000روپے وصول ہوجائیں تو اس کا چالیسواں حصہ 250روپے بطورِ زکوٰۃ دینا واجب ہوگا۔البتہ آسانی اس میں ہے کہ ہر سال اس کی بھی زکوٰۃ ادا کر دی جائے ۔</p>
-            </div>
-        </div>
-
-        <div class="field-card">
-            <label>Non-Business or Private Receivables</label>
-            <div class="urdu-subtitle">غیر تجارتی    قابلِ وُصول ادھار (دَین متوسط)</div>
-            <div class="urdu-body" style="font-size:1.0rem; color:#6B7280; text-align:center; margin-bottom:5px;">مثلاً:  گھر کا سامان بیچا اور اس کی قیمت لینے والے پر اُدھار ہو۔</div>
-            <input type="text" class="r-in num-fmt" id="v_dm" inputmode="decimal" placeholder="Enter Amount in Local Currency">
-
-            <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۲)دَین مُتَوَسِّط کیا ہے؟ :</div>
-            <div class="sub-acc-body">
-                <p>دَین مُتَوَسِّط اسے کہتے ہیں جو غیرتجارتی مال کا عوض یا بدل ہو جیسے گھر کی کرسی یا چارپائی یا دیگر سامان بیچا اور اس کی قیمت لینے والے پر اُدھار ہو۔</p>
-                <p><strong>حکم:</strong> اس میں بھی زکوٰۃ فرض ہوگی مگر ادائیگی اُس وقت واجب ہوگی جب بقدرِ نصاب پوری رقم آجائے ۔</p>
-            </div>
-        </div>
-
-        <div class="field-card">
-            <label>WEAK RECEIVABLES AGAINST SERVICES<br><em style="font-weight:400; font-size:0.9rem;">(Not Eligible for Zakat)</em></label>
-            <div class="urdu-subtitle">دَینِ ضعیف وہ ہے جو غیرِ مال کا بدل ہو جیسے مہر مؤجّل وغیرہ</div>
-            <input type="text" class="num-fmt" id="v_dw" inputmode="decimal" placeholder="(Not Zakatable yet)" disabled>
-
-            <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۳) دَین ضعیف کیا ہے؟ :</div>
-            <div class="sub-acc-body">
-                <p>وہ ہے جو غیرِ مال کا بدل ہو جیسے مہر مؤجّل اور مکان یا دکان کا کرایہ کہ نفع کا بدلہ ہے مال کا نہیں۔</p>
-                <p><strong>حکم:</strong> اس میں گزشتہ سالوں کی زکوٰۃ فرض نہیں ہے ۔جب قبضہ میں آجائے اور شرائطِ زکوٰۃ پائی جائیں تو سال گزرنے پر زکوٰۃ فرض ہوگی۔(الدرالمختار، کتاب الزکوٰۃ ، باب زکوٰۃالمال ج۳، ص۲۸۱ملخصاً :  بہار ِ شریعت ، حصہ ۵، ص۹۰۶)</p>
-            </div>
-            
-            <div class="sub-acc-header" onclick="toggleSubAcc(this)">قرض کی واپسی کی امید نہ ہوتو؟</div>
-            <div class="sub-acc-body">
-                <p>جس کے ذمے ہمارا دَین(قوی یا ضعیف )ہو اور وہ لاپتہ ہوگیا ، یا اس نے ہمارا مقروض ہونے سے انکار کردیا اور ہمارے پاس گواہ بھی نہیں ، الغرض قرض کی واپسی کی کوئی امید نہ رہی تو اب ہم پر زکوٰۃ دینا واجب نہیں۔</p>
-                <p>پھر اگر خوش قسمتی سے اس نے قرض لوٹادیا تو ایسی صورت میں گزشتہ سالوں کی زکوٰۃ فرض نہیں ہے ۔(الدر المختار وردالمحتار، کتاب الزکوٰۃ، مطلب فی زکوٰۃ ثمن المبیع، ج۳، ص۲۱۸)</p>
-            </div>
-
-             <div class="sub-acc-header" onclick="toggleSubAcc(this)">عورت پر اس کے مہر کی زکوٰۃ:</div>
-            <div class="sub-acc-body">
-                <p>مہر دو قسم کا ہوتا ہے ، مُعَجَّل (یعنی خلوت سے پہلے مہر دینا قرار پایا ہے )اور غیرِ مُعَجَّل(جس کے لئے کوئی میعاد مقرر ہو)، اگر عورت کا مہر معجل نصاب کے بقدر ہو تواس کا کم از کم پانچواں حصہ وصول ہونے پر اس کی زکوٰۃ ادا کرنا واجب ہو گا اور غیر معجل مہر میں عموماًادائیگی کا وقت طے نہیں ہو تا اور اس کا مطالبہ عورت طلاق یا شوہر کی موت سے پہلے نہیں کر سکتی۔ اس پروصول کرنے کے بعد شرائط پوری ہونے کی صورت میں زکوٰۃ فرض ہوگی ۔(ماخوذ از فتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ص۱۶۹)</p>
-            </div>
-        </div>
-
-        <h4 style="color:var(--primary); font-family:var(--font-english); text-align:center; margin-top:20px;">Other Receivables</h4>
-        <div class="urdu-subtitle" style="margin-bottom:15px;">(With Deferred Zakat Payment Option)</div>
-
-        <div class="field-card">
-            <label>Amount in Committee / BC</label>
-            <div class="urdu-subtitle">کمیٹی / بیسی میں جمع  شدہ رقم</div>
-            <div class="advice-box-single-line" style="text-align:center; color:#991B1B; background:#FEF2F2; border-color:#FCA5A5;">
-                نوٹ: اگر ابھی تک آپ کی کمیٹی نہیں کھلی تو یہ رقم درج کریں۔
-            </div>
-            <input type="text" class="r-in num-fmt" id="v_bc" inputmode="decimal" placeholder="Enter Amount in Local Currency">
-        </div>
-
-        <div class="field-card">
-            <label>Provident Fund (Halal Balance on Zakat Date)</label>
-            <div class="urdu-subtitle">پراویڈنٹ فنڈ میں جمع شدہ قابلِ وُصول حلال  رقم</div>
-            <input type="text" class="r-in num-fmt" id="v_pf" inputmode="decimal" placeholder="Enter Amount in Local Currency">
-            
-            <div class="accordion-header" onclick="toggleAccordion('pfNote', this)">پراویڈنٹ فنڈ پر زکوٰۃ کا مسئلہ:</div>
-            <div class="accordion-content" id="pfNote">
-                <p>پراویڈنٹ فنڈ پر زکوٰۃ کے مسائل میں اختلاف ہے، ہم نے احتیاطاً اسے زکوٰۃ میں شامل کیا ہے۔ کئی علماء کے مطابق چونکہ یہ فنڈ مالک کی مِلک ہوتا ہے ، اس لئے اگر ملازم مالکِ نصاب ہے توجب سے یہ رقم جمع ہونا شروع ہوئی اُسی وقت سے اِس رقم کی بھی زکوٰۃ ہر سال فرض ہوتی رہے گی۔ (فتاوی فیض الرسول ، حصّہ اوّل، ص ۴۷۹)لیکن ادائیگی اس وقت واجب ہوگی جب مقدارِ نصاب کا کم از کم پانچواں حصہ وصول ہوجائے ۔(ماخوذ از فتاوٰی فقیہ ملت ج۱، ص۳۲۰)</p>
-                <p>جو اصل رقم ملازم کی تنخواہ سے کاٹی جاتی ہے اور اس کٹوتی والی رقم کے برابر جو رقم ادارے کی طرف سے ملائی جاتی ہے یہ دونوں طرح کی رقم ملازم کی ہی ملکیت ہے اور اس کے لئے حلال ہے۔ لیکن جو سودی اضافہ ہے اس پر زکوٰۃ نہیں کہ زکوٰۃ پاک مال پر ہوتی ہے ۔</p>
-                <p>ہاں زکوٰۃ میں یہ رخصت ہے کہ جب تک وہ رقم مکمل یا کم از کم نصاب کے پانچویں حصے کے برابر وصول نہ ہوجائے اس وقت تک اس کی ادائیگی واجب نہیں ہوگی لیکن جب وصول ہوگی تو گزشتہ تمام سالوں کی زکوٰۃ ادا کرنی ہوگی اس لئے بہتر ہے کہ اگر کوئی شخص ایسا ہے جس پر دیگر اموال کی زکوٰۃ نکالنا فرض ہے تو وہ ہر سال اس رقم کی بھی زکوٰۃ نکالتا رہے جو فنڈ میں جمع ہوتی رہی ہے ،تاکہ بعد میں ایک ساتھ نکالنے کی دشواری نہ ہو۔</p>
-                <p>واضح رہے کہ ادارے کی طرف سے یہ رقم بینک وغیرہ میں رکھواکر اس پر جو نفع دیا جاتا ہے وہ نفع سود ہے کیونکہ بینک میں اس رقم کو رکھوانا قرض ہے اورقرض پر ملنے والا نفع سود ہوتا ہے۔ لہٰذا اس سود کی رقم کا حکم یہ ہے کہ ملازم کو جب کُل رقم ملے تو سودی رقم بِلانیتِ ثواب شرعی فقیر کو دے دی جائے۔ اور اگر کمپنی یا ادارہ یہ آپشن دیتا ہے کہ آپ کہہ سکتے ہیں کہ میری رقم پر سود کا اضافہ نہ کیا جائے تو ایسا کرنا ضروری ہوگا۔</p>
-            </div>
-        </div>
-        
-        <div class="field-card">
-            <label>Security Deposit (Refundable)</label>
-            <div class="urdu-subtitle">قابلِ واپسی سیکیورٹی ڈپازٹ</div>
-             <div class="urdu-body" style="font-size:1.0rem; color:#6B7280; text-align:center; margin-bottom:5px;">(e.g., Rental or Utility Deposit that will be returned)</div>
-            <input type="text" class="r-in num-fmt" id="v_sec" inputmode="decimal" placeholder="Enter Amount">
-        </div>
-
-        <div class="btn-row">
-            <button class="btn btn-prev" onclick="nav(2)"><span class="en">&larr; Back</span><span class="ur">واپس</span></button>
-            <button class="btn btn-primary" onclick="nav(4)"><span class="en">Next: Liabilities &rarr;</span><span class="ur">اگلا: واجبات</span></button>
-        </div>
-    </div>
-
-    <!-- STEP 4 -->
-    <div id="step-4" class="hidden">
-        <div class="top-nav-row">
-            <button class="top-back-btn" onclick="nav(3)">← Back</button>
-        </div>
-        <div class="step-title">Step 4: Liabilities (Deductions)</div>
-        <div class="urdu-label-main">واجب الاداء رقم (مِنہا کیے جانے والے واجبات)</div>
-        
-        <div class="field-card"><label>Loans & Personal Debts Payable</label><span class="urdu-label-main">واجب الاداء ذاتی قرضے</span><input type="text" class="l-in num-fmt" id="l_per" inputmode="decimal" placeholder="Enter Amount"></div>
-        <div class="field-card">
-            <label>Due Bills for Utilities (on Zakat Year End Date)</label>
-            <span class="urdu-label-main">زکوٰۃ کے سال کے آخری دن تک کے بقایا بجلی گیس اور دیگر یوٹیلیٹی کے بِلز</span>
-            <input type="text" class="l-in num-fmt" id="l_utility" inputmode="decimal" placeholder="Enter Amount">
-        </div>
-        <div class="field-card"><label>Trade and Business Payables:</label><span class="urdu-label-main">واجبُ الاداء تجارتی قرضہ اور اُدھار</span><input type="text" class="l-in num-fmt" id="l_trade" inputmode="decimal" placeholder="Enter Amount"></div>
-        <div class="field-card"><label>Unpaid Salaries Due</label><span class="urdu-label-main">ملازمین کی واجب الاداء تنخواہیں</span><input type="text" class="l-in num-fmt" id="l_salary" inputmode="decimal" placeholder="Enter Amount"></div>
-        <div class="field-card"><label>All Remaining Installments (for House, Car etc.)</label><span class="urdu-label-main">گھر مکان دکان وغیرہ کی بقایا اَقساط</span><input type="text" class="l-in num-fmt" id="l_installments" inputmode="decimal" placeholder="Enter Amount"></div>
-        <div class="field-card">
-            <label>Remaining BC Installments IF Full BC is Received</label><span class="urdu-label-main">بیسی کی بقایا اقساط (اگر کمیٹی مل چکی ہے)</span>
-            <div class="advice-box-single-line" style="text-align:center; color:#991B1B; background:#FEF2F2; border-color:#FCA5A5;">نوٹ: یہ رقم صرف اس صورت میں درج کریں اگر آپ کمیٹی وصول کر چکے ہوں۔</div>
-            <input type="text" class="l-in num-fmt" id="l_bc" inputmode="decimal" placeholder="Enter Amount">
-        </div>
-        <div class="field-card"><label>Unpaid Past Zakat</label><span class="urdu-label-main">گُزشتہ سالوں کی بقایا زکوٰۃ</span><input type="text" class="l-in num-fmt" id="l_past" inputmode="decimal" placeholder="Enter Amount"></div>
-        <div class="field-card">
-            <label>TAXES & GOVT. DUES PAYABLE</label>
-            <span class="urdu-label-main">واجب الاداء ٹیکس اور سرکاری واجبات</span>
-            <input type="text" class="l-in num-fmt" id="l_tax" inputmode="decimal" placeholder="Enter Amount">
-        </div>
-
         <div class="btn-row">
             <button class="btn btn-prev" onclick="nav(3)"><span class="en">&larr; Back</span><span class="ur">واپس</span></button>
             <button class="btn btn-primary" id="calcBtn"><span class="en">Calculate Result &rarr;</span><span class="ur">حساب لگائیں</span></button>

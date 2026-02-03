@@ -1,10 +1,14 @@
-// Update this version string to v45 to force update
-const CACHE_NAME = 'zakat-calc-v45'; 
+// Update this version string to v48 to force update
+const CACHE_NAME = 'zakat-calc-v48'; 
 
+// Added specific icon files to cache list for better PWA support
 const ASSETS = [
   './',
   './index.html',
-  './icon.png'
+  './manifest.json',
+  './icon.png',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // 1. Install Event

@@ -11,8 +11,8 @@
     <meta name="application-name" content="Zakat Calculator">
     <title>Zakat Calculator</title>
     
-    <!-- LINK TO EXTERNAL MANIFEST (Best for Master Folder) -->
-    <link rel="manifest" href="manifest.json">
+    <!-- EMBEDDED MANIFEST (Fixes GitHub Path Issues) -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Zakat Calculator","short_name":"Zakat Calculator","start_url":".","display":"standalone","background_color":"#F9FAFB","theme_color":"#064E3B","orientation":"portrait","icons":[{"src":"icon.png","sizes":"192x192","type":"image/png"},{"src":"icon.png","sizes":"512x512","type":"image/png"}]}'>
     <link rel="apple-touch-icon" href="icon.png">
     
     <!-- FONTS -->
@@ -62,8 +62,6 @@
         }
 
         /* --- TYPOGRAPHY --- */
-        
-        /* Main Urdu Labels */
         .urdu-label-main {
             font-family: var(--font-urdu) !important;
             font-size: 1.25rem; 
@@ -77,7 +75,6 @@
             margin-bottom: 4px;
         }
         
-        /* Subtitles */
         .urdu-subtitle {
             font-family: var(--font-urdu) !important;
             color: #4B5563;
@@ -89,7 +86,6 @@
             line-height: 1.4;
         }
 
-        /* Body Text (Notes) */
         .urdu-body {
             font-family: var(--font-urdu) !important;
             direction: rtl;
@@ -115,7 +111,6 @@
             align-items: center; 
         }
 
-        /* Header Content: Left Aligned Stack */
         .header-content {
             flex: 0 1 auto; 
             display: flex;
@@ -151,7 +146,6 @@
             font-weight: 700;
         }
         
-        /* History Button */
         .hist-btn-top {
             background: rgba(255,255,255,0.15);
             border: 1px solid rgba(255,255,255,0.3);
@@ -189,7 +183,6 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         
-        /* Section Titles */
         .step-title { 
             color: var(--primary); 
             font-family: var(--font-english);
@@ -204,7 +197,6 @@
             border-radius: 8px 8px 0 0;
         }
 
-        /* English Labels */
         label { 
             display: block; 
             font-weight: 700; 
@@ -217,7 +209,6 @@
             text-transform: uppercase;
         }
         
-        /* Inputs */
         input, select {
             width: 100%;
             padding: 10px;
@@ -233,7 +224,6 @@
         }
         input:focus, select:focus { outline: none; border-color: var(--primary); background: white; }
         
-        /* --- ACCORDIONS --- */
         .accordion-header, .sub-acc-header {
             font-size: 0.9rem;
             padding: 8px 10px;
@@ -259,6 +249,7 @@
         .accordion-header::after, .sub-acc-header::after { content: '▼'; font-size: 0.8rem; color: #6B7280; margin-right: 10px; }
         .accordion-header.active::after, .sub-acc-header.active::after { content: '✕'; font-size: 1rem; color: var(--danger); font-weight: bold; }
         
+        /* Updated font-size to 1.0rem as requested */
         .accordion-content, .sub-acc-body {
             display: none;
             padding: 10px;
@@ -268,13 +259,12 @@
             text-align: right;
             font-family: var(--font-urdu);
             line-height: 2.1;
-            font-size: 1.1rem;
+            font-size: 1.0rem; 
             color: #374151;
             border-radius: 0 0 6px 6px;
             margin-bottom: 5px;
         }
 
-        /* Read First Button */
         .read-first-btn {
             background: #FFFBEB; color: #92400E; padding: 10px; text-align: center; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -284,7 +274,6 @@
         .read-first-btn span.ur { font-family: var(--font-urdu); font-weight: 400; font-size: 1.1rem; margin-top:4px; }
         .read-first-content { display: none; border: 1px solid #FCD34D; border-top: none; padding: 10px; background: #FFF; border-radius: 0 0 8px 8px; margin-bottom: 15px; }
 
-        /* Notes */
         .advice-box-single-line {
             background: #F0F9FF; border-left: 4px solid #3B82F6; padding: 8px; border-radius: 6px;
             font-size: 1.05rem; margin: 6px 0; color: #1E40AF; text-align: right; font-family: var(--font-urdu);
@@ -293,7 +282,6 @@
         .warning-box { background: #FFFBEB; border-left: 4px solid #F59E0B; padding: 10px; border-radius: 6px; font-size: 0.9rem; margin-bottom: 8px; font-family: var(--font-english); color: #78350F; }
         .warning-box .urdu { font-family: var(--font-urdu) !important; font-size: 1.1rem; display: block; margin-top: 4px; text-align: right; line-height: 2.0; color: #92400E; }
 
-        /* --- SKETCH BOX --- */
         .nisab-sketch-container {
             border: 2px solid var(--primary);
             border-radius: 10px;
@@ -323,17 +311,30 @@
         .statement-table th { background: #F9FAFB; padding: 8px 10px; text-align: left; font-weight: 700; color: var(--slate); font-size: 0.9rem; text-transform: uppercase; font-family: var(--font-english); }
         .statement-table td { padding: 8px 10px; border-bottom: 1px solid #E5E7EB; vertical-align: top; }
         .row-header { font-weight: 600; color: var(--slate); font-size: 0.95rem; display: block; font-family: var(--font-english); }
-        .row-urdu { font-family: var(--font-urdu); color: var(--text-muted); font-size: 1rem; font-weight: normal; display: block; text-align: right; direction: rtl; line-height: 1.3; margin-top: 2px; }
+        
+        .row-urdu { 
+            font-family: var(--font-urdu); 
+            color: var(--text-muted); 
+            font-size: 1rem; 
+            font-weight: normal; 
+            display: block; 
+            text-align: left; /* Captions aligned left under English */
+            direction: rtl; 
+            line-height: 1.3; 
+            margin-top: 2px; 
+        }
+        
         .row-val { font-weight: 700; color: var(--primary); text-align: right; font-size: 1.1rem; vertical-align: middle; font-family: var(--font-english); }
         .row-final { background: var(--primary); color: white; }
-        .row-final .row-header, .row-final .row-val, .row-final .row-urdu { color: white !important; }
+        
+        .row-final .row-header { color: white !important; font-size: 1.2rem; }
+        .row-final .row-urdu { color: white !important; font-size: 1.1rem; }
+        .row-final .row-val { color: white !important; font-size: 1.6rem; font-weight: 900; }
 
-        /* FAQs */
         .faq-item { margin-bottom: 10px; border-bottom: 1px dashed #E5E7EB; padding-bottom: 10px; }
         .faq-q { color: #991B1B; font-weight: bold; font-family: var(--font-urdu); font-size: 1.1rem; text-align: right; margin-bottom: 4px; line-height: 1.6; }
         .faq-a { color: #064E3B; font-family: var(--font-urdu); font-size: 1.05rem; text-align: right; line-height: 2.0; }
 
-        /* Buttons */
         .btn-row { display: flex; gap: 8px; margin-top: 15px; }
         .btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-family: var(--font-english); }
         .btn span.en { font-size: 0.95rem; }
@@ -343,8 +344,16 @@
         .btn-gold { background: var(--accent); color: var(--primary-dark); width: 100%; margin-top: 10px; font-weight: 700; }
         
         .btn-clear { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 700; font-family: var(--font-english); font-size: 0.9rem; }
+        
+        /* --- TOP NAV STYLES --- */
+        .top-nav-row { display: flex; align-items: center; margin-bottom: 5px; }
+        .top-back-btn { 
+            background: none; border: none; color: #6B7280; font-size: 0.95rem; 
+            font-weight: 600; cursor: pointer; display: flex; align-items: center; 
+            gap: 5px; font-family: var(--font-english); padding: 5px 0;
+        }
+        .top-back-btn:hover { color: var(--primary); }
 
-        /* Install Button */
         #installBtn { 
             display: none; 
             width: 100%; 
@@ -363,7 +372,6 @@
         #toast { visibility: hidden; min-width: 250px; background: #333; color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%); font-size: 1rem; }
         #toast.show { visibility: visible; }
         
-        /* History Modal & Detailed Cards */
         #historyModal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
         .modal-content { background-color: white; margin: 5% auto; padding: 20px; border-radius: 12px; width: 95%; max-width: 500px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); position: relative; }
         .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; width: 36px; height: 36px; background: #f1f1f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -403,14 +411,11 @@
         .h-btn-del { background: #FEF2F2; color: #991B1B; }
 
         footer { text-align: center; padding: 20px 10px; color: #6B7280; font-size: 0.8rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 15px; font-family: var(--font-english); }
-        
-        /* UPDATED FOOTER COLOR CONTRAST */
         footer strong { color: var(--label-gold); font-weight: 900; }
 
         .hijri-panel { background: var(--primary-dark); color: white; padding: 8px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
         .adj-btn { background: var(--accent); border: none; color: var(--primary-dark); width: 30px; height: 30px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         
-        /* RTL LIST STYLE */
         .rtl-list {
             padding-right: 25px;
             padding-left: 0;
@@ -442,7 +447,6 @@
 
 <div class="container">
     
-    <!-- INSTALL BUTTON (Hidden by default, shown via JS) -->
     <button id="installBtn" onclick="installApp()">📲 Install App</button>
 
     <!-- STEP 1 -->
@@ -451,7 +455,6 @@
         <div class="urdu-label-main">پروفائل، اہلیت اور نصاب</div>
 
         <div class="field-card">
-            <!-- Full Name Single Line -->
             <div style="display:flex; justify-content:center; gap:8px; align-items:center;">
                 <label style="margin-bottom:0;">Full Name</label>
                 <span class="urdu-label-main" style="margin:0; font-size:1.1rem;">پورا نام</span>
@@ -459,7 +462,6 @@
             <input type="text" id="u_name" placeholder="Enter Full Name" style="margin-top:5px;">
         </div>
 
-        <!-- READ IT FIRST SECTION -->
         <div class="read-first-btn" onclick="toggleReadFirst(this)">
             <span class="en">Read it First</span>
             <span class="ur">پہلے اسے پڑھیں</span>
@@ -485,7 +487,6 @@
                 </ol>
             </div>
 
-            <!-- UPDATED TEXT: Meaning of Owner of Nisab -->
             <div class="sub-acc-header" onclick="toggleSubAcc(this)">نصاب کا مالک ہونے سے کیا مراد ہے؟</div>
             <div class="sub-acc-body">
                 <p>شریعت نے جتنے مال پر زکوۃ کو فرض قرار دیا ہے اس کو نصاب کہتے ہیں اور جو اس مال کا مالک ہو اس کو مالکِ نصاب یا صاحبِ نصاب کہتے ہیں۔</p>
@@ -500,7 +501,6 @@
             </div>
         </div>
 
-        <!-- How to Calculate Dropdown (Separate) -->
         <div class="accordion-header" onclick="toggleAccordion('howToCalc', this)">زكوة كس طرح نکالی جائے ؟</div>
         <div class="accordion-content" id="howToCalc">
             <p>سب سے پہلے زکوۃ واجب ہونے کی قمری تاریخ کا تعین کر لیں۔</p>
@@ -509,7 +509,6 @@
 
         <div class="field-card">
             <label>Currency</label><span class="urdu-label-main">کرنسی منتخب کریں</span>
-            <!-- Left Aligned Text -->
             <select id="currency_pref" onchange="updateCurrency()" style="text-align: left;">
                 <option value="Rs.">PKR (Rs.)</option>
                 <option value="SAR">SAR (﷼)</option>
@@ -531,7 +530,6 @@
                 <div style="font-size:1rem; font-weight:600;"><span id="hijriOutput">Pick a Date</span></div>
                 <button class="adj-btn" onclick="adjH(1)">+</button>
             </div>
-            <!-- Hijri Note Centered -->
             <div class="urdu-body" style="text-align:center; font-size:0.95rem; margin-top:6px; color:var(--text-muted); line-height:1.6;">سال گزرنے میں قَمری(یعنی چاند کے )مہینوں کا اعتبار ہوگا۔</div>
         </div>
 
@@ -544,7 +542,6 @@
                 اوپر لکھی ہوئی تاریخ پر نصاب کی مقدار کا تعین کرنے کے لئے چاندی کا ریٹ درج کریں
             </div>
             <div class="sketch-input-row">
-                <!-- UPDATED INPUT MODE FOR DECIMALS -->
                 <input type="text" id="s_rate" class="num-fmt" placeholder="Enter Silver Rate" inputmode="decimal" style="flex:2" oninput="calcNisab()">
                 <select id="s_unit" style="flex:1.5; padding:8px 2px;" onchange="calcNisab()">
                     <option value="tola">Per Tola</option>
@@ -554,7 +551,6 @@
                 </select>
             </div>
             <div class="sketch-result-box">
-                <!-- UPDATED LABEL TEXT -->
                 <div class="urdu-body" style="font-size:1.1rem; color:var(--text-muted); text-align:center;">Nisaab Threshold - نصاب کی مقدار</div>
                 <div id="nisabVal" style="font-size:1.6rem; font-weight:800; color:var(--accent); font-family:var(--font-english);">0</div>
             </div>
@@ -562,8 +558,15 @@
             <div style="margin-top: 15px;">
                 <div class="sub-acc-header" style="font-size: 1rem;" onclick="toggleSubAcc(this)">ایپلی کیشن میں چاندی کا نصاب کیوں بنیادی معیار بنایا گیا ہے؟</div>
                 <div class="sub-acc-body">
-                    <!-- REMOVED 'PRIZE BOND' from list below -->
-                    <p>اصول یہ ہے کہ اگر صرف سونا ہو اور اس کے ساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجودنہ ہو، توزکوٰۃ تب ہی فرض ہو گی کہ جب سونا وزن کے اعتبار سے ساڑھے سات تولے ہو، لیکن اگر سونا ساڑھے سات تولےسے کم ہواور اس کےساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجود ہو، تو اس صورت میں فرضیتِ زکوۃ کا نصاب ’’ساڑھے52 تولے چاندی کی مالیت‘‘ہے،پھر اگر قرض ہو، تو اسےسونے اور دیگراموالِ زکوٰۃ کی کل مالیت میں سے مائنس کرنے کے بعد بچنے والی رقم ساڑھے 52 تولہ چاندی کی مالیت کے برابر پہنچتی ہو، تو قرض کے علاوہ اس تمام مال کی زکوٰۃ فرض ہو گی اور اگر نہیں پہنچتی ، تو زکوٰۃ فرض نہیں ہو گی۔</p>
+                    <!-- UPDATED URDU TEXT WITH RTL DIRECTION -->
+                    <p style="text-align: right; direction: rtl;">اصول یہ ہے کہ:<br>
+                    اگر صرف سونا ہو اور اس کے ساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجود نہ ہو، توزکوٰۃ تب ہی فرض ہو گی کہ جب سونا وزن کے اعتبار سے ساڑھے سات تولے ہو، اور دیگر شرائط بھی پائی جائیں۔</p>
+
+                    <p style="text-align: right; direction: rtl;">لیکن عام طور پر ایسا نہیں ہوتا۔ لوگوں کے پاس مختلف قسم کے مال ہوتے ہیں۔لہٰذا:<br>
+                    دیگر شرائط پائے جانے کے ساتھ <br>
+                    اگر سونے کےساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجود ہو، تو اس صورت میں فرضیتِ زکوۃ کا نصاب ’’ساڑھے52 تولے چاندی کی مالیت‘‘ہے، </p>
+
+                    <p style="text-align: right; direction: rtl;">پھر اگر قرض ہو، تو اسےسونے اور دیگراموالِ زکوٰۃ کی کُل مالیت میں سے مِنہا (مائنس) کرنے کے بعد بچنے والی رقم ساڑھے 52 تولہ چاندی کی مالیت کے برابر پہنچتی ہو، اور نصاب پر سال گزر جائے تو قرض کے علاوہ اس تمام مال کی زکوٰۃ فرض ہو گی۔</p>
                 </div>
             </div>
         </div>
@@ -578,12 +581,21 @@
 
     <!-- STEP 2 -->
     <div id="step-2" class="hidden">
+        <div class="top-nav-row">
+            <button class="top-back-btn" onclick="nav(1)">← Back</button>
+        </div>
         <div class="step-title">Step 2: Core Assets Eligible for Zakat<br><span style="font-size:1rem; font-weight:500;">(Pay their Zakat Immediately)</span></div>
         <div class="urdu-label-main">اثاثے جن پر زکوٰۃ کی ادائیگی فی الفور لازم ہے</div>
         
         <div class="accordion-header" onclick="toggleAccordion('priceDef', this)" style="margin-bottom:12px;">قیمت کی تعریف:</div>
         <div class="accordion-content" id="priceDef">
             <p>شرعاً قیمت اس کو کہتے ہیں جو اس چیز کا بازار میں بھاؤہو ، اتفاقی طور پر یا بھاؤتاؤ کرنے کے بعد کمی یا زیادتی کے ساتھ کوئی چیز خرید لی جائے تو اس کو قیمت نہیں کہیں گے (بلکہ ثَمَن کہیں گے )۔(فتاویٰ امجدیہ ج ۱ص۳۸۲)</p>
+            <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+            <p><strong>کس جگہ کی قیمت لی جائے گی؟</strong></p>
+            <p>قیمت اس جگہ کی ہونی چاہیے جہاں مال ہے ۔ (بہارشریعت ، ج۱، حصّہ ۵، مسئلہ ۱۸، ص۹۰۸)</p>
+            <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+            <p><strong>قیمت کس دن کی معتبر ہے ؟</strong></p>
+            <p>قیمت نہ توبنوانے کے وقت کی معتبر ہے نہ ادائیگیٔ زکوٰۃ کے وقت کی بلکہ جب زکوٰۃ کا سال پورا ہوا اسی وقت کی قیمت کا حساب لگایا جائے گا ۔(ماخوذازفتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ۱۳۳)</p>
         </div>
 
         <div class="field-card">
@@ -593,6 +605,10 @@
             <div class="accordion-content" id="goldNoteContent">
                 <p><strong>قیمت کس دن کی معتبر ہے؟</strong> زکوٰۃ کا سال جس دن پورا ہوا اسی وقت کی قیمت کا حساب لگایا جائے گا۔ (ماخوذازفتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ص۱۳۳)</p>
                 <p><strong>ہیروں پر زکوٰۃ:</strong> ہیروں اور موتی پر زکوٰۃ واجب نہیں ، ہاں ! اگر تجارت کی نیت سے لئے تو زکوٰۃ واجب ہے۔ (الدرالمختار، ج۳، ص۲۳۰)</p>
+                <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+                <p><strong>گولڈ کی زکاۃ میں کھوٹ شمار ہو گا یا نہیں؟</strong></p>
+                <p><strong>سوال:</strong> گولڈ کی زکوٰۃ کو شمار کرتے ہوئے، اس میں کھوٹ کو بھی گولڈ میں شمار کر کے اس کا ریٹ لگائیں گے یا کھوٹ کے علاوہ کا اعتبار ہو گا جیسے 18 کیرٹ  کا سونا ہو اور اس میں 75 فیصد گولڈ اور 25 فیصد کھوٹ ہو، تو کھوٹ سمیت پورا گولڈ ہی شمار کیا جائے گا یا کھوٹ کو نکال کر صرف گولڈ کے وزن کا اعتبار ہو گا؟</p>
+                <p><strong>جواب:</strong> سونا ،چاندی میں سے اگر کسی کے ساتھ دوسری دھات مل جائے ،تو جو ان میں سے غالب ہو اسی کا اعتبار ہوتا ہے اورسوال میں بیان کردہ  صورت میں بھی سونا چونکہ کھوٹ پر غالب ہے ، لہذاکھوٹ  کے وزن کو بھی سونے کے وزن کے ساتھ شامل کر کے ٹوٹل وزن کا اعتبار ہو گا ۔ ہاں !  اتنا ضرور ہے کہ جب آپ قیمت کے اعتبار سے زکوۃ ادا کریں گے، تو18 کیرٹ سونے کی  سال پوراہونے کے دن جو مارکیٹ ویلیو ہو گی زکوٰۃ بھی اسی کے مطابق  ہو گی ۔ (فتاویٰ اہلِ سُنّت)</p>
             </div>
         </div>
 
@@ -615,7 +631,6 @@
         <div class="field-card"><label>Shares & Tradable Certificates</label><span class="urdu-label-main">شیئرز اور قابلِ فروخت انویسٹمنٹ سرٹیفیکیٹ کی مارکیٹ ویلیو</span><input type="text" class="c-in num-fmt" id="v_sh" inputmode="decimal" placeholder="Enter Market Value"></div>
         <div class="field-card"><label>Private Business Share</label><span class="urdu-label-main">پرائیویٹ کاروبارمیں آپ کے حصّے کے قابلِ زکوٰۃ اثاثے</span><input type="text" class="c-in num-fmt" id="v_pb" inputmode="decimal" placeholder="Enter Market Value"></div>
 
-        <!-- FAQ Area -->
         <div style="margin-top:20px;">
             <div class="accordion-header" onclick="toggleAccordion('faqContent', this)" style="background:#fff; border:1px solid #6EE7B7; color:var(--primary); padding:10px;">زکوٰۃ کے بارے میں عام طور پر پوچھے جانے والے سوالات: FAQs</div>
             <div class="accordion-content" id="faqContent" style="background:#fff;">
@@ -623,7 +638,6 @@
                     <div class="faq-q">سوال (1) سوناچاندی پہننے کا ہو تو بھی زکوٰۃ ہوگی؟</div>
                     <div class="faq-a">جواب: جی ہاں نصاب کو پہنچتا ہو اور شرائط پائی جاتی ہوں تو زکوٰۃ ہوگی۔</div>
                 </div>
-                <!-- UPDATED FAQ ANSWER -->
                 <div class="faq-item">
                     <div class="faq-q">سوال (2)سونے کی زکوٰۃ شوہر نکالے گا یا بیوی؟</div>
                     <div class="faq-a">جواب : جو سونے کا مالک ہے وہ زکوٰۃ نکالے گا ۔عورت کو جو سونا میکے سے ملا وہ اس کی ملکیت ہے۔ جو لڑکے نے پہلی رات دیا وہ بھی گفٹ ہو کر ملکیت ہوگیا۔ لیکن جو سسرال سے لڑکی کو دیا جاتا ہے اس میں مختلف برادریوں کے مختلف عرف ہیں، ان کا پتا خاص کر طلاق ہونے پر چلتا ہے کہ واپس لیا جاتا ہے یا نہیں الغرض لڑکی کے سسرال سے صریح الفاظ هبہ نہ کہے گئے ہوں تو برادری کے عرف کے مطابق لڑکے یا لڑکی کی ملکیت تصور ہوگا۔</div>
@@ -671,6 +685,9 @@
 
     <!-- STEP 3 -->
     <div id="step-3" class="hidden">
+        <div class="top-nav-row">
+            <button class="top-back-btn" onclick="nav(2)">← Back</button>
+        </div>
         <div class="step-title">Step 3: RECEIVABLES</div>
         <div class="urdu-label-main">قابلِ وصول رُقوم</div>
         <div class="urdu-subtitle">
@@ -772,6 +789,9 @@
 
     <!-- STEP 4 -->
     <div id="step-4" class="hidden">
+        <div class="top-nav-row">
+            <button class="top-back-btn" onclick="nav(3)">← Back</button>
+        </div>
         <div class="step-title">Step 4: Liabilities (Deductions)</div>
         <div class="urdu-label-main">واجب الاداء رقم (مِنہا کیے جانے والے واجبات)</div>
         
@@ -804,6 +824,9 @@
 
     <!-- STEP 5 -->
     <div id="step-5" class="hidden">
+        <div class="top-nav-row">
+            <button class="top-back-btn" onclick="nav(4)">← Edit Data</button>
+        </div>
         <div class="step-title">Zakaat Calculations Report</div>
         
         <div style="background:white; border-radius:12px; padding:15px; box-shadow:0 1px 3px rgba(0,0,0,0.05); margin-bottom:15px;">
@@ -862,8 +885,8 @@
                     <tr class="row-final">
                         <td>
                             <div class="row-item-container">
-                                <span class="row-header" style="color:#fff;">E : Total Zakat (2.5%)</span>
-                                <span class="row-urdu" style="color:#fff;">کُل واجب الاداء زکوٰۃ</span>
+                                <span class="row-header">E : Total Zakat (2.5%)</span>
+                                <span class="row-urdu">کُل واجب الاداء زکوٰۃ</span>
                             </div>
                         </td>
                         <td id="r_total" class="row-val">0</td>
@@ -906,7 +929,6 @@
     </div>
 </div>
 
-<!-- History Modal -->
 <div id="historyModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeHistory()">&times;</span>
@@ -929,7 +951,6 @@
     let hijriOffset = 0, nisabLimit = 0, lastResult = null, currentCurr = "Rs.";
     let deferredPrompt;
 
-    // Toggle Logic with Close Icon
     function toggleReadFirst(btn) {
         const c = document.getElementById('readFirstContent');
         const icon = btn.querySelector('.toggle-icon');
@@ -944,7 +965,6 @@
         }
     }
     
-    // Generic Toggle for Sub-Accordions
     function toggleSubAcc(h) {
         const b = h.nextElementSibling;
         if(b.style.display === "block") { 
@@ -956,13 +976,11 @@
         }
     }
 
-    // Generic Toggle for Main Accordions
     function toggleAccordion(id, h) {
         const c = document.getElementById(id);
         if(c.style.display === "block") { 
             c.style.display = "none"; 
             h.classList.remove('active'); 
-            // Reset icon
             h.classList.remove('active');
         } else { 
             c.style.display = "block"; 
@@ -970,7 +988,6 @@
         }
     }
 
-    // PWA Service Worker Registration & Install Logic
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
@@ -979,18 +996,14 @@
         });
     }
 
-    // Listen for install prompt (Android)
     window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent default browser banner
         e.preventDefault();
         
-        // SAFETY CHECK: If running as a standalone app (PWA/APK), do not show button
         if (window.matchMedia('(display-mode: standalone)').matches) {
             return;
         }
 
         deferredPrompt = e;
-        // Show our install button
         document.getElementById('installBtn').style.display = 'block';
     });
 
@@ -1001,12 +1014,10 @@
             deferredPrompt = null;
             document.getElementById('installBtn').style.display = 'none';
         } else {
-            // Manual Instructions for iOS or Desktop
             alert("To install this app:\n\niOS: Tap 'Share' icon below ➡ 'Add to Home Screen'.\n\nAndroid/Desktop: Tap the menu (⋮) ➡ 'Install App' or 'Add to Home Screen'.");
         }
     }
 
-    // Logic
     function formatNumber(n) { return n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); }
     function parseNumber(s) { return parseFloat(s.replace(/,/g, '')) || 0; }
     function updateCurrency() { currentCurr = document.getElementById('currency_pref').value; calcNisab(); }
@@ -1014,39 +1025,26 @@
     document.querySelectorAll('.num-fmt').forEach(input => {
         input.addEventListener('input', function() {
             let original = this.value;
-            // Remove non-numeric/dot
             let valStr = original.replace(/[^0-9.]/g, '');
-            
-            // Handle multiple dots
             const parts = valStr.split('.');
             if (parts.length > 2) {
                  valStr = parts[0] + '.' + parts.slice(1).join('');
             }
-            
-            // If ends with dot, keep it
             if (valStr.endsWith('.')) {
                 this.value = valStr;
                 return;
             }
-            
-            // If empty
             if (valStr === '') {
                 this.value = '';
                 return;
             }
-
-            // Simple formatting with commas for the integer part
             const parts2 = valStr.split('.');
             let intPart = parts2[0];
             let decPart = parts2.length > 1 ? '.' + parts2[1] : '';
-            
-            // Add commas to intPart
             intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            
             this.value = intPart + decPart;
         });
         
-        // Ensure precision on blur
         input.addEventListener('blur', function() {
              let val = parseFloat(this.value.replace(/,/g, ''));
              if(!isNaN(val)) this.value = val.toLocaleString('en-US', { maximumFractionDigits: 2 });
@@ -1072,9 +1070,6 @@
         const unit = document.getElementById('s_unit').value;
         let pricePerGram = 0;
         
-        // 1 Tola = 11.664 grams
-        // 1 Troy Ounce = 31.1035 grams
-        
         if (unit === 'tola') {
             pricePerGram = rate / 11.664;
         } else if (unit === '10g') {
@@ -1085,11 +1080,7 @@
             pricePerGram = rate / 31.1035;
         }
         
-        // Total Nisab is 52.5 Tolas.
-        // 52.5 Tolas * 11.664 grams/tola = 612.36 Grams
         const totalNisabGrams = 612.36;
-        
-        // NO ROUNDING OFF as requested
         nisabLimit = pricePerGram * totalNisabGrams;
         document.getElementById('nisabVal').innerText = currentCurr + " " + formatNumber(nisabLimit);
     }
@@ -1126,9 +1117,20 @@
         
         let net = (core + recv) - liab;
         let payableTotal = (net >= nisabLimit) ? (net * 0.025) : 0;
-        let netCore = Math.max(0, core - liab);
-        let payNow = (netCore * 0.025);
-        let payDef = Math.max(0, payableTotal - payNow);
+        
+        // --- NEW BIFURCATION LOGIC ---
+        // Proportionally distribute the Zakat burden based on Core Assets vs Receivables
+        let totalGross = core + recv;
+        let payNow = 0;
+        let payDef = 0;
+
+        if (payableTotal > 0 && totalGross > 0) {
+            // Pay Immediate = Total Zakat * (Core Assets / Total Gross Assets)
+            payNow = payableTotal * (core / totalGross);
+            
+            // Pay Delayed = Total Zakat * (Receivables / Total Gross Assets)
+            payDef = payableTotal * (recv / totalGross);
+        }
 
         const p = currentCurr.trim() !== "" ? currentCurr + " " : "";
         document.getElementById('r_total').innerText = p + formatNumber(payableTotal);
@@ -1161,7 +1163,6 @@
         nav(5);
     }
 
-    // History Logic
     const STOR_KEY = 'z_history_v30'; 
     function saveToHistory() {
         if(!lastResult) return;
@@ -1178,23 +1179,14 @@
         loadHistory();
     }
     
-    // UPDATED CLEAR HISTORY FUNCTION v33
     function clearAllHistory() {
         if(confirm("Are you sure you want to delete all history records?")) {
             try {
-                // 1. Force clear the key
                 localStorage.setItem(STOR_KEY, '[]');
-                
-                // 2. Immediate UI Update
                 const box = document.getElementById('history_list');
                 if(box) box.innerHTML = '<div style="text-align:center;color:#666; font-family:var(--font-english);">No records.</div>';
-                
-                // 3. Optional: Remove key entirely
                 localStorage.removeItem(STOR_KEY);
-                
-                // 4. Reload logic just in case
                 loadHistory();
-                
                 msg("History Cleared");
             } catch (e) {
                 console.error("Error clearing history:", e);
@@ -1219,7 +1211,6 @@
             const p = i.curr.trim();
             const d = i.formattedDate || i.date;
             
-            // Safe fallbacks for older history format
             const core = i.core || 0;
             const recv = i.recv || 0;
             const liab = i.liab || 0;

@@ -1,16 +1,14 @@
-// Update this version string when you make changes to the app
-const CACHE_NAME = 'zakat-calc-v38'; 
+// Update this version string to v45 to force update
+const CACHE_NAME = 'zakat-calc-v45'; 
 
 const ASSETS = [
   './',
   './index.html',
-  './manifest.json',
   './icon.png'
 ];
 
-// 1. Install Event: Caches the assets immediately
+// 1. Install Event
 self.addEventListener('install', (event) => {
-  // Forces the waiting service worker to become the active service worker
   self.skipWaiting(); 
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -19,7 +17,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// 2. Activate Event: Cleans up OLD caches (Crucial for updates)
+// 2. Activate Event (Cleanup)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keyList) => {
@@ -33,15 +31,13 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  // Takes control of the page immediately
   self.clients.claim(); 
 });
 
-// 3. Fetch Event: Serve from Cache first, fallback to Network
+// 3. Fetch Event
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
-      // Return cached version if found, otherwise fetch from network
       return response || fetch(event.request);
     })
   );

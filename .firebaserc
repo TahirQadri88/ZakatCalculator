@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "zakathisab",
+    "n": "livestock-weight-calculator",
+    "zakathisab": "zakathisab"
+  },
+  "targets": {},
+  "etags": {}
+}

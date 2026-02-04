@@ -1,5 +1,5 @@
-// Update this version string to v49 to force update
-const CACHE_NAME = 'zakat-calc-v49'; 
+// Update this version string to v53 to force update
+const CACHE_NAME = 'zakat-calc-v53'; 
 
 // Added specific icon files to cache list for better PWA support
 const ASSETS = [

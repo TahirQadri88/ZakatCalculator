@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- PWA SETTINGS & NAME -->
+    <!-- PWA SETTINGS -->
     <meta name="theme-color" content="#064E3B">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Zakat Calculator">
     <meta name="application-name" content="Zakat Calculator">
     <title>Zakat Calculator</title>
     
-    <!-- PWA MANIFEST LINK -->
+    <!-- MANIFEST LINK -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-192.png">
@@ -250,7 +250,6 @@
         .accordion-header::after, .sub-acc-header::after { content: '▼'; font-size: 0.8rem; color: #6B7280; margin-right: 10px; }
         .accordion-header.active::after, .sub-acc-header.active::after { content: '✕'; font-size: 1rem; color: var(--danger); font-weight: bold; }
         
-        /* Updated font-size to 1.0rem as requested */
         .accordion-content, .sub-acc-body {
             display: none;
             padding: 10px;
@@ -945,12 +944,13 @@
 
 <footer>
     <div style="margin-bottom: 8px;">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong></div>
+    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v53</span></div>
 </footer>
 
 <script>
     let hijriOffset = 0, nisabLimit = 0, lastResult = null, currentCurr = "Rs.";
     let deferredPrompt;
+    let currentStep = 1; // GLOBAL STATE
 
     function toggleReadFirst(btn) {
         const c = document.getElementById('readFirstContent');
@@ -1087,16 +1087,28 @@
     }
 
     function nav(s) {
-        s = parseInt(s); // Safety check: Ensure s is always a number
+        s = parseInt(s);
+        
+        // Validation for Step 1 -> 2 transition
         if(s === 2 && (!document.getElementById('u_name').value || nisabLimit <= 0)) { 
             msg("Please Enter Name and Silver Rate"); 
             return; 
         }
+
+        // UPDATE GLOBAL STATE
+        currentStep = s;
+
+        // Hide all steps
         for(let i=1; i<=5; i++) {
             const el = document.getElementById('step-'+i);
             if(el) el.classList.add('hidden');
         }
-        document.getElementById('step-'+s)?.classList.remove('hidden');
+
+        // Show requested step - Compatible approach
+        const targetStep = document.getElementById('step-'+s);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+        }
         window.scrollTo(0,0);
     }
 
@@ -1115,6 +1127,12 @@
     }
 
     function calculate() {
+        // FAIL-SAFE LOCK: If we are not on Step 4, DO NOT RUN CALCULATION
+        if (currentStep !== 4) {
+            // Silently fail or log if needed, but do not jump
+            return; 
+        }
+
         let core=0, recv=0, liab=0;
         document.querySelectorAll('.c-in').forEach(i => core += parseNumber(i.value));
         document.querySelectorAll('.r-in').forEach(i => recv += parseNumber(i.value));
@@ -1123,17 +1141,12 @@
         let net = (core + recv) - liab;
         let payableTotal = (net >= nisabLimit) ? (net * 0.025) : 0;
         
-        // --- NEW BIFURCATION LOGIC ---
-        // Proportionally distribute the Zakat burden based on Core Assets vs Receivables
         let totalGross = core + recv;
         let payNow = 0;
         let payDef = 0;
 
         if (payableTotal > 0 && totalGross > 0) {
-            // Pay Immediate = Total Zakat * (Core Assets / Total Gross Assets)
             payNow = payableTotal * (core / totalGross);
-            
-            // Pay Delayed = Total Zakat * (Receivables / Total Gross Assets)
             payDef = payableTotal * (recv / totalGross);
         }
 
@@ -1309,6 +1322,19 @@
         t.innerText = m; t.className = "show";
         setTimeout(() => t.className = "", 3000);
     }
+
+    // Global Enter Key Handler for better UX and to prevent bugs
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+            e.preventDefault(); // Stop default form submission
+            
+            // USE GLOBAL STATE TO DECIDE NAVIGATION
+            if(currentStep === 1) nav(2);
+            else if(currentStep === 2) nav(3);
+            else if(currentStep === 3) nav(4);
+            else if(currentStep === 4) calculate();
+        }
+    });
 
     window.onload = () => {
         document.getElementById('g_date').valueAsDate = new Date();

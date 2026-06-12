@@ -1,48 +1,47 @@
-// Update this version string to v53 to force update
-const CACHE_NAME = 'zakat-calc-v53'; 
+const CACHE_NAME = 'zakat-calc-v54';
 
-// Added specific icon files to cache list for better PWA support
-const ASSETS = [
-  './',
-  './index.html',
+const STATIC_ASSETS = [
   './manifest.json',
   './icon.png',
   './icon-192.png',
   './icon-512.png'
 ];
 
-// 1. Install Event
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); 
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
   );
 });
 
-// 2. Activate Event (Cleanup)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(
-        keyList.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('[SW] Removing old cache', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
   );
-  self.clients.claim(); 
+  self.clients.claim();
 });
 
-// 3. Fetch Event
 self.addEventListener('fetch', (event) => {
+  const req = event.request;
+
+  // Network-first for HTML navigation — always get fresh app code
+  if (req.mode === 'navigate' || req.url.endsWith('.html') || req.url.endsWith('/')) {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // Cache-first for static assets (icons, manifest)
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    caches.match(req).then(cached => cached || fetch(req))
   );
 });

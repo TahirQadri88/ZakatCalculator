@@ -1922,17 +1922,14 @@
             : '—';
 
         if (!zakatDate || zakatDate < today) {
-            // Past date — live rate is WRONG for this date
+            // Past date — warn but still allow fetch with clear label
             info.style.display = 'block';
-            info.innerHTML = `⚠️ <strong>Zakat date is ${dateLabel} — a past date.</strong>`
-                + `<br>Live rates are for <em>today</em>, not your selected date.`
-                + ` For accurate Zakat, you need the silver rate on <strong>${dateLabel}</strong>.`
-                + `<br><br>`
-                + `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — enter date to see historical rate`
-                + `<br>• Or tap <strong>📈</strong> above for Pakistan gold rate reference table`
-                + `<br>• Or enter the rate manually in the field below`;
-            msg('Zakat date is in the past — enter rate manually');
-            return;
+            info.innerHTML = `⚠️ <strong>Your Zakat date (${dateLabel}) is in the past.</strong>`
+                + ` For correct Zakat, use the silver rate from <strong>${dateLabel}</strong>, not today's rate.`
+                + `<br>• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — look up rate by date`
+                + ` &nbsp;·&nbsp; Or tap <strong>📈</strong> for gold rate table`
+                + `<br><em style="color:#6B7280; font-size:0.78rem;">Today's rate loaded below for reference only.</em>`;
+            // Fall through — still fetch today's rate so the field isn't empty
         }
 
         icon.textContent = '⏳'; txt.textContent = 'Fetching…'; btn.disabled = true;

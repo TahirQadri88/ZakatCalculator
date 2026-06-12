@@ -869,12 +869,13 @@
         html[lang="ur"] .urdu-subtitle { display: block !important; }
 
         /* --- URDU MODE: SIDE LABEL LAYOUT --- */
-        /* In Urdu mode, field-cards become flex-row so the Urdu label sits
-           to the right of the input — avoids Nastaliq bottom-clipping issue */
+        /* direction:ltr on the card overrides RTL page direction so flex goes
+           left→right: input on left, Urdu label on the right side */
         html[lang="ur"] .field-card {
             display: flex;
             flex-wrap: wrap;
             flex-direction: row;
+            direction: ltr;
             align-items: center;
             gap: 0 10px;
         }
@@ -891,6 +892,7 @@
             line-height: 1.3;
             font-size: 0.9rem;
             text-align: right;
+            direction: rtl;
             display: inline-block !important;
         }
         html[lang="ur"] .field-card > input,
@@ -900,6 +902,8 @@
             min-width: 0;
             margin-top: 0 !important;
             width: auto !important;
+            direction: rtl;
+            text-align: right;
         }
         /* Anything else (accordions, panels, notes, hijri) goes full-width below */
         html[lang="ur"] .field-card > .accordion-header,
@@ -912,6 +916,7 @@
             order: 10;
             flex: 0 0 100%;
             width: 100%;
+            direction: rtl;
         }
 
         /* --- LANGUAGE TOGGLE --- */

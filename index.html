@@ -27,7 +27,7 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -51,7 +51,7 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
             --radius: 10px;
-            --font-english: 'Inter', system-ui, sans-serif;
+            --font-english: 'Outfit', system-ui, sans-serif;
             --font-urdu: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
             --font-urdu-title: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
         }
@@ -70,35 +70,35 @@
         /* --- TYPOGRAPHY --- */
         .urdu-label-main {
             font-family: var(--font-urdu) !important;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             color: var(--primary);
             font-weight: normal;
             direction: rtl;
             display: block;
             text-align: center;
-            line-height: 1.5;
-            margin-top: 1px;
-            margin-bottom: 4px;
+            line-height: 1.4;
+            margin-top: 0;
+            margin-bottom: 2px;
         }
 
         .urdu-subtitle {
             font-family: var(--font-urdu) !important;
-            color: #4B5563;
-            font-size: 1.05rem;
+            color: #6B7280;
+            font-size: 0.95rem;
             text-align: center;
             display: block;
             direction: rtl;
-            margin-bottom: 4px;
-            line-height: 1.4;
+            margin-bottom: 3px;
+            line-height: 1.35;
         }
 
         .urdu-body {
             font-family: var(--font-urdu) !important;
             direction: rtl;
             unicode-bidi: embed;
-            line-height: 2.1;
+            line-height: 1.9;
             text-align: right;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #374151;
         }
 
@@ -288,8 +288,8 @@
         .step-header-card {
             background: linear-gradient(135deg, var(--primary) 0%, #0A6B52 100%);
             border-radius: var(--radius);
-            padding: 14px 16px;
-            margin-bottom: 14px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
             text-align: center;
             box-shadow: var(--shadow-md);
         }
@@ -298,42 +298,43 @@
             color: #FEF3C7;
             font-family: var(--font-english);
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 1rem;
             line-height: 1.2;
+            letter-spacing: 0.2px;
         }
 
         .step-title-sub {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.65);
             font-family: var(--font-english);
-            font-size: 0.82rem;
+            font-size: 0.75rem;
             font-weight: 500;
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
         .step-urdu-label {
             font-family: var(--font-urdu) !important;
-            font-size: 1.15rem;
-            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            color: rgba(255,255,255,0.85);
             direction: rtl;
             display: block;
             text-align: center;
-            line-height: 1.5;
-            margin-top: 4px;
+            line-height: 1.4;
+            margin-top: 2px;
         }
 
         /* --- FIELD CARDS --- */
         .field-card {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 14px;
-            margin-bottom: 10px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
             transition: box-shadow 0.2s;
         }
 
         .field-card:focus-within {
-            box-shadow: 0 0 0 2px rgba(6,78,59,0.15), var(--shadow-sm);
+            box-shadow: 0 0 0 2px rgba(6,78,59,0.12), var(--shadow-sm);
             border-color: #6EE7B7;
         }
 
@@ -344,28 +345,28 @@
 
         label {
             display: block;
-            font-weight: 700;
-            font-size: 0.82rem;
-            margin-bottom: 2px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            margin-bottom: 1px;
             color: var(--label-gold);
             text-align: center;
             font-family: var(--font-english);
-            letter-spacing: 0.4px;
+            letter-spacing: 0.3px;
             text-transform: uppercase;
         }
 
         input, select {
             width: 100%;
-            padding: 11px 12px;
+            padding: 9px 10px;
             border: 1.5px solid #D1D5DB;
             border-radius: 7px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
             background: #FAFAFA;
             color: #111;
             font-weight: 600;
             font-family: var(--font-english);
-            margin-top: 4px;
+            margin-top: 3px;
             transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
         }
 
@@ -373,15 +374,15 @@
             outline: none;
             border-color: var(--primary);
             background: white;
-            box-shadow: 0 0 0 3px rgba(6,78,59,0.1);
+            box-shadow: 0 0 0 3px rgba(6,78,59,0.08);
         }
 
-        input::placeholder { color: #B0B8C4; font-weight: 400; font-size: 0.95rem; }
+        input::placeholder { color: #C0C8D4; font-weight: 400; font-size: 0.88rem; }
 
         /* --- ACCORDIONS --- */
         .accordion-header, .sub-acc-header {
-            font-size: 0.95rem;
-            padding: 9px 12px;
+            font-size: 0.92rem;
+            padding: 8px 10px;
             background: #F8FAFB;
             border: 1px solid #E5E7EB;
             border-radius: 7px;
@@ -389,7 +390,7 @@
             text-align: right;
             color: var(--primary);
             font-family: var(--font-urdu);
-            margin-top: 8px;
+            margin-top: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -422,17 +423,17 @@
 
         .accordion-content, .sub-acc-body {
             display: none;
-            padding: 12px;
+            padding: 10px 12px;
             background: #FDFDFD;
             border: 1px solid #E5E7EB;
             border-top: none;
             text-align: right;
             font-family: var(--font-urdu);
-            line-height: 2.1;
-            font-size: 1.0rem;
+            line-height: 1.9;
+            font-size: 0.95rem;
             color: #374151;
             border-radius: 0 0 7px 7px;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         /* --- SPECIAL BLOCKS --- */
@@ -651,13 +652,13 @@
 
         .btn {
             flex: 1;
-            padding: 13px 10px;
+            padding: 11px 10px;
             border-radius: var(--radius);
             border: none;
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -667,8 +668,8 @@
         }
 
         .btn:active { transform: scale(0.97); }
-        .btn span.en { font-size: 0.9rem; font-weight: 700; }
-        .btn span.ur { font-family: var(--font-urdu); font-size: 0.85rem; font-weight: normal; margin-top: 1px; }
+        .btn span.en { font-size: 0.85rem; font-weight: 700; }
+        .btn span.ur { font-family: var(--font-urdu); font-size: 0.82rem; font-weight: normal; margin-top: 1px; }
 
         .btn-primary {
             background: var(--primary);
@@ -905,48 +906,48 @@
         html[lang="ur"] .top-home-btn .en { display: none; }
 
         /* --- HOME SCREEN CARDS --- */
-        #home-screen { padding: 8px 0 20px; }
+        #home-screen { padding: 4px 0 16px; }
 
         .home-greeting {
             text-align: center;
-            padding: 18px 16px 14px;
+            padding: 12px 16px 10px;
         }
         .home-greeting .bismillah {
             font-family: var(--font-urdu);
-            font-size: 1.6rem;
+            font-size: 1.45rem;
             color: var(--accent);
             direction: rtl;
             line-height: 1.4;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .home-greeting .tagline-en {
             font-family: var(--font-english);
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
             font-weight: 500;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
         }
         .home-greeting .tagline-ur {
             font-family: var(--font-urdu);
-            font-size: 1rem;
+            font-size: 0.92rem;
             color: var(--text-muted);
             direction: rtl;
             display: block;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .home-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding: 0 4px;
+            gap: 10px;
+            padding: 0 2px;
         }
 
         .home-card {
             background: white;
-            border-radius: 14px;
-            padding: 20px 12px 18px;
+            border-radius: 12px;
+            padding: 16px 10px 14px;
             text-align: center;
             cursor: pointer;
             border: 1.5px solid var(--border);
@@ -955,7 +956,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             -webkit-tap-highlight-color: transparent;
         }
         .home-card:active { transform: scale(0.96); }
@@ -979,29 +980,29 @@
         .home-card.gold-card .card-icon { background: rgba(255,255,255,0.15); }
 
         .card-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             background: var(--primary-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
+            font-size: 1.35rem;
         }
 
         .card-title-en {
             font-family: var(--font-english);
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             font-weight: 700;
             color: var(--slate);
             line-height: 1.2;
         }
         .card-title-ur {
             font-family: var(--font-urdu);
-            font-size: 1rem;
+            font-size: 0.92rem;
             color: var(--primary);
             direction: rtl;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .lang-card-inner {

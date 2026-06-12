@@ -815,6 +815,13 @@
         html[dir="rtl"] .step-title { font-family: var(--font-urdu); direction: rtl; }
         html[dir="rtl"] .step-urdu-label { display: none; }
 
+        /* Hide Urdu sub-labels in English mode */
+        html[lang="en"] .urdu-label-main,
+        html[lang="en"] .urdu-subtitle { display: none !important; }
+        /* Show them back in Urdu mode */
+        html[lang="ur"] .urdu-label-main,
+        html[lang="ur"] .urdu-subtitle { display: block !important; }
+
         /* --- LANGUAGE TOGGLE --- */
         .lang-pill {
             display: flex;
@@ -1447,6 +1454,13 @@
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
         document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
         document.documentElement.lang = l === 'ur' ? 'ur' : 'en';
+        // Hide English <label> when an Urdu label sibling exists
+        document.querySelectorAll('.field-card label, .nisab-sketch-container label').forEach(lbl => {
+            const next = lbl.nextElementSibling;
+            if (next && (next.classList.contains('urdu-label-main') || next.classList.contains('urdu-subtitle'))) {
+                lbl.style.display = l === 'ur' ? 'none' : '';
+            }
+        });
     }
 
     function toggleReadFirst(btn) {
@@ -1863,6 +1877,7 @@
         loadHistory();
         document.getElementById('calcBtn').onclick = calculate;
         updateHijri();
+        setLang('en');
     };
     
     window.onclick = function(event) { if (event.target == document.getElementById('historyModal')) closeHistory(); }

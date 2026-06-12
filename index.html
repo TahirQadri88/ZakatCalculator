@@ -709,7 +709,7 @@
         .btn-clear:hover { background: #FEE2E2; }
 
         /* --- TOP NAV --- */
-        .top-nav-row { display: flex; align-items: center; margin-bottom: 8px; }
+        .top-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
 
         .top-back-btn {
             background: none;
@@ -726,6 +726,28 @@
             transition: color 0.15s;
         }
         .top-back-btn:hover { color: var(--primary); }
+
+        .top-home-btn {
+            background: none;
+            border: 1px solid #E5E7EB;
+            color: #6B7280;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-english);
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: all 0.15s;
+        }
+        .top-home-btn:hover { color: var(--primary); border-color: var(--primary); background: var(--primary-light); }
+        .top-home-btn .ur { font-family: var(--font-urdu); font-size: 0.9rem; }
+
+        /* Clickable progress dots */
+        .prog-step.done { cursor: pointer; }
+        .prog-step.done:hover .prog-dot { background: var(--accent); border-color: var(--accent); transform: scale(1.1); }
 
         /* --- INSTALL BTN --- */
         #installBtn {
@@ -875,6 +897,12 @@
         html[lang="en"] .lbl-ur { display: none !important; }
         html[lang="en"] .lbl-en { display: block !important; }
         .lbl-ur { display: none; font-family: var(--font-urdu); direction: rtl; text-align: center; }
+
+        /* Nav button bilingual spans */
+        html[lang="en"] .top-back-btn .ur,
+        html[lang="en"] .top-home-btn .ur { display: none; }
+        html[lang="ur"] .top-back-btn .en,
+        html[lang="ur"] .top-home-btn .en { display: none; }
 
         /* --- HOME SCREEN CARDS --- */
         #home-screen { padding: 8px 0 20px; }
@@ -1073,7 +1101,7 @@
 
 <header>
     <div class="header-top-row">
-        <div class="header-emblem">☽</div>
+        <div class="header-emblem" onclick="goHome()" style="cursor:pointer;" title="Home">☽</div>
         <div class="header-content">
             <h1>ZAKAT CALCULATOR</h1>
             <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
@@ -1182,7 +1210,8 @@
     <!-- STEP 1 -->
     <div id="step-1" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="goHome()">← Home</button>
+            <button type="button" class="top-back-btn" onclick="goHome()"><span class="en">← Home</span><span class="ur" style="font-family:var(--font-urdu)">← ہوم</span></button>
+            <span style="font-family:var(--font-english);font-size:0.75rem;color:#9CA3AF;font-weight:600;">Step 1 / 4</span>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 1: Profile, Eligibility &amp; Nisab</div>
@@ -1324,7 +1353,8 @@
     <!-- STEP 2 -->
     <div id="step-2" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(1)">← Back</button>
+            <button type="button" class="top-back-btn" onclick="nav(1)"><span class="en">← Profile</span><span class="ur" style="font-family:var(--font-urdu)">← پروفائل</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 2: Core Assets Eligible for Zakat</div>
@@ -1431,7 +1461,8 @@
     <!-- STEP 3 -->
     <div id="step-3" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(2)">← Back</button>
+            <button type="button" class="top-back-btn" onclick="nav(2)"><span class="en">← Assets</span><span class="ur" style="font-family:var(--font-urdu)">← اثاثے</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 3: Receivables</div>
@@ -1535,7 +1566,8 @@
     <!-- STEP 4 -->
     <div id="step-4" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(3)">← Back</button>
+            <button type="button" class="top-back-btn" onclick="nav(3)"><span class="en">← Receivables</span><span class="ur" style="font-family:var(--font-urdu)">← واجب الوصول</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 4: Liabilities (Deductions)</div>
@@ -1572,7 +1604,8 @@
     <!-- STEP 5 -->
     <div id="step-5" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(4)">← Edit Data</button>
+            <button type="button" class="top-back-btn" onclick="nav(4)"><span class="en">← Edit Data</span><span class="ur" style="font-family:var(--font-urdu)">← تبدیل کریں</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
 
         <!-- Report Header -->
@@ -1664,6 +1697,7 @@
             <button type="button" class="btn btn-primary" onclick="saveToHistory()"><span class="en">💾 Save Record</span><span class="ur">محفوظ کریں</span></button>
         </div>
         <button type="button" class="btn btn-gold" onclick="shareWhatsApp()"><span class="en">📤 Share Detailed Report</span><span class="ur">واٹس ایپ پر شیئر کریں</span></button>
+        <button type="button" class="btn btn-prev" style="width:100%;margin-top:8px;" onclick="goHome()"><span class="en">🏠 Back to Home</span><span class="ur" style="font-family:var(--font-urdu)">🏠 ہوم پر واپس</span></button>
     </div>
 </div>
 
@@ -2171,18 +2205,24 @@
             const step = document.getElementById('ps' + i);
             if (!step) continue;
             step.classList.remove('active', 'done');
-            if (i < s) step.classList.add('done');
-            else if (i === s) step.classList.add('active');
-
-            // Update dot content
+            if (i < s) {
+                step.classList.add('done');
+                step.onclick = () => nav(i);
+                step.title = 'Go to step ' + i;
+            } else if (i === s) {
+                step.classList.add('active');
+                step.onclick = null;
+                step.title = '';
+            } else {
+                step.onclick = null;
+                step.title = '';
+            }
             const dot = step.querySelector('.prog-dot');
             if (dot) dot.textContent = (i < s) ? '✓' : (i === 5 ? '✓' : i);
         }
         for (let i = 1; i <= 4; i++) {
             const line = document.getElementById('pl' + i);
-            if (line) {
-                line.classList.toggle('done', i < s);
-            }
+            if (line) line.classList.toggle('done', i < s);
         }
     }
 

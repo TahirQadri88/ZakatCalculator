@@ -1878,20 +1878,20 @@
             msgFail:      'Could not fetch rate. Please enter manually.',
         },
         ur: {
-            fetching:     d => `${d} کی قیمت حاصل ہو رہی ہے…`,
+            fetching:     d => `<bdi>${d}</bdi> کی قیمت حاصل ہو رہی ہے…`,
             fetchingNow:  'قیمت حاصل ہو رہی ہے…',
-            histLabel:    d => `📅 <strong>${d}</strong> کی تاریخی قیمت (jsDelivr / currency-api)`,
-            liveLabel:    d => `✅ آج <strong>(${d})</strong> کی قیمت (jsDelivr / currency-api)`,
-            silverTola:   (v, c) => `چاندی: <strong>${c} ${v} / تولہ</strong>`,
-            silverOz:     (v, c) => `چاندی: <strong>${c} ${v} / ٹرائے اونس</strong>`,
-            silverBoth:   (t, o, c) => `چاندی: <strong>${c} ${t} / تولہ</strong> &nbsp;·&nbsp; ${c} ${o} / ٹرائے اونس`,
-            verify:       `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">تصدیق: goldpricelive.pk ↗</a>`,
+            histLabel:    d => `📅 <strong><bdi>${d}</bdi></strong> کی تاریخی قیمت`,
+            liveLabel:    d => `✅ آج <strong>(<bdi>${d}</bdi>)</strong> کی قیمت`,
+            silverTola:   (v, c) => `چاندی: <strong><bdi>${c} ${v}</bdi> / تولہ</strong>`,
+            silverOz:     (v, c) => `چاندی: <strong><bdi>${c} ${v}</bdi> / ٹرائے اونس</strong>`,
+            silverBoth:   (t, o, c) => `چاندی: <strong><bdi>${c} ${t}</bdi> / تولہ</strong> &nbsp;·&nbsp; <bdi>${c} ${o}</bdi> / ٹرائے اونس`,
+            verify:       `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;unicode-bidi:plaintext;">تصدیق: goldpricelive.pk ↗</a>`,
             disclaimer:   '⚠ یہ قیمت تقریبی ہے۔ زکوٰۃ سے پہلے مقامی سرافہ بازار سے تصدیق کریں۔',
-            noHistory:    d => `⚠️ ${d} کی تاریخی قیمت دستیاب نہیں۔ ڈیٹا جنوری 2024 سے دستیاب ہے۔`,
-            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — تاریخ کے مطابق دیکھیں &nbsp;·&nbsp; یا 📈 پر ٹیپ کریں<br>• یا نیچے خود درج کریں۔`,
+            noHistory:    d => `⚠️ <bdi>${d}</bdi> کی تاریخی قیمت دستیاب نہیں۔ ڈیٹا جنوری 2024 سے دستیاب ہے۔`,
+            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — تاریخ کے مطابق دیکھیں<br>• یا 📈 پر ٹیپ کریں، یا نیچے خود درج کریں۔`,
             fetchFailed:  `⚠️ قیمت حاصل نہ ہو سکی۔ <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> ملاحظہ کریں`,
             btnText:      'چاندی کی قیمت حاصل کریں',
-            msgOk:        d => `${d} کی قیمت لوڈ ہو گئی`,
+            msgOk:        d => `<bdi>${d}</bdi> کی قیمت لوڈ ہو گئی`,
             msgFail:      'قیمت حاصل نہ ہو سکی۔ خود درج کریں۔',
         }
     };
@@ -2222,10 +2222,10 @@
             const TR = t();
             info.style.display = 'block';
             info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+            const silverLine = isPKR ? TR.silverBoth(tolaVal, ozVal, 'PKR') : TR.silverOz(pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2}), targetCode);
+            const verifyLine = isPKR ? (lang === 'ur' ? `<br>${TR.verify}` : ` &nbsp;·&nbsp; ${TR.verify}`) : '';
             info.innerHTML = (isHistorical ? TR.histLabel(dateLabel) : TR.liveLabel(dateLabel))
-                + `<br>`
-                + (isPKR ? TR.silverBoth(tolaVal, ozVal, 'PKR') : TR.silverOz(pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2}), targetCode))
-                + (isPKR ? ` &nbsp;·&nbsp; ${TR.verify}` : '')
+                + `<br>` + silverLine + verifyLine
                 + `<br><em style="color:#B45309;">${TR.disclaimer}</em>`;
 
             msg(TR.msgOk(dateLabel));

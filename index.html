@@ -1911,92 +1911,103 @@
         const txt = document.getElementById('fetchRateTxt');
         const info = document.getElementById('rateSourceInfo');
 
-        // Check if the selected Zakat date is today or in the future
-        const zakatDateVal = document.getElementById('g_date').value;
+        const zakatDateVal = document.getElementById('g_date').value; // YYYY-MM-DD
         const zakatDate = zakatDateVal ? new Date(zakatDateVal) : null;
         const today = new Date(); today.setHours(0,0,0,0);
         if (zakatDate) zakatDate.setHours(0,0,0,0);
-
         const dateLabel = zakatDate
             ? zakatDate.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })
             : '—';
+        const isPast = zakatDate && zakatDate < today;
+        const apiDate = isPast ? zakatDateVal : 'latest'; // use exact date for historical, 'latest' for today
 
-        if (!zakatDate || zakatDate < today) {
-            // Past date — warn but still allow fetch with clear label
-            info.style.display = 'block';
-            info.innerHTML = `⚠️ <strong>Your Zakat date (${dateLabel}) is in the past.</strong>`
-                + ` For correct Zakat, use the silver rate from <strong>${dateLabel}</strong>, not today's rate.`
-                + `<br>• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — look up rate by date`
-                + ` &nbsp;·&nbsp; Or tap <strong>📈</strong> for gold rate table`
-                + `<br><em style="color:#6B7280; font-size:0.78rem;">Today's rate loaded below for reference only.</em>`;
-            // Fall through — still fetch today's rate so the field isn't empty
-        }
-
-        icon.textContent = '⏳'; txt.textContent = 'Fetching…'; btn.disabled = true;
+        icon.textContent = '⏳';
+        txt.textContent = isPast ? `Fetching rate for ${dateLabel}…` : 'Fetching…';
+        btn.disabled = true;
 
         const currPref = document.getElementById('currency_pref').value.trim();
-        const targetCode = CURR_CODE[currPref];
+        const targetCode = CURR_CODE[currPref] || 'USD';
 
         try {
-            // --- PKR: try goldpricez.com directly (Sarafa/local rate, PKR per tola) ---
-            if (targetCode === 'PKR') {
-                try {
-                    const tolaRate = await fetchSilverPKRDirect();
-                    document.getElementById('s_unit').value = 'tola';
-                    document.getElementById('s_rate').value = tolaRate.toLocaleString('en-US', { maximumFractionDigits: 2 });
-                    calcNisab();
-                    const stamp = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-                    info.style.display = 'block';
-                    info.innerHTML = `✅ <strong>PKR ${tolaRate.toLocaleString()} / tola</strong>`
-                        + ` &nbsp;·&nbsp; Source: goldpricez.com (Sarafa) &nbsp;·&nbsp; ${stamp}`
-                        + `<br>Rate is for <strong>today (${dateLabel})</strong>`
-                        + ` &nbsp;·&nbsp; <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify: goldpricelive.pk ↗</a>`
-                        + `<br><em style="color:#B45309;">⚠ Rates are approximate. Verify with local Sarafa market before Zakat calculation.</em>`;
-                    msg('Silver rate updated from goldpricez.com (Sarafa)');
-                    return;
-                } catch (e) {
-                    console.warn('goldpricez.com failed, using fallback:', e.message);
-                }
+            // @fawazahmed0/currency-api on jsDelivr — supports any date from 2024-01-01 onwards
+            // XAG = troy oz of silver treated as a currency; xag.pkr = oz value of 1 PKR
+            // URL: cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{YYYY-MM-DD OR latest}/v1/currencies/xag.json
+            const cdnUrl = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${apiDate}/v1/currencies/xag.json`;
+            const res = await fetch(cdnUrl);
+            if (!res.ok) throw new Error('CDN ' + res.status);
+            const data = await res.json();
+
+            const currKey = targetCode.toLowerCase();
+            const xagInCurr = data.xag[currKey]; // amount of currency per 1 troy oz silver = 1/xagInCurr... wait
+            // data.xag.pkr = how many PKR equal 1 troy oz of silver (silver priced IN that currency)
+            // Actually: xag.usd = price of 1 XAG in USD = price per troy oz in USD ✓
+            if (!xagInCurr) throw new Error('Currency ' + currKey + ' not in dataset');
+
+            const pricePerOz = xagInCurr; // price of 1 troy oz in target currency
+
+            // For PKR specifically, also convert to per-tola for Pakistani users
+            const isPKR = targetCode === 'PKR';
+            if (isPKR) {
+                const pricePerTola = pricePerOz * (11.664 / 31.1035);
+                document.getElementById('s_unit').value = 'tola';
+                document.getElementById('s_rate').value = pricePerTola.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            } else {
+                document.getElementById('s_unit').value = 'oz';
+                document.getElementById('s_rate').value = pricePerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
             }
-
-            // --- Coinbase XAG-USD × FX (fallback / non-PKR) ---
-            const metalRes = await fetch('https://api.coinbase.com/v2/prices/XAG-USD/spot');
-            if (!metalRes.ok) throw new Error('Coinbase ' + metalRes.status);
-            const usdPerOz = parseFloat((await metalRes.json()).data.amount);
-            if (!usdPerOz) throw new Error('No XAG price');
-
-            let localPerOz = usdPerOz, fxRate = 1, displayCode = 'USD', fxSource = '';
-            if (targetCode && targetCode !== 'USD') {
-                try {
-                    const cdnRes = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
-                    if (cdnRes.ok) { fxRate = (await cdnRes.json()).usd[targetCode.toLowerCase()]; fxSource = 'jsDelivr CDN'; }
-                } catch (_) {}
-                if (!fxRate) {
-                    fxRate = (await (await fetch('https://api.exchangerate-api.com/v4/latest/USD')).json()).rates[targetCode];
-                    fxSource = 'ExchangeRate-API';
-                }
-                if (!fxRate) throw new Error('Currency not found: ' + targetCode);
-                localPerOz = usdPerOz * fxRate; displayCode = targetCode;
-            }
-
-            document.getElementById('s_unit').value = 'oz';
-            document.getElementById('s_rate').value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
             calcNisab();
-            const stamp = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+            const dataDate = data.date || apiDate;
+            const isHistorical = isPast;
             info.style.display = 'block';
-            info.innerHTML = `✅ XAG-USD $${usdPerOz.toFixed(3)}`
-                + (displayCode !== 'USD' ? ` · USD/${displayCode}: ${fxRate.toFixed(2)} (${fxSource})` : '')
-                + `<br><strong>${displayCode} ${localPerOz.toFixed(2)} / troy oz</strong> · ${stamp}`
-                + ` · Rate is for <strong>today (${dateLabel})</strong>`
-                + (targetCode === 'PKR' ? ` · <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify ↗</a>` : '')
+            info.innerHTML = (isHistorical
+                ? `📅 <strong>Historical rate for ${dateLabel}</strong> (from jsDelivr/currency-api)`
+                : `✅ <strong>Live rate for today (${dateLabel})</strong> (jsDelivr/currency-api)`)
+                + `<br>`
+                + (isPKR
+                    ? `Silver: <strong>PKR ${(pricePerOz * (11.664/31.1035)).toLocaleString('en-US',{maximumFractionDigits:0})} / tola</strong>`
+                      + ` &nbsp;·&nbsp; PKR ${pricePerOz.toLocaleString('en-US',{maximumFractionDigits:0})} / troy oz`
+                    : `Silver: <strong>${targetCode} ${pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2})} / troy oz</strong>`)
+                + (isPKR ? ` &nbsp;·&nbsp; <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify ↗</a>` : '')
                 + `<br><em style="color:#B45309;">⚠ Rates are approximate. Verify with local Sarafa market before Zakat calculation.</em>`;
-            msg('Silver rate updated');
+
+            msg(isHistorical ? `Historical rate loaded for ${dateLabel}` : 'Live silver rate loaded');
+
         } catch (e) {
-            msg('Could not fetch rate. Please enter manually.');
-            info.style.display = 'block';
-            info.innerHTML = `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> for the current Sarafa rate.`;
+            // CDN failed (date too old <2024, or network issue) — fallback to Coinbase for today only
+            console.warn('jsDelivr XAG fetch failed:', e.message);
+            if (isPast) {
+                info.style.display = 'block';
+                info.innerHTML = `⚠️ Historical rate not available for ${dateLabel} (data available from Jan 2024).`
+                    + `<br>• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — look up by date`
+                    + ` &nbsp;·&nbsp; Or tap 📈 for gold rate table`
+                    + `<br>• Or enter the rate manually below.`;
+                msg('Historical rate unavailable — enter manually');
+            } else {
+                // Today but CDN failed — try Coinbase
+                try {
+                    const metalRes = await fetch('https://api.coinbase.com/v2/prices/XAG-USD/spot');
+                    const usdPerOz = parseFloat((await metalRes.json()).data.amount);
+                    let localPerOz = usdPerOz;
+                    if (targetCode !== 'USD') {
+                        const fx = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                        localPerOz = usdPerOz * (await fx.json()).rates[targetCode];
+                    }
+                    document.getElementById('s_unit').value = 'oz';
+                    document.getElementById('s_rate').value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
+                    calcNisab();
+                    info.style.display = 'block';
+                    info.innerHTML = `✅ ${targetCode} ${localPerOz.toFixed(2)} / troy oz · Coinbase (fallback) · ${dateLabel}`
+                        + `<br><em style="color:#B45309;">⚠ Verify with local Sarafa market.</em>`;
+                    msg('Silver rate loaded (fallback source)');
+                } catch (_) {
+                    msg('Could not fetch rate. Please enter manually.');
+                    info.style.display = 'block';
+                    info.innerHTML = `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a>`;
+                }
+            }
         } finally {
-            icon.textContent = '🔄'; txt.textContent = 'Fetch Live Silver Rate'; btn.disabled = false;
+            icon.textContent = '🔄'; txt.textContent = 'Fetch Silver Rate'; btn.disabled = false;
         }
     }
 

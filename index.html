@@ -853,6 +853,130 @@
         html[lang="en"] .lbl-en { display: block !important; }
         .lbl-ur { display: none; font-family: var(--font-urdu); direction: rtl; text-align: center; }
 
+        /* --- HOME SCREEN CARDS --- */
+        #home-screen { padding: 8px 0 20px; }
+
+        .home-greeting {
+            text-align: center;
+            padding: 18px 16px 14px;
+        }
+        .home-greeting .bismillah {
+            font-family: var(--font-urdu);
+            font-size: 1.6rem;
+            color: var(--accent);
+            direction: rtl;
+            line-height: 1.4;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .home-greeting .tagline-en {
+            font-family: var(--font-english);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        .home-greeting .tagline-ur {
+            font-family: var(--font-urdu);
+            font-size: 1rem;
+            color: var(--text-muted);
+            direction: rtl;
+            display: block;
+            line-height: 1.5;
+        }
+
+        .home-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 4px;
+        }
+
+        .home-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px 12px 18px;
+            text-align: center;
+            cursor: pointer;
+            border: 1.5px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .home-card:active { transform: scale(0.96); }
+        .home-card:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(6,78,59,0.12); }
+
+        .home-card.primary-card {
+            background: linear-gradient(145deg, var(--primary), #0A6B52);
+            border-color: transparent;
+            color: white;
+        }
+        .home-card.primary-card .card-title-en { color: white; }
+        .home-card.primary-card .card-title-ur { color: rgba(255,255,255,0.9); }
+        .home-card.primary-card .card-icon { background: rgba(255,255,255,0.15); }
+
+        .home-card.gold-card {
+            background: linear-gradient(145deg, #92400E, #B45309);
+            border-color: transparent;
+        }
+        .home-card.gold-card .card-title-en { color: white; }
+        .home-card.gold-card .card-title-ur { color: rgba(255,255,255,0.9); }
+        .home-card.gold-card .card-icon { background: rgba(255,255,255,0.15); }
+
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        .card-title-en {
+            font-family: var(--font-english);
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--slate);
+            line-height: 1.2;
+        }
+        .card-title-ur {
+            font-family: var(--font-urdu);
+            font-size: 1rem;
+            color: var(--primary);
+            direction: rtl;
+            line-height: 1.4;
+        }
+
+        .lang-card-inner {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .lang-choice {
+            flex: 1;
+            padding: 8px 4px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: #F9FAFB;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            transition: all 0.15s;
+            font-family: var(--font-english);
+        }
+        .lang-choice.ur-opt { font-family: var(--font-urdu); font-size: 1rem; }
+        .lang-choice.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+
+        /* Hide progress bar on home screen */
+        body.on-home .progress-bar-wrap { display: none; }
+
         /* --- FOOTER --- */
         footer { text-align: center; padding: 20px 10px; color: #6B7280; font-size: 0.78rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
         footer strong { color: var(--label-gold); font-weight: 900; }
@@ -946,8 +1070,54 @@
     
     <button id="installBtn" onclick="installApp()">📲 Install App</button>
 
+    <!-- HOME SCREEN -->
+    <div id="home-screen">
+        <div class="home-greeting">
+            <span class="bismillah">بِسْمِ اللّٰہِ الرَّحْمٰنِ الرَّحِیْم</span>
+            <span class="tagline-en">Calculate your Zakat with confidence</span>
+            <span class="tagline-ur">اپنی زکوٰۃ درست طریقے سے نکالیں</span>
+        </div>
+
+        <div class="home-cards">
+            <!-- Language -->
+            <div class="home-card" onclick="">
+                <div class="card-icon">🌐</div>
+                <div class="card-title-en">App Language</div>
+                <div class="card-title-ur">زبان منتخب کریں</div>
+                <div class="lang-card-inner">
+                    <div class="lang-choice selected" id="lc-en" onclick="event.stopPropagation(); homeLang('en')">EN</div>
+                    <div class="lang-choice ur-opt" id="lc-ur" onclick="event.stopPropagation(); homeLang('ur')">اردو</div>
+                </div>
+            </div>
+
+            <!-- Calculate Zakat -->
+            <div class="home-card primary-card" onclick="goCalculate()">
+                <div class="card-icon">🕌</div>
+                <div class="card-title-en">Calculate Zakat</div>
+                <div class="card-title-ur">زکوٰۃ حساب</div>
+            </div>
+
+            <!-- My Records -->
+            <div class="home-card" onclick="openHistory()">
+                <div class="card-icon">📜</div>
+                <div class="card-title-en">My Zakat Records</div>
+                <div class="card-title-ur">میرا ریکارڈ</div>
+            </div>
+
+            <!-- FAQs -->
+            <div class="home-card gold-card" onclick="goFAQs()">
+                <div class="card-icon" style="background:rgba(255,255,255,0.15);">❓</div>
+                <div class="card-title-en">Zakat FAQs</div>
+                <div class="card-title-ur">عام سوالات</div>
+            </div>
+        </div>
+    </div>
+
     <!-- STEP 1 -->
-    <div id="step-1">
+    <div id="step-1" class="hidden">
+        <div class="top-nav-row">
+            <button type="button" class="top-back-btn" onclick="goHome()">← Home</button>
+        </div>
         <div class="step-header-card">
             <div class="step-title">Step 1: Profile, Eligibility &amp; Nisab</div>
             <div class="step-urdu-label">پروفائل، اہلیت اور نصاب</div>
@@ -1448,6 +1618,46 @@
     let currentStep = 1; // GLOBAL STATE
     let lang = 'en';
 
+    function goHome() {
+        document.getElementById('home-screen').classList.remove('hidden');
+        for (let i = 1; i <= 5; i++) {
+            const el = document.getElementById('step-' + i);
+            if (el) el.classList.add('hidden');
+        }
+        document.body.classList.add('on-home');
+        window.scrollTo(0, 0);
+    }
+
+    function goCalculate() {
+        document.getElementById('home-screen').classList.add('hidden');
+        document.body.classList.remove('on-home');
+        nav(1);
+    }
+
+    function goFAQs() {
+        goCalculate();
+        // Navigate to step 2 where FAQs live, then scroll to FAQ section
+        nav(2);
+        setTimeout(() => {
+            const el = document.getElementById('faqContent');
+            if (el) {
+                el.style.display = 'block';
+                const hdr = el.previousElementSibling;
+                if (hdr) hdr.classList.add('active');
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    }
+
+    function homeLang(l) {
+        document.getElementById('lc-en').classList.toggle('selected', l === 'en');
+        document.getElementById('lc-ur').classList.toggle('selected', l === 'ur');
+        setLang(l);
+        // Also sync header toggle buttons
+        document.getElementById('btnEn').classList.toggle('active', l === 'en');
+        document.getElementById('btnUr').classList.toggle('active', l === 'ur');
+    }
+
     function setLang(l) {
         lang = l;
         document.getElementById('btnEn').classList.toggle('active', l === 'en');
@@ -1628,6 +1838,7 @@
 
         // UPDATE GLOBAL STATE
         currentStep = s;
+        document.body.classList.remove('on-home');
 
         // Update progress bar
         updateProgressBar(s);
@@ -1878,6 +2089,7 @@
         document.getElementById('calcBtn').onclick = calculate;
         updateHijri();
         setLang('en');
+        document.body.classList.add('on-home');
     };
     
     window.onclick = function(event) { if (event.target == document.getElementById('historyModal')) closeHistory(); }

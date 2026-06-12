@@ -2032,6 +2032,8 @@
                 lbl.style.display = l === 'ur' ? 'none' : '';
             }
         });
+        // Refresh Hijri date in new language
+        updateHijri();
     }
 
     function toggleReadFirst(btn) {
@@ -2135,17 +2137,26 @@
     });
 
     function getHijri(dateStr, offset) {
-        if(!dateStr) return "Pick a Date";
+        if(!dateStr) return lang === 'ur' ? 'تاریخ منتخب کریں' : 'Pick a Date';
         let date = new Date(dateStr); date.setDate(date.getDate() + offset);
         let jd = Math.floor(date.getTime() / 86400000) + 2440588, l = jd - 1948440 + 10632, n = Math.floor((l - 1) / 10631);
         l = l - 10631 * n + 354;
         let j = (Math.floor((10985-l)/5316))*(Math.floor(50*l/17719))+(Math.floor(l/5670))*(Math.floor(43*l/15238));
         l = l - (Math.floor((30-j)/15))*(Math.floor(17719*j/50))-(Math.floor(j/16))*(Math.floor(15238*j/43))+29;
         let m = Math.floor(24*l/709), d = l - Math.floor(709*m/24), y = 30*n+j-30;
-        const months = ["Muharram", "Safar", "Rabi-I", "Rabi-II", "Jumada-I", "Jumada-II", "Rajab", "Sha'ban", "Ramadan", "Shawwal", "Dhu-al-Qi'dah", "Dhu-al-Hijjah"];
-        return `${d} ${months[m - 1]} ${y} AH`;
+        const monthsEn = ["Muharram","Safar","Rabi-I","Rabi-II","Jumada-I","Jumada-II","Rajab","Sha'ban","Ramadan","Shawwal","Dhu-al-Qi'dah","Dhu-al-Hijjah"];
+        const monthsUr = ["محرم","صفر","ربیع الاول","ربیع الثانی","جمادی الاول","جمادی الثانی","رجب","شعبان","رمضان","شوال","ذو القعدہ","ذو الحجہ"];
+        if (lang === 'ur') return `${toUrduNum(d)} ${monthsUr[m-1]} ${toUrduNum(y)} ھ`;
+        return `${d} ${monthsEn[m - 1]} ${y} AH`;
     }
-    function updateHijri() { const g = document.getElementById('g_date').value; if(g) document.getElementById('hijriOutput').innerText = getHijri(g, hijriOffset); }
+    function toUrduNum(n) { return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+    function toUrduDate(dateStr) {
+        const mnths = {Jan:'جنوری',Feb:'فروری',Mar:'مارچ',Apr:'اپریل',May:'مئی',Jun:'جون',Jul:'جولائی',Aug:'اگست',Sep:'ستمبر',Oct:'اکتوبر',Nov:'نومبر',Dec:'دسمبر'};
+        const dt = new Date(dateStr); dt.setHours(12);
+        const mo = dt.toLocaleDateString('en-GB', {month:'short'});
+        return `${toUrduNum(dt.getDate())} ${mnths[mo] || mo} ${toUrduNum(dt.getFullYear())}ء`;
+    }
+    function updateHijri() { const g = document.getElementById('g_date').value; document.getElementById('hijriOutput').innerText = getHijri(g, hijriOffset); }
     function adjH(v) { hijriOffset += v; updateHijri(); }
 
     const CURR_CODE = { 'Rs.': 'PKR', 'SAR': 'SAR', 'AED': 'AED', 'USD': 'USD', 'GBP': 'GBP', 'EUR': 'EUR', 'INR': 'INR' };
@@ -2174,7 +2185,7 @@
         const today = new Date(); today.setHours(0,0,0,0);
         if (zakatDate) zakatDate.setHours(0,0,0,0);
         const dateLabel = zakatDate
-            ? zakatDate.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })
+            ? (lang === 'ur' ? toUrduDate(zakatDateVal) : zakatDate.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }))
             : '—';
         const isPast = zakatDate && zakatDate < today;
         const apiDate = isPast ? zakatDateVal : 'latest'; // use exact date for historical, 'latest' for today

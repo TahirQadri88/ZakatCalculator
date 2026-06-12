@@ -977,6 +977,39 @@
         /* Hide progress bar on home screen */
         body.on-home .progress-bar-wrap { display: none; }
 
+        /* --- HISTORICAL RATES MODAL --- */
+        #histRatesModal { display:none; position:fixed; z-index:200; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
+        #histRatesModal.open { display:flex; }
+        .hist-rates-box {
+            background:white; border-radius:16px; width:95%; max-width:520px;
+            max-height:88vh; overflow-y:auto; padding:20px 16px;
+            box-shadow:0 20px 50px rgba(0,0,0,0.25);
+            position:relative;
+        }
+        .hist-rates-title {
+            font-family:var(--font-english); font-size:1rem; font-weight:800;
+            color:var(--primary); margin-bottom:4px;
+        }
+        .hist-rates-ur {
+            font-family:var(--font-urdu); font-size:1.1rem; color:var(--accent);
+            direction:rtl; display:block; text-align:right; margin-bottom:12px; line-height:1.5;
+        }
+        .hist-rates-note {
+            background:#FFF7ED; border:1px solid #FDE68A; border-radius:8px;
+            padding:10px 12px; font-size:0.78rem; color:#92400E;
+            font-family:var(--font-english); margin-bottom:14px; line-height:1.5;
+        }
+        .hist-rates-note .ur { font-family:var(--font-urdu); font-size:0.9rem; direction:rtl; display:block; text-align:right; margin-top:4px; color:#B45309; line-height:1.6; }
+        .hist-table { width:100%; border-collapse:collapse; font-family:var(--font-english); font-size:0.83rem; }
+        .hist-table thead th { background:var(--primary); color:white; padding:8px 10px; text-align:left; font-weight:700; position:sticky; top:0; }
+        .hist-table tbody tr:nth-child(even) { background:#F9FAFB; }
+        .hist-table tbody td { padding:7px 10px; border-bottom:1px solid #F3F4F6; vertical-align:middle; }
+        .hist-table .yr { font-weight:700; color:var(--primary-dark); white-space:nowrap; }
+        .hist-table .rate { font-weight:800; color:var(--accent); text-align:right; white-space:nowrap; }
+        .hist-table .note-col { font-size:0.75rem; color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:right; line-height:1.4; }
+        .hist-src { font-size:0.72rem; color:#9CA3AF; text-align:center; margin-top:12px; font-family:var(--font-english); }
+        .hist-close-btn { position:absolute; top:14px; right:14px; background:#F3F4F6; border:1px solid #E5E7EB; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; }
+
         /* --- FOOTER --- */
         footer { text-align: center; padding: 20px 10px; color: #6B7280; font-size: 0.78rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
         footer strong { color: var(--label-gold); font-weight: 900; }
@@ -1110,6 +1143,16 @@
                 <div class="card-title-en">Zakat FAQs</div>
                 <div class="card-title-ur">عام سوالات</div>
             </div>
+
+            <!-- Historical Rates -->
+            <div class="home-card" onclick="openHistRates()" style="grid-column:1/-1; flex-direction:row; justify-content:flex-start; gap:14px; padding:16px;">
+                <div class="card-icon" style="flex-shrink:0;">📈</div>
+                <div style="text-align:left;">
+                    <div class="card-title-en" style="text-align:left;">Historical Gold Rates (Pakistan)</div>
+                    <div class="card-title-ur" style="text-align:right; font-size:0.95rem; margin-top:2px;">پرانی زکوٰۃ کے لیے تاریخی قیمتیں</div>
+                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-english); margin-top:3px;">1947 – 2019 · Source: Daily Jang</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1210,9 +1253,12 @@
             <div class="sketch-instruction">
                 اوپر لکھی ہوئی تاریخ پر نصاب کی مقدار کا تعین کرنے کے لئے چاندی کا ریٹ درج کریں
             </div>
-            <button type="button" id="fetchRateBtn" onclick="fetchSilverRate()" style="width:100%; margin-bottom:8px; padding:10px; background:linear-gradient(135deg,#064E3B,#0A6B52); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; font-family:var(--font-english);">
-                <span id="fetchRateIcon">🔄</span> <span id="fetchRateTxt">Fetch Live Silver Rate</span>
-            </button>
+            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                <button type="button" id="fetchRateBtn" onclick="fetchSilverRate()" style="flex:1; padding:10px; background:linear-gradient(135deg,#064E3B,#0A6B52); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; font-family:var(--font-english);">
+                    <span id="fetchRateIcon">🔄</span> <span id="fetchRateTxt">Fetch Live Silver Rate</span>
+                </button>
+                <button type="button" onclick="openHistRates()" title="Historical rates for past Zakat" style="padding:10px 12px; background:#FFF7ED; border:1px solid #FDE68A; border-radius:8px; cursor:pointer; font-size:1rem; flex-shrink:0;" >📈</button>
+            </div>
             <div id="rateSourceInfo" style="display:none; text-align:center; font-size:0.72rem; color:#6B7280; margin-bottom:8px; font-family:var(--font-english); line-height:1.4;"></div>
             <div class="sketch-input-row">
                 <input type="text" id="s_rate" class="num-fmt" placeholder="Enter Silver Rate" inputmode="decimal" style="flex:2" oninput="calcNisab()">
@@ -1598,6 +1644,55 @@
     </div>
 </div>
 
+<!-- HISTORICAL RATES MODAL -->
+<div id="histRatesModal">
+    <div class="hist-rates-box">
+        <div class="hist-close-btn" onclick="closeHistRates()">✕</div>
+        <div class="hist-rates-title">Pakistan Gold Rates — Historical Reference</div>
+        <span class="hist-rates-ur">پاکستان میں سونے کی تاریخی قیمتیں (حوالہ)</span>
+
+        <div class="hist-rates-note">
+            <strong>For Overdue Zakat:</strong> Past Zakat must be calculated using prices from <em>that specific year</em>. Use this table to find the approximate gold rate. For silver (Nisab), contact your local Sarafa Association for the rate on your exact Zakat date.
+            <span class="ur">گزشتہ زکوٰۃ اسی سال کی قیمتوں سے نکالی جائے گی۔ نصاب کے لیے اس سال کی چاندی کی قیمت سرافہ ایسوسی ایشن سے معلوم کریں۔</span>
+        </div>
+
+        <table class="hist-table">
+            <thead><tr><th>Year / سال</th><th style="text-align:right">Rate (PKR)</th><th style="text-align:right">Unit</th></tr></thead>
+            <tbody>
+                <tr><td class="yr">1947</td><td class="rate">25</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Feb 1951</td><td class="rate">93</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Oct 1951</td><td class="rate">87</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Apr 1953</td><td class="rate">88</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Aug 1955</td><td class="rate">104</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Sep 1956</td><td class="rate">106</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Oct 1957</td><td class="rate">109</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Dec 1957</td><td class="rate">106</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Oct 1958</td><td class="rate">106</td><td class="note-col">فی تولہ (ایوب)</td></tr>
+                <tr><td class="yr">Jan 1962</td><td class="rate">132</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Mar 1969</td><td class="rate">170</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Dec 1971</td><td class="rate">159</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Oct 1972</td><td class="rate">277</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Nov 1977</td><td class="rate">665</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Mar 1985</td><td class="rate">1,740</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">May 1988</td><td class="rate">2,966</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Nov 1988</td><td class="rate">2,906</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Nov 1990</td><td class="rate">3,025</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Oct 1993</td><td class="rate">3,887</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Feb 1997</td><td class="rate">4,775</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Oct 1999</td><td class="rate">5,452</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Aug 2008</td><td class="rate">19,117</td><td class="note-col">فی 10 گرام</td></tr>
+                <tr><td class="yr">Jun 2012</td><td class="rate">57,700</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Mar 2013</td><td class="rate">60,000</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Jun 2013</td><td class="rate">53,700</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Aug 2017</td><td class="rate">50,900</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">May 2018</td><td class="rate">58,000</td><td class="note-col">فی تولہ</td></tr>
+                <tr><td class="yr">Sep 2019</td><td class="rate">88,600</td><td class="note-col">فی تولہ</td></tr>
+            </tbody>
+        </table>
+        <div class="hist-src">Source: Daily Jang, 4 September 2019 &nbsp;·&nbsp; Gold (Tezabi) rates, PKR&nbsp;·&nbsp; For silver Nisab rates contact Pakistan Saraf Association</div>
+    </div>
+</div>
+
 <div id="historyModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeHistory()">&times;</span>
@@ -1621,6 +1716,10 @@
     let deferredPrompt;
     let currentStep = 1; // GLOBAL STATE
     let lang = 'en';
+
+    function openHistRates() { document.getElementById('histRatesModal').classList.add('open'); }
+    function closeHistRates() { document.getElementById('histRatesModal').classList.remove('open'); }
+    window.addEventListener('click', e => { if (e.target === document.getElementById('histRatesModal')) closeHistRates(); });
 
     function goHome() {
         document.getElementById('home-screen').classList.remove('hidden');

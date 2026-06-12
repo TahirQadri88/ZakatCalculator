@@ -1210,6 +1210,10 @@
             <div class="sketch-instruction">
                 اوپر لکھی ہوئی تاریخ پر نصاب کی مقدار کا تعین کرنے کے لئے چاندی کا ریٹ درج کریں
             </div>
+            <button type="button" id="fetchRateBtn" onclick="fetchSilverRate()" style="width:100%; margin-bottom:8px; padding:10px; background:linear-gradient(135deg,#064E3B,#0A6B52); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; font-family:var(--font-english);">
+                <span id="fetchRateIcon">🔄</span> <span id="fetchRateTxt">Fetch Live Silver Rate</span>
+            </button>
+            <div id="rateSourceInfo" style="display:none; text-align:center; font-size:0.72rem; color:#6B7280; margin-bottom:8px; font-family:var(--font-english); line-height:1.4;"></div>
             <div class="sketch-input-row">
                 <input type="text" id="s_rate" class="num-fmt" placeholder="Enter Silver Rate" inputmode="decimal" style="flex:2" oninput="calcNisab()">
                 <select id="s_unit" style="flex:1.5; padding:8px 2px;" onchange="calcNisab()">
@@ -1786,6 +1790,58 @@
     }
     function updateHijri() { const g = document.getElementById('g_date').value; if(g) document.getElementById('hijriOutput').innerText = getHijri(g, hijriOffset); }
     function adjH(v) { hijriOffset += v; updateHijri(); }
+
+    const CURR_CODE = { 'Rs.': 'PKR', 'SAR': 'SAR', 'AED': 'AED', 'USD': 'USD', 'GBP': 'GBP', 'EUR': 'EUR', 'INR': 'INR' };
+
+    async function fetchSilverRate() {
+        const btn = document.getElementById('fetchRateBtn');
+        const icon = document.getElementById('fetchRateIcon');
+        const txt = document.getElementById('fetchRateTxt');
+        icon.textContent = '⏳'; txt.textContent = 'Fetching…'; btn.disabled = true;
+
+        try {
+            // Silver spot price (USD per troy oz) — Coinbase public API, CORS-enabled, no key required
+            const metalRes = await fetch('https://api.coinbase.com/v2/prices/XAG-USD/spot');
+            if (!metalRes.ok) throw new Error('Metal API error');
+            const metalData = await metalRes.json();
+            const usdPerOz = parseFloat(metalData.data.amount);
+            if (!usdPerOz) throw new Error('No silver price');
+
+            const currPref = document.getElementById('currency_pref').value.trim();
+            const targetCode = CURR_CODE[currPref];
+            let localPerOz = usdPerOz;
+            let displayCode = 'USD';
+
+            if (targetCode && targetCode !== 'USD') {
+                // Exchange rate — free, no key, CORS-enabled
+                const fxRes = await fetch(`https://api.exchangerate-api.com/v4/latest/USD`);
+                if (!fxRes.ok) throw new Error('FX API error');
+                const fxData = await fxRes.json();
+                const rate = fxData.rates[targetCode];
+                if (!rate) throw new Error('Currency not found');
+                localPerOz = usdPerOz * rate;
+                displayCode = targetCode;
+            }
+
+            document.getElementById('s_unit').value = 'oz';
+            const rateField = document.getElementById('s_rate');
+            rateField.value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
+            calcNisab();
+
+            const now = new Date();
+            const stamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('rateSourceInfo').style.display = 'block';
+            document.getElementById('rateSourceInfo').innerHTML =
+                `✅ ${displayCode} ${localPerOz.toFixed(2)} / troy oz &nbsp;·&nbsp; Source: Coinbase (XAG-USD)<br>Fetched: ${stamp} &nbsp;·&nbsp; <em>Market rate — verify for your Zakat date</em>`;
+            msg('Silver rate updated from Coinbase');
+        } catch (e) {
+            msg('Could not fetch rate. Please enter manually.');
+            document.getElementById('rateSourceInfo').style.display = 'block';
+            document.getElementById('rateSourceInfo').innerHTML = '⚠️ Rate fetch failed. Enter manually above.';
+        } finally {
+            icon.textContent = '🔄'; txt.textContent = 'Fetch Live Silver Rate'; btn.disabled = false;
+        }
+    }
 
     function calcNisab() {
         const rate = parseNumber(document.getElementById('s_rate').value);

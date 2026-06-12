@@ -27,19 +27,10 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. FONT EMBEDDING --- */
-        @font-face {
-            font-family: 'Jameel Noori Nastaleeq';
-            src: local('Jameel Noori Nastaleeq'), url('https://fonts.cdnfonts.com/s/15467/JameelNooriNastaleeq.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
         /* --- 2. DESIGN TOKENS --- */
         :root {
             --primary: #064E3B;
@@ -60,9 +51,9 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
             --radius: 10px;
-            --font-english: 'Playfair Display', serif;
-            --font-urdu: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
-            --font-urdu-title: 'Scheherazade New', serif;
+            --font-english: 'Inter', system-ui, sans-serif;
+            --font-urdu: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
+            --font-urdu-title: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -814,6 +805,47 @@
         .h-btn-share { background: #FFF7ED; color: #9A3412; }
         .h-btn-del { background: var(--danger-light); color: var(--danger); }
 
+        /* --- RTL OVERRIDES --- */
+        html[dir="rtl"] .btn-row { flex-direction: row-reverse; }
+        html[dir="rtl"] .header-top-row { flex-direction: row-reverse; }
+        html[dir="rtl"] .top-nav-row { flex-direction: row-reverse; }
+        html[dir="rtl"] .hist-header { flex-direction: row-reverse; }
+        html[dir="rtl"] input, html[dir="rtl"] select { text-align: right; direction: rtl; }
+        html[dir="rtl"] .field-card label { text-align: right; display: block; }
+        html[dir="rtl"] .step-title { font-family: var(--font-urdu); direction: rtl; }
+        html[dir="rtl"] .step-urdu-label { display: none; }
+
+        /* --- LANGUAGE TOGGLE --- */
+        .lang-pill {
+            display: flex;
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 3px;
+            border: 1px solid rgba(255,255,255,0.25);
+            flex-shrink: 0;
+        }
+        .lbtn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.65);
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 9px;
+            border-radius: 16px;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+        .lbtn.ur { font-family: var(--font-urdu); font-size: 0.85rem; padding: 2px 8px; }
+        .lbtn.active { background: var(--accent); color: var(--primary-dark); }
+
+        /* Language visibility helpers */
+        html[lang="ur"] .lbl-en { display: none !important; }
+        html[lang="ur"] .lbl-ur { display: block !important; }
+        html[lang="en"] .lbl-ur { display: none !important; }
+        html[lang="en"] .lbl-en { display: block !important; }
+        .lbl-ur { display: none; font-family: var(--font-urdu); direction: rtl; text-align: center; }
+
         /* --- FOOTER --- */
         footer { text-align: center; padding: 20px 10px; color: #6B7280; font-size: 0.78rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
         footer strong { color: var(--label-gold); font-weight: 900; }
@@ -860,10 +892,16 @@
             <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
             <div class="header-urdu-subtitle">دارُالإفتاء النّور</div>
         </div>
-        <div class="hist-btn-top" onclick="openHistory()">
-            <span class="icon">📜</span>
-            <span class="txt-en">History</span>
-            <span class="txt-ur">گزشتہ ریکارڈ</span>
+        <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end; flex-shrink:0;">
+            <div class="lang-pill">
+                <button class="lbtn active" id="btnEn" onclick="setLang('en')">EN</button>
+                <button class="lbtn ur" id="btnUr" onclick="setLang('ur')">اردو</button>
+            </div>
+            <div class="hist-btn-top" onclick="openHistory()">
+                <span class="icon">📜</span>
+                <span class="txt-en">History</span>
+                <span class="txt-ur">ریکارڈ</span>
+            </div>
         </div>
     </div>
 
@@ -1401,6 +1439,15 @@
     let hijriOffset = 0, nisabLimit = 0, lastResult = null, currentCurr = "Rs.";
     let deferredPrompt;
     let currentStep = 1; // GLOBAL STATE
+    let lang = 'en';
+
+    function setLang(l) {
+        lang = l;
+        document.getElementById('btnEn').classList.toggle('active', l === 'en');
+        document.getElementById('btnUr').classList.toggle('active', l === 'ur');
+        document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
+        document.documentElement.lang = l === 'ur' ? 'ur' : 'en';
+    }
 
     function toggleReadFirst(btn) {
         const c = document.getElementById('readFirstContent');

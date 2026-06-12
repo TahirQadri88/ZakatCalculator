@@ -865,6 +865,8 @@
         html[dir="rtl"] .top-nav-row { flex-direction: row-reverse; }
         html[dir="rtl"] .hist-header { flex-direction: row-reverse; }
         html[dir="rtl"] input, html[dir="rtl"] select { text-align: right; direction: rtl; }
+        /* Date input must stay LTR — browser renders it in OS locale format */
+        input[type="date"] { direction: ltr !important; text-align: left !important; }
         html[dir="rtl"] .field-card label { text-align: right; display: block; }
 
         /* Hide Urdu sub-labels in English mode */
@@ -1369,7 +1371,8 @@
         <div class="field-card">
             <label>Zakat Year End Date</label>
             <span class="urdu-label-main">زکوٰۃ کے سال کے اختتام کی تاریخ</span>
-            <input type="date" id="g_date" onchange="updateHijri()">
+            <input type="date" id="g_date" onchange="updateHijri(); updateUrduDateDisplay()">
+            <div id="urduDateDisplay" style="display:none; font-family:var(--font-urdu); font-size:1rem; color:var(--danger); text-align:right; direction:rtl; padding:4px 2px 0; font-weight:600;"></div>
             <div class="hijri-panel">
                 <button class="adj-btn" onclick="adjH(-1)">-</button>
                 <div style="font-size:1rem; font-weight:600;"><span id="hijriOutput">Pick a Date</span></div>
@@ -2032,8 +2035,9 @@
                 lbl.style.display = l === 'ur' ? 'none' : '';
             }
         });
-        // Refresh Hijri date in new language
+        // Refresh date displays in new language
         updateHijri();
+        updateUrduDateDisplay();
     }
 
     function toggleReadFirst(btn) {
@@ -2157,6 +2161,13 @@
         return `${toUrduNum(dt.getDate())} ${mnths[mo] || mo} ${toUrduNum(dt.getFullYear())}ء`;
     }
     function updateHijri() { const g = document.getElementById('g_date').value; document.getElementById('hijriOutput').innerText = getHijri(g, hijriOffset); }
+    function updateUrduDateDisplay() {
+        const el = document.getElementById('urduDateDisplay');
+        const g = document.getElementById('g_date').value;
+        if (!el) return;
+        if (lang === 'ur' && g) { el.style.display = 'block'; el.textContent = toUrduDate(g); }
+        else { el.style.display = 'none'; }
+    }
     function adjH(v) { hijriOffset += v; updateHijri(); }
 
     const CURR_CODE = { 'Rs.': 'PKR', 'SAR': 'SAR', 'AED': 'AED', 'USD': 'USD', 'GBP': 'GBP', 'EUR': 'EUR', 'INR': 'INR' };

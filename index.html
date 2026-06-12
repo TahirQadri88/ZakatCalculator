@@ -1892,30 +1892,59 @@
 
     const CURR_CODE = { 'Rs.': 'PKR', 'SAR': 'SAR', 'AED': 'AED', 'USD': 'USD', 'GBP': 'GBP', 'EUR': 'EUR', 'INR': 'INR' };
 
+    // Try to fetch PKR silver rate directly from goldpricez.com (Sarafa-based, per tola)
+    async function fetchSilverPKRDirect() {
+        const url = 'https://goldpricez.com/api/rates/currency/pkr/measure/tola';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('goldpricez ' + res.status);
+        const d = await res.json();
+        // Handle possible response shapes
+        const val = d?.silver?.tola ?? d?.silver ?? d?.XAG?.tola ?? d?.rates?.silver ?? d?.metal_rates?.silver?.tola;
+        const rate = parseFloat(val);
+        if (!rate || isNaN(rate)) throw new Error('No silver field in response');
+        return rate; // PKR per tola
+    }
+
     async function fetchSilverRate() {
         const btn = document.getElementById('fetchRateBtn');
         const icon = document.getElementById('fetchRateIcon');
         const txt = document.getElementById('fetchRateTxt');
         icon.textContent = '⏳'; txt.textContent = 'Fetching…'; btn.disabled = true;
 
-        try {
-            // 1. Silver spot price in USD/troy oz — Coinbase public API (CORS-enabled, no key)
-            const metalRes = await fetch('https://api.coinbase.com/v2/prices/XAG-USD/spot');
-            if (!metalRes.ok) throw new Error('Coinbase error ' + metalRes.status);
-            const metalData = await metalRes.json();
-            const usdPerOz = parseFloat(metalData.data.amount);
-            if (!usdPerOz) throw new Error('No XAG price returned');
+        const currPref = document.getElementById('currency_pref').value.trim();
+        const targetCode = CURR_CODE[currPref];
+        const info = document.getElementById('rateSourceInfo');
 
-            const currPref = document.getElementById('currency_pref').value.trim();
-            const targetCode = CURR_CODE[currPref];
-            let localPerOz = usdPerOz;
-            let fxRate = 1;
-            let displayCode = 'USD';
-            let fxSource = '';
+        try {
+            // --- PKR: try goldpricez.com directly (Sarafa/local rate, PKR per tola) ---
+            if (targetCode === 'PKR') {
+                try {
+                    const tolaRate = await fetchSilverPKRDirect();
+                    document.getElementById('s_unit').value = 'tola';
+                    document.getElementById('s_rate').value = tolaRate.toLocaleString('en-US', { maximumFractionDigits: 2 });
+                    calcNisab();
+                    const stamp = new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+                    info.style.display = 'block';
+                    info.innerHTML = `✅ <strong>PKR ${tolaRate.toLocaleString()} / tola</strong> &nbsp;·&nbsp; Source: goldpricez.com (Sarafa rate)<br>${stamp}`
+                        + ` &nbsp;·&nbsp; <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify: goldpricelive.pk ↗</a>`
+                        + `<br><em style="color:#B45309;">⚠ Confirm with local Sarafa Bazar for your exact Zakat date</em>`;
+                    msg('Silver rate updated from goldpricez.com (Sarafa)');
+                    return;
+                } catch (e) {
+                    // goldpricez.com failed — fall through to Coinbase + FX fallback
+                    console.warn('goldpricez.com failed, using fallback:', e.message);
+                }
+            }
+
+            // --- All currencies (or PKR fallback): Coinbase XAG-USD × FX rate ---
+            const metalRes = await fetch('https://api.coinbase.com/v2/prices/XAG-USD/spot');
+            if (!metalRes.ok) throw new Error('Coinbase ' + metalRes.status);
+            const usdPerOz = parseFloat((await metalRes.json()).data.amount);
+            if (!usdPerOz) throw new Error('No XAG price');
+
+            let localPerOz = usdPerOz, fxRate = 1, displayCode = 'USD', fxSource = '';
 
             if (targetCode && targetCode !== 'USD') {
-                // 2a. Try @fawazahmed0/currency-api via jsDelivr CDN (static JSON, no key, very reliable)
-                let fxData = null;
                 try {
                     const cdnRes = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
                     if (cdnRes.ok) {
@@ -1924,17 +1953,12 @@
                         fxSource = 'jsDelivr CDN';
                     }
                 } catch (_) {}
-
-                // 2b. Fallback: exchangerate-api.com free tier
                 if (!fxRate) {
-                    const fxRes = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-                    if (!fxRes.ok) throw new Error('FX fallback failed');
-                    fxData = await fxRes.json();
-                    fxRate = fxData.rates[targetCode];
+                    const fb = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+                    fxRate = (await fb.json()).rates[targetCode];
                     fxSource = 'ExchangeRate-API';
                 }
-
-                if (!fxRate) throw new Error('Currency ' + targetCode + ' not found');
+                if (!fxRate) throw new Error('Currency not found: ' + targetCode);
                 localPerOz = usdPerOz * fxRate;
                 displayCode = targetCode;
             }
@@ -1943,28 +1967,19 @@
             document.getElementById('s_rate').value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
             calcNisab();
 
-            const now = new Date();
-            const stamp = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const stamp = new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
             const isPKR = targetCode === 'PKR';
-            const verifyLink = isPKR
-                ? ` &nbsp;·&nbsp; <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify: goldpricelive.pk ↗</a>`
-                : '';
-
-            document.getElementById('rateSourceInfo').style.display = 'block';
-            document.getElementById('rateSourceInfo').innerHTML =
-                `✅ XAG-USD: $${usdPerOz.toFixed(3)}` +
-                (displayCode !== 'USD' ? ` &nbsp;·&nbsp; USD/${displayCode}: ${fxRate.toFixed(2)} (${fxSource})` : '') +
-                `<br><strong>${displayCode} ${localPerOz.toFixed(2)} / troy oz</strong> &nbsp;·&nbsp; ${stamp}` +
-                verifyLink +
-                `<br><em style="color:#B45309;">⚠ Confirm Sarafa Bazar rate for your exact Zakat date</em>`;
-
-            msg('Silver rate updated — verify with local Sarafa Bazar');
+            info.style.display = 'block';
+            info.innerHTML = `✅ XAG-USD: $${usdPerOz.toFixed(3)}`
+                + (displayCode !== 'USD' ? ` · USD/${displayCode}: ${fxRate.toFixed(2)} (${fxSource})` : '')
+                + `<br><strong>${displayCode} ${localPerOz.toFixed(2)} / troy oz</strong> · ${stamp}`
+                + (isPKR ? ` · <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify ↗</a>` : '')
+                + `<br><em style="color:#B45309;">⚠ Rates are approximate. Verify with local Sarafa market before Zakat calculation.</em>`;
+            msg('Silver rate updated (intl. spot)');
         } catch (e) {
             msg('Could not fetch rate. Please enter manually.');
-            document.getElementById('rateSourceInfo').style.display = 'block';
-            document.getElementById('rateSourceInfo').innerHTML =
-                `⚠️ Fetch failed. Enter rate manually, or visit ` +
-                `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a>`;
+            info.style.display = 'block';
+            info.innerHTML = `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> for the current Sarafa rate.`;
         } finally {
             icon.textContent = '🔄'; txt.textContent = 'Fetch Live Silver Rate'; btn.disabled = false;
         }

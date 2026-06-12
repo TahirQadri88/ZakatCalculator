@@ -868,6 +868,52 @@
         html[lang="ur"] .urdu-label-main,
         html[lang="ur"] .urdu-subtitle { display: block !important; }
 
+        /* --- URDU MODE: SIDE LABEL LAYOUT --- */
+        /* In Urdu mode, field-cards become flex-row so the Urdu label sits
+           to the right of the input — avoids Nastaliq bottom-clipping issue */
+        html[lang="ur"] .field-card {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            align-items: center;
+            gap: 0 10px;
+        }
+        html[lang="ur"] .field-card > label {
+            display: none !important;
+        }
+        html[lang="ur"] .field-card > .urdu-label-main {
+            order: 2;
+            flex: 0 0 auto;
+            max-width: 42%;
+            margin: 0 !important;
+            padding-bottom: 8px; /* room for Nastaliq descenders */
+            overflow: visible;
+            line-height: 1.3;
+            font-size: 0.9rem;
+            text-align: right;
+            display: inline-block !important;
+        }
+        html[lang="ur"] .field-card > input,
+        html[lang="ur"] .field-card > select {
+            order: 1;
+            flex: 1 1 0;
+            min-width: 0;
+            margin-top: 0 !important;
+            width: auto !important;
+        }
+        /* Anything else (accordions, panels, notes, hijri) goes full-width below */
+        html[lang="ur"] .field-card > .accordion-header,
+        html[lang="ur"] .field-card > .accordion-content,
+        html[lang="ur"] .field-card > .advice-box-single-line,
+        html[lang="ur"] .field-card > .urdu-body,
+        html[lang="ur"] .field-card > .hijri-panel,
+        html[lang="ur"] .field-card > .urdu-subtitle,
+        html[lang="ur"] .field-card > div:not([class*="urdu-label"]) {
+            order: 10;
+            flex: 0 0 100%;
+            width: 100%;
+        }
+
         /* --- LANGUAGE TOGGLE --- */
         .lang-pill {
             display: flex;
@@ -1220,11 +1266,9 @@
         </div>
 
         <div class="field-card">
-            <div style="display:flex; justify-content:center; gap:8px; align-items:center;">
-                <label style="margin-bottom:0;">Full Name</label>
-                <span class="urdu-label-main" style="margin:0; font-size:1.1rem;">پورا نام</span>
-            </div>
-            <input type="text" id="u_name" placeholder="Enter Full Name" style="margin-top:5px;">
+            <label>Full Name</label>
+            <span class="urdu-label-main">پورا نام</span>
+            <input type="text" id="u_name" placeholder="Enter Full Name">
         </div>
 
         <div class="read-first-btn" onclick="toggleReadFirst(this)">

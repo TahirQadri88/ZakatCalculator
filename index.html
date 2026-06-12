@@ -1717,6 +1717,45 @@
     let currentStep = 1; // GLOBAL STATE
     let lang = 'en';
 
+    // Rate notice translations
+    const RT = {
+        en: {
+            fetching:     d => `Fetching rate for ${d}…`,
+            fetchingNow:  'Fetching…',
+            histLabel:    d => `📅 Historical rate for <strong>${d}</strong> (jsDelivr / currency-api)`,
+            liveLabel:    d => `✅ Live rate for today <strong>(${d})</strong> (jsDelivr / currency-api)`,
+            silverTola:   (v, c) => `Silver: <strong>${c} ${v} / tola</strong>`,
+            silverOz:     (v, c) => `Silver: <strong>${c} ${v} / troy oz</strong>`,
+            silverBoth:   (t, o, c) => `Silver: <strong>${c} ${t} / tola</strong> &nbsp;·&nbsp; ${c} ${o} / troy oz`,
+            verify:       `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify: goldpricelive.pk ↗</a>`,
+            disclaimer:   '⚠ Rates are approximate. Verify with local Sarafa market before Zakat calculation.',
+            noHistory:    d => `⚠️ Historical rate not available for ${d}. Data available from Jan 2024.`,
+            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — look up by date &nbsp;·&nbsp; Or tap 📈 for gold rate table<br>• Or enter the rate manually below.`,
+            fetchFailed:  `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a>`,
+            btnText:      'Fetch Silver Rate',
+            msgOk:        d => `Rate loaded for ${d}`,
+            msgFail:      'Could not fetch rate. Please enter manually.',
+        },
+        ur: {
+            fetching:     d => `${d} کی شرح حاصل ہو رہی ہے…`,
+            fetchingNow:  'شرح حاصل ہو رہی ہے…',
+            histLabel:    d => `📅 <strong>${d}</strong> کی تاریخی شرح (jsDelivr / currency-api)`,
+            liveLabel:    d => `✅ آج <strong>(${d})</strong> کی شرح (jsDelivr / currency-api)`,
+            silverTola:   (v, c) => `چاندی: <strong>${c} ${v} / تولہ</strong>`,
+            silverOz:     (v, c) => `چاندی: <strong>${c} ${v} / ٹرائے اونس</strong>`,
+            silverBoth:   (t, o, c) => `چاندی: <strong>${c} ${t} / تولہ</strong> &nbsp;·&nbsp; ${c} ${o} / ٹرائے اونس`,
+            verify:       `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">تصدیق: goldpricelive.pk ↗</a>`,
+            disclaimer:   '⚠ یہ شرح تقریبی ہے۔ زکوٰۃ سے پہلے مقامی سرافہ بازار سے تصدیق کریں۔',
+            noHistory:    d => `⚠️ ${d} کی تاریخی شرح دستیاب نہیں۔ ڈیٹا جنوری 2024 سے دستیاب ہے۔`,
+            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — تاریخ کے مطابق دیکھیں &nbsp;·&nbsp; یا 📈 پر ٹیپ کریں<br>• یا نیچے خود درج کریں۔`,
+            fetchFailed:  `⚠️ شرح حاصل نہ ہو سکی۔ <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> ملاحظہ کریں`,
+            btnText:      'چاندی کی شرح حاصل کریں',
+            msgOk:        d => `${d} کی شرح لوڈ ہو گئی`,
+            msgFail:      'شرح حاصل نہ ہو سکی۔ خود درج کریں۔',
+        }
+    };
+    function t() { return RT[lang] || RT.en; }
+
     function openHistRates() { document.getElementById('histRatesModal').classList.add('open'); }
     function closeHistRates() { document.getElementById('histRatesModal').classList.remove('open'); }
     window.addEventListener('click', e => { if (e.target === document.getElementById('histRatesModal')) closeHistRates(); });
@@ -1767,6 +1806,12 @@
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
         document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
         document.documentElement.lang = l === 'ur' ? 'ur' : 'en';
+        // Update rate fetch button text
+        const fetchTxt = document.getElementById('fetchRateTxt');
+        if (fetchTxt && !fetchTxt.textContent.includes('…')) fetchTxt.textContent = RT[l].btnText;
+        // Update rate info direction if visible
+        const info = document.getElementById('rateSourceInfo');
+        if (info) info.style.direction = l === 'ur' ? 'rtl' : 'ltr';
         // Hide English <label> when an Urdu label sibling exists
         document.querySelectorAll('.field-card label, .nisab-sketch-container label').forEach(lbl => {
             const next = lbl.nextElementSibling;
@@ -1922,7 +1967,7 @@
         const apiDate = isPast ? zakatDateVal : 'latest'; // use exact date for historical, 'latest' for today
 
         icon.textContent = '⏳';
-        txt.textContent = isPast ? `Fetching rate for ${dateLabel}…` : 'Fetching…';
+        txt.textContent = isPast ? t().fetching(dateLabel) : t().fetchingNow;
         btn.disabled = true;
 
         const currPref = document.getElementById('currency_pref').value.trim();
@@ -1959,30 +2004,28 @@
 
             const dataDate = data.date || apiDate;
             const isHistorical = isPast;
+            const tolaVal = (pricePerOz * (11.664/31.1035)).toLocaleString('en-US',{maximumFractionDigits:0});
+            const ozVal   = pricePerOz.toLocaleString('en-US',{maximumFractionDigits:0});
+            const TR = t();
             info.style.display = 'block';
-            info.innerHTML = (isHistorical
-                ? `📅 <strong>Historical rate for ${dateLabel}</strong> (from jsDelivr/currency-api)`
-                : `✅ <strong>Live rate for today (${dateLabel})</strong> (jsDelivr/currency-api)`)
+            info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+            info.innerHTML = (isHistorical ? TR.histLabel(dateLabel) : TR.liveLabel(dateLabel))
                 + `<br>`
-                + (isPKR
-                    ? `Silver: <strong>PKR ${(pricePerOz * (11.664/31.1035)).toLocaleString('en-US',{maximumFractionDigits:0})} / tola</strong>`
-                      + ` &nbsp;·&nbsp; PKR ${pricePerOz.toLocaleString('en-US',{maximumFractionDigits:0})} / troy oz`
-                    : `Silver: <strong>${targetCode} ${pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2})} / troy oz</strong>`)
-                + (isPKR ? ` &nbsp;·&nbsp; <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify ↗</a>` : '')
-                + `<br><em style="color:#B45309;">⚠ Rates are approximate. Verify with local Sarafa market before Zakat calculation.</em>`;
+                + (isPKR ? TR.silverBoth(tolaVal, ozVal, 'PKR') : TR.silverOz(pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2}), targetCode))
+                + (isPKR ? ` &nbsp;·&nbsp; ${TR.verify}` : '')
+                + `<br><em style="color:#B45309;">${TR.disclaimer}</em>`;
 
-            msg(isHistorical ? `Historical rate loaded for ${dateLabel}` : 'Live silver rate loaded');
+            msg(TR.msgOk(dateLabel));
 
         } catch (e) {
             // CDN failed (date too old <2024, or network issue) — fallback to Coinbase for today only
             console.warn('jsDelivr XAG fetch failed:', e.message);
             if (isPast) {
+                const TR2 = t();
                 info.style.display = 'block';
-                info.innerHTML = `⚠️ Historical rate not available for ${dateLabel} (data available from Jan 2024).`
-                    + `<br>• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — look up by date`
-                    + ` &nbsp;·&nbsp; Or tap 📈 for gold rate table`
-                    + `<br>• Or enter the rate manually below.`;
-                msg('Historical rate unavailable — enter manually');
+                info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                info.innerHTML = TR2.noHistory(dateLabel) + `<br>` + TR2.noHistLinks;
+                msg(TR2.msgFail);
             } else {
                 // Today but CDN failed — try Coinbase
                 try {
@@ -1996,18 +2039,23 @@
                     document.getElementById('s_unit').value = 'oz';
                     document.getElementById('s_rate').value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
                     calcNisab();
+                    const TR3 = t();
                     info.style.display = 'block';
-                    info.innerHTML = `✅ ${targetCode} ${localPerOz.toFixed(2)} / troy oz · Coinbase (fallback) · ${dateLabel}`
-                        + `<br><em style="color:#B45309;">⚠ Verify with local Sarafa market.</em>`;
-                    msg('Silver rate loaded (fallback source)');
+                    info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                    info.innerHTML = TR3.liveLabel(dateLabel) + `<br>`
+                        + TR3.silverOz(localPerOz.toFixed(2), targetCode)
+                        + `<br><em style="color:#B45309;">${TR3.disclaimer}</em>`;
+                    msg(TR3.msgOk(dateLabel));
                 } catch (_) {
-                    msg('Could not fetch rate. Please enter manually.');
+                    const TR4 = t();
+                    msg(TR4.msgFail);
                     info.style.display = 'block';
-                    info.innerHTML = `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a>`;
+                    info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                    info.innerHTML = TR4.fetchFailed;
                 }
             }
         } finally {
-            icon.textContent = '🔄'; txt.textContent = 'Fetch Silver Rate'; btn.disabled = false;
+            icon.textContent = '🔄'; txt.textContent = t().btnText; btn.disabled = false;
         }
     }
 

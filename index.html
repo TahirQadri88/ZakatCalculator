@@ -157,21 +157,22 @@
         }
 
         .header-urdu-title {
-            font-family: var(--font-urdu-title);
-            font-size: 1.4rem;
+            font-family: 'Scheherazade New', serif;
+            font-size: 1.55rem;
             color: #FFFFFF;
             margin-top: 1px;
             line-height: 1.2;
             font-weight: 700;
+            direction: rtl;
         }
 
         .header-urdu-subtitle {
-            font-family: var(--font-urdu-title);
-            font-size: 0.95rem;
+            font-family: 'Scheherazade New', serif;
+            font-size: 1.05rem;
             color: var(--accent);
             margin-top: 0;
             font-weight: 700;
-            letter-spacing: 0.3px;
+            direction: rtl;
         }
 
         .hist-btn-top {
@@ -804,6 +805,28 @@
         .h-btn-edit { background: var(--blue-light); color: var(--blue); }
         .h-btn-share { background: #FFF7ED; color: #9A3412; }
         .h-btn-del { background: var(--danger-light); color: var(--danger); }
+
+        /* --- GLOBAL URDU RTL ENFORCEMENT --- */
+        .accordion-content, .sub-acc-body { direction: rtl; }
+        .accordion-content p, .sub-acc-body p { direction: rtl; text-align: right; }
+        .advice-box-single-line { direction: rtl; }
+        .warning-box .urdu { direction: rtl; }
+        .faq-q, .faq-a { direction: rtl; text-align: right; }
+        .step-urdu-label { direction: rtl; text-align: center; }
+        .sketch-instruction { direction: rtl; }
+        .sketch-title-ur { direction: rtl; }
+        .urdu-label-main { direction: rtl; }
+        .urdu-subtitle { direction: rtl; }
+        .card-title-ur { direction: rtl; text-align: center; }
+        .home-greeting .tagline-ur { direction: rtl; text-align: center; }
+        .bismillah { direction: rtl; text-align: center; }
+        .hist-rates-ur { direction: rtl; text-align: right; }
+        .hist-rates-note .ur { direction: rtl; text-align: right; }
+        .row-urdu { direction: rtl; text-align: right; display: block; }
+        .zakat-split-ur { direction: rtl; }
+        .zakat-hero-label-ur { direction: rtl; }
+        /* Accordion toggle icon stays LTR even inside RTL container */
+        .accordion-header::after, .sub-acc-header::after { direction: ltr; }
 
         /* --- RTL OVERRIDES --- */
         html[dir="rtl"] .btn-row { flex-direction: row-reverse; }
@@ -1806,6 +1829,70 @@
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
         document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
         document.documentElement.lang = l === 'ur' ? 'ur' : 'en';
+        // Translate input placeholders
+        const PH = {
+            en: {
+                'u_name':          'Enter Full Name',
+                's_rate':          'Enter Silver Rate',
+                'v_gold':          'Enter Market Value',
+                'v_silver':        'Enter Market Value',
+                'v_cash':          'Enter Total Amount',
+                'v_bank':          'Enter Total Amount',
+                'v_forex':         'Enter Market Value',
+                'v_inv':           'Enter Market Value',
+                'v_raw':           'Enter Market Value',
+                'v_re':            'Enter Market Value',
+                'v_sh':            'Enter Market Value',
+                'v_pb':            'Enter Market Value',
+                'v_ds':            'Enter Amount in Local Currency',
+                'v_dm':            'Enter Amount in Local Currency',
+                'v_dw':            '(Not Zakatable yet)',
+                'v_bc':            'Enter Amount in Local Currency',
+                'v_pf':            'Enter Amount in Local Currency',
+                'v_sec':           'Enter Amount',
+                'l_per':           'Enter Amount',
+                'l_utility':       'Enter Amount',
+                'l_trade':         'Enter Amount',
+                'l_salary':        'Enter Amount',
+                'l_installments':  'Enter Amount',
+                'l_bc':            'Enter Amount',
+                'l_past':          'Enter Amount',
+                'l_tax':           'Enter Amount',
+            },
+            ur: {
+                'u_name':          'پورا نام درج کریں',
+                's_rate':          'چاندی کی قیمت درج کریں',
+                'v_gold':          'مارکیٹ ویلیو درج کریں',
+                'v_silver':        'مارکیٹ ویلیو درج کریں',
+                'v_cash':          'کل رقم درج کریں',
+                'v_bank':          'کل رقم درج کریں',
+                'v_forex':         'مارکیٹ ویلیو درج کریں',
+                'v_inv':           'مارکیٹ ویلیو درج کریں',
+                'v_raw':           'مارکیٹ ویلیو درج کریں',
+                'v_re':            'مارکیٹ ویلیو درج کریں',
+                'v_sh':            'مارکیٹ ویلیو درج کریں',
+                'v_pb':            'مارکیٹ ویلیو درج کریں',
+                'v_ds':            'مقامی کرنسی میں رقم درج کریں',
+                'v_dm':            'مقامی کرنسی میں رقم درج کریں',
+                'v_dw':            '(ابھی قابلِ زکوٰۃ نہیں)',
+                'v_bc':            'مقامی کرنسی میں رقم درج کریں',
+                'v_pf':            'مقامی کرنسی میں رقم درج کریں',
+                'v_sec':           'رقم درج کریں',
+                'l_per':           'رقم درج کریں',
+                'l_utility':       'رقم درج کریں',
+                'l_trade':         'رقم درج کریں',
+                'l_salary':        'رقم درج کریں',
+                'l_installments':  'رقم درج کریں',
+                'l_bc':            'رقم درج کریں',
+                'l_past':          'رقم درج کریں',
+                'l_tax':           'رقم درج کریں',
+            }
+        };
+        Object.keys(PH.en).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.placeholder = PH[l][id] || PH.en[id];
+        });
+
         // Update rate fetch button text
         const fetchTxt = document.getElementById('fetchRateTxt');
         if (fetchTxt && !fetchTxt.textContent.includes('…')) fetchTxt.textContent = RT[l].btnText;

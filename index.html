@@ -193,8 +193,8 @@
         }
         .hist-btn-top:hover { background: rgba(255,255,255,0.22); }
         .hist-btn-top .icon { font-size: 1.1rem; }
-        .hist-btn-top .txt-en { font-family: var(--font-english); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .hist-btn-top .txt-ur { font-family: var(--font-urdu); font-size: 0.8rem; margin-top: 1px; }
+        .hist-btn-top .lbl-en { font-family: var(--font-english); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hist-btn-top .lbl-ur { font-family: var(--font-urdu); font-size: 0.8rem; margin-top: 1px; }
 
         /* --- PROGRESS BAR --- */
         .progress-bar-wrap {
@@ -858,8 +858,6 @@
         html[dir="rtl"] .hist-header { flex-direction: row-reverse; }
         html[dir="rtl"] input, html[dir="rtl"] select { text-align: right; direction: rtl; }
         html[dir="rtl"] .field-card label { text-align: right; display: block; }
-        html[dir="rtl"] .step-title { font-family: var(--font-urdu); direction: rtl; }
-        html[dir="rtl"] .step-urdu-label { display: none; }
 
         /* Hide Urdu sub-labels in English mode */
         html[lang="en"] .urdu-label-main,
@@ -943,18 +941,38 @@
         .lbtn.ur { font-family: var(--font-urdu); font-size: 0.85rem; padding: 2px 8px; }
         .lbtn.active { background: var(--accent); color: var(--primary-dark); }
 
-        /* Language visibility helpers */
-        html[lang="ur"] .lbl-en { display: none !important; }
-        html[lang="ur"] .lbl-ur { display: block !important; }
-        html[lang="en"] .lbl-ur { display: none !important; }
-        html[lang="en"] .lbl-en { display: block !important; }
+        /* ===== LANGUAGE VISIBILITY — GLOBAL ===== */
         .lbl-ur { display: none; font-family: var(--font-urdu); direction: rtl; text-align: center; }
 
-        /* Nav button bilingual spans */
-        html[lang="en"] .top-back-btn .ur,
-        html[lang="en"] .top-home-btn .ur { display: none; }
-        html[lang="ur"] .top-back-btn .en,
-        html[lang="ur"] .top-home-btn .en { display: none; }
+        /* Urdu mode: hide all English, show all Urdu */
+        html[lang="ur"] .lbl-en  { display: none !important; }
+        html[lang="ur"] .lbl-ur  { display: block !important; }
+        html[lang="ur"] span.en  { display: none !important; }
+        html[lang="ur"] span.ur  { display: inline !important; }
+        html[lang="ur"] .card-title-en  { display: none !important; }
+        html[lang="ur"] .card-title-ur  { display: block !important; }
+        html[lang="ur"] .tagline-en     { display: none !important; }
+        html[lang="ur"] .tagline-ur     { display: inline !important; }
+        html[lang="ur"] .sketch-title-en { display: none !important; }
+        html[lang="ur"] .sketch-title-ur { display: inline !important; }
+        html[lang="ur"] .step-title,
+        html[lang="ur"] .step-title-sub { display: none !important; }
+        html[lang="ur"] .step-urdu-label { display: block !important; }
+
+        /* English mode: hide all Urdu, show all English */
+        html[lang="en"] .lbl-ur  { display: none !important; }
+        html[lang="en"] .lbl-en  { display: block !important; }
+        html[lang="en"] span.ur  { display: none !important; }
+        html[lang="en"] span.en  { display: inline !important; }
+        html[lang="en"] .card-title-ur  { display: none !important; }
+        html[lang="en"] .card-title-en  { display: block !important; }
+        html[lang="en"] .tagline-ur     { display: none !important; }
+        html[lang="en"] .tagline-en     { display: inline !important; }
+        html[lang="en"] .sketch-title-ur { display: none !important; }
+        html[lang="en"] .sketch-title-en { display: inline !important; }
+        html[lang="en"] .step-urdu-label { display: none !important; }
+        html[lang="en"] .step-title,
+        html[lang="en"] .step-title-sub { display: block !important; }
 
         /* --- HOME SCREEN CARDS --- */
         #home-screen { padding: 4px 0 16px; }
@@ -1155,7 +1173,7 @@
     <div class="header-top-row">
         <div class="header-emblem" onclick="goHome()" style="cursor:pointer;" title="Home">☽</div>
         <div class="header-content">
-            <h1>ZAKAT CALCULATOR</h1>
+            <h1 class="lbl-en">ZAKAT CALCULATOR</h1>
             <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
             <div class="header-urdu-subtitle">دارُالإفتاء النّور</div>
         </div>
@@ -1166,8 +1184,8 @@
             </div>
             <div class="hist-btn-top" onclick="openHistory()">
                 <span class="icon">📜</span>
-                <span class="txt-en">History</span>
-                <span class="txt-ur">ریکارڈ</span>
+                <span class="lbl-en">History</span>
+                <span class="lbl-ur">ریکارڈ</span>
             </div>
         </div>
     </div>
@@ -1176,27 +1194,32 @@
     <div class="progress-steps">
         <div class="prog-step active" id="ps1">
             <div class="prog-dot">1</div>
-            <div class="prog-label">Profile</div>
+            <div class="prog-label lbl-en">Profile</div>
+            <div class="prog-label lbl-ur">پروفائل</div>
         </div>
         <div class="prog-line" id="pl1"></div>
         <div class="prog-step" id="ps2">
             <div class="prog-dot">2</div>
-            <div class="prog-label">Assets</div>
+            <div class="prog-label lbl-en">Assets</div>
+            <div class="prog-label lbl-ur">اثاثے</div>
         </div>
         <div class="prog-line" id="pl2"></div>
         <div class="prog-step" id="ps3">
             <div class="prog-dot">3</div>
-            <div class="prog-label">Receivables</div>
+            <div class="prog-label lbl-en">Receivables</div>
+            <div class="prog-label lbl-ur">واجبات</div>
         </div>
         <div class="prog-line" id="pl3"></div>
         <div class="prog-step" id="ps4">
             <div class="prog-dot">4</div>
-            <div class="prog-label">Liabilities</div>
+            <div class="prog-label lbl-en">Liabilities</div>
+            <div class="prog-label lbl-ur">قرضے</div>
         </div>
         <div class="prog-line" id="pl4"></div>
         <div class="prog-step" id="ps5">
             <div class="prog-dot">✓</div>
-            <div class="prog-label">Result</div>
+            <div class="prog-label lbl-en">Result</div>
+            <div class="prog-label lbl-ur">نتیجہ</div>
         </div>
     </div>
 </div>

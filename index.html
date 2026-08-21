@@ -891,14 +891,12 @@
         html[dir="rtl"] .header-top-row { flex-direction: row-reverse; }
         html[dir="rtl"] .top-nav-row { flex-direction: row-reverse; }
         html[dir="rtl"] .hist-header { flex-direction: row-reverse; }
-        /* Hero & FAQ cards: reverse layout in RTL so icon is on right, arrow on left */
-        html[dir="rtl"] .calc-hero-card { flex-direction: row-reverse; }
+        /* Hero & FAQ cards: RTL direction naturally reverses row order (icon→right, arrow→left).
+           Only flip the arrow glyph so › becomes ‹ visually. */
         html[dir="rtl"] .calc-hero-arrow { transform: scaleX(-1); }
         html[dir="rtl"] .calc-hero-card .card-title-en { text-align: right; }
         html[dir="rtl"] .calc-hero-card .hero-sub { text-align: right; }
         html[dir="rtl"] .calc-hero-card .card-title-ur { font-size: 1.35rem; font-weight: 700; }
-        html[dir="rtl"] .home-card.gold-card { flex-direction: row-reverse; }
-        html[dir="rtl"] .home-card.gold-card > div:last-child { transform: scaleX(-1); }
         html[dir="rtl"] .card-arrow { transform: scaleX(-1); }
         html[dir="rtl"] input, html[dir="rtl"] select { text-align: right; direction: rtl; }
         /* Date input must stay LTR — browser renders it in OS locale format */

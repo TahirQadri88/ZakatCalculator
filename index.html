@@ -986,6 +986,7 @@
         html[lang="ur"] span.en  { display: none !important; }
         html[lang="ur"] span.ur  { display: inline !important; }
         html[lang="ur"] .card-title-en  { display: none !important; }
+        html[lang="ur"] .hero-sub       { display: none !important; }
         html[lang="ur"] .card-title-ur  { display: block !important; }
         html[lang="ur"] .tagline-en     { display: none !important; }
         html[lang="ur"] .tagline-ur     { display: inline !important; }
@@ -1077,9 +1078,10 @@
             border: 1px solid rgba(255,255,255,0.25);
         }
         .calc-hero-card .hero-text { flex: 1; min-width: 0; }
-        .calc-hero-card .card-title-en { color: white; font-size: 1.12rem; font-weight: 800; text-align: left; letter-spacing: 0.2px; }
-        .calc-hero-card .card-title-ur { color: rgba(255,255,255,0.88); font-size: 1.1rem; text-align: right; margin-top: 2px; display: block; }
-        .calc-hero-arrow { font-size: 1.8rem; color: rgba(255,255,255,0.65); flex-shrink: 0; font-weight: 300; }
+        .calc-hero-card .card-title-en { color: white; font-size: 1.18rem; font-weight: 800; text-align: left; letter-spacing: 0.2px; }
+        .calc-hero-card .hero-sub { font-family: var(--font-english); font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 3px; font-weight: 500; }
+        .calc-hero-card .card-title-ur { color: rgba(255,255,255,0.88); font-size: 1.1rem; text-align: right; margin-top: 4px; display: block; }
+        .calc-hero-arrow { font-size: 2rem; color: rgba(255,255,255,0.6); flex-shrink: 0; font-weight: 300; line-height: 1; }
 
         .home-cards {
             display: grid;
@@ -1321,9 +1323,10 @@
 
         <!-- Calculate Zakat — Hero CTA -->
         <div class="calc-hero-card" onclick="goCalculate()">
-            <div class="card-icon">🕌</div>
+            <div class="card-icon" style="font-size:2rem;">🕌</div>
             <div class="hero-text">
                 <div class="card-title-en">Calculate Zakat</div>
+                <div class="hero-sub">Enter assets · get your exact Zakat amount</div>
                 <div class="card-title-ur">زکوٰۃ حساب کریں</div>
             </div>
             <div class="calc-hero-arrow">›</div>
@@ -1360,7 +1363,7 @@
 
             <!-- Historical Rates -->
             <div class="home-card hist-rates-card" onclick="openHistRates()" style="grid-column:1/-1; flex-direction:row; gap:14px; padding:16px;">
-                <div class="card-icon" style="flex-shrink:0;">📈</div>
+                <div class="card-icon" style="flex-shrink:0; font-size:1.5rem;">📊</div>
                 <div style="flex:1; text-align:start;">
                     <div class="card-title-en" style="text-align:start;">Historical Gold Rates (Pakistan)</div>
                     <div class="card-title-ur" style="text-align:end; font-size:0.95rem; margin-top:2px;">پرانی زکوٰۃ کے لیے تاریخی قیمتیں</div>

@@ -1331,9 +1331,9 @@
         </div>
 
         <div class="field-card">
-            <label>Full Name</label>
-            <span class="urdu-label-main">پورا نام</span>
-            <input type="text" id="u_name" placeholder="Enter Full Name">
+            <label>Full Name <span style="font-size:0.75rem; color:#9CA3AF; font-weight:400;">(Optional)</span></label>
+            <span class="urdu-label-main">پورا نام <span style="font-size:0.75rem; color:#9CA3AF; font-weight:400;">(اختیاری)</span></span>
+            <input type="text" id="u_name" placeholder="Enter Name (optional)">
         </div>
 
         <div class="read-first-btn" onclick="toggleReadFirst(this)">
@@ -2383,8 +2383,8 @@
         s = parseInt(s);
 
         // Validation for Step 1 -> 2 transition
-        if(s === 2 && (!document.getElementById('u_name').value || nisabLimit <= 0)) {
-            msg("Please Enter Name and Silver Rate");
+        if(s === 2 && nisabLimit <= 0) {
+            msg("Please Enter Silver Rate to continue");
             return;
         }
 
@@ -2459,7 +2459,7 @@
         document.getElementById('r_net').innerText = p + formatNumber(net);
         document.getElementById('r_nisab').innerText = p + formatNumber(nisabLimit);
         
-        document.getElementById('rpt_name').innerText = document.getElementById('u_name').value;
+        document.getElementById('rpt_name').innerText = document.getElementById('u_name').value || 'My Zakat';
         const h = document.getElementById('hijriOutput').innerText;
         document.getElementById('rpt_date').innerText = new Date(document.getElementById('g_date').value).toLocaleDateString('en-GB') + " | " + h;
 
@@ -2473,7 +2473,7 @@
         }
 
         lastResult = {
-            id: Date.now(), inputs: getInputMap(), name: document.getElementById('u_name').value,
+            id: Date.now(), inputs: getInputMap(), name: document.getElementById('u_name').value || 'My Zakat',
             date: document.getElementById('g_date').value, formattedDate: document.getElementById('rpt_date').innerText,
             hijri: h,
             total: payableTotal, payNow: payNow, payDef: payDef, net: net, core: core, recv: recv, liab: liab, nisab: nisabLimit, curr: currentCurr

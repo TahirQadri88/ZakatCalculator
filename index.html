@@ -2011,12 +2011,18 @@
         updateProgressBar(2);
         window.scrollTo(0, 0);
         setTimeout(() => {
-            const el = document.getElementById('faqContent');
-            if (el) {
-                el.style.display = 'block';
-                const hdr = el.previousElementSibling;
+            const content = document.getElementById('faqContent');
+            if (content) {
+                content.style.display = 'block';
+                const hdr = content.previousElementSibling;
                 if (hdr) hdr.classList.add('active');
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Scroll FAQ header into view just below sticky header + progress bar
+                const target = hdr || content;
+                const headerEl = document.querySelector('header');
+                const progressEl = document.getElementById('progressBarWrap');
+                const stickyH = (headerEl ? headerEl.offsetHeight : 0) + (progressEl ? progressEl.offsetHeight : 0);
+                const targetTop = target.getBoundingClientRect().top + window.scrollY - stickyH - 10;
+                window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
             }
         }, 150);
     }

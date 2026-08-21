@@ -1782,7 +1782,7 @@
             <div id="res_header" style="text-align:center;">
                 <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; font-family:var(--font-english); margin-bottom:4px;">Zakat Calculation Report</div>
                 <div id="rpt_name" style="font-weight:900; color:var(--primary); font-size:1.5rem; font-family:var(--font-english); line-height:1.1;"></div>
-                <div style="font-size:0.82rem; color:#6B7280; margin-top:5px; font-family:var(--font-english);">Year Ending: <span id="rpt_date" style="font-weight:600; color:var(--slate);"></span></div>
+                <div style="font-size:0.82rem; color:#6B7280; margin-top:5px; font-family:var(--font-english); direction:ltr; unicode-bidi:isolate;">Year Ending: <span id="rpt_date_greg" style="font-weight:600; color:var(--slate);"></span> &nbsp;|&nbsp; <span id="rpt_date_hijri" style="font-weight:600; color:var(--slate); font-family:var(--font-urdu); direction:rtl; unicode-bidi:isolate;"></span></div>
             </div>
             <div id="elig_status_box" style="text-align:center; margin-top:12px; padding:9px 12px; border-radius:8px; font-weight:700; font-size:0.92rem; font-family:var(--font-english); letter-spacing:0.3px;"></div>
         </div>
@@ -2511,8 +2511,8 @@
         const p = currentCurr.trim() !== "" ? currentCurr + " " : "";
         document.getElementById('r_total').innerText = p + formatNumber(Math.ceil(payableTotal));
         document.getElementById('r_total_dup').innerText = p + formatNumber(Math.ceil(payableTotal));
-        document.getElementById('p_now').innerText = p + formatNumber(payNow);
-        document.getElementById('p_def').innerText = p + formatNumber(payDef);
+        document.getElementById('p_now').innerText = p + formatNumber(Math.ceil(payNow));
+        document.getElementById('p_def').innerText = p + formatNumber(Math.ceil(payDef));
         
         document.getElementById('r_gross').innerText = p + formatNumber(core);
         document.getElementById('r_recv').innerText = p + formatNumber(recv);
@@ -2522,7 +2522,9 @@
         
         document.getElementById('rpt_name').innerText = document.getElementById('u_name').value || 'My Zakat';
         const h = document.getElementById('hijriOutput').innerText;
-        document.getElementById('rpt_date').innerText = new Date(document.getElementById('g_date').value).toLocaleDateString('en-GB') + " | " + h;
+        const gregStr = new Date(document.getElementById('g_date').value).toLocaleDateString('en-GB');
+        document.getElementById('rpt_date_greg').innerText = gregStr;
+        document.getElementById('rpt_date_hijri').innerText = h;
 
         const sb = document.getElementById('elig_status_box');
         if(net >= nisabLimit) {
@@ -2535,7 +2537,7 @@
 
         lastResult = {
             id: Date.now(), inputs: getInputMap(), name: document.getElementById('u_name').value || 'My Zakat',
-            date: document.getElementById('g_date').value, formattedDate: document.getElementById('rpt_date').innerText,
+            date: document.getElementById('g_date').value, formattedDate: gregStr + ' | ' + h,
             hijri: h,
             total: payableTotal, payNow: payNow, payDef: payDef, net: net, core: core, recv: recv, liab: liab, nisab: nisabLimit, curr: currentCurr
         };

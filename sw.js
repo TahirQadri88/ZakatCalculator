@@ -1,6 +1,8 @@
-const CACHE_NAME = 'zakat-calc-v54';
+const CACHE_NAME = 'zakat-calc-v55';
 
 const STATIC_ASSETS = [
+  './',
+  './index.html',
   './manifest.json',
   './icon.png',
   './icon-192.png',
@@ -35,7 +37,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
           return res;
         })
-        .catch(() => caches.match(req))
+        .catch(() => caches.match(req).then(r => r || caches.match('./index.html')))
     );
     return;
   }

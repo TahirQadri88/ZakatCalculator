@@ -210,7 +210,7 @@
         }
         .hist-btn-top:hover { background: rgba(255,255,255,0.22); }
         .hist-btn-top .icon { font-size: 1.1rem; }
-        .hist-btn-top .lbl-en { font-family: var(--font-english); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hist-btn-top .lbl-en { font-family: var(--font-english); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .hist-btn-top .lbl-ur { font-family: var(--font-urdu); font-size: 0.85rem; margin-top: 1px; line-height: 1.2; }
 
         /* --- PROGRESS BAR --- */
@@ -269,9 +269,9 @@
 
         .prog-label {
             font-family: var(--font-english);
-            font-size: 0.55rem;
+            font-size: 0.62rem;
             font-weight: 600;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.5);
             text-transform: uppercase;
             letter-spacing: 0.3px;
             margin-top: 3px;
@@ -279,10 +279,10 @@
             transition: color 0.3s;
         }
 
-        /* Urdu progress labels need larger size — Nastaliq is unreadable at 0.55rem */
+        /* Urdu progress labels need larger size — Nastaliq is unreadable at small sizes */
         .prog-label.lbl-ur {
             font-family: var(--font-urdu);
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             text-transform: none;
             letter-spacing: 0;
             line-height: 1.2;
@@ -703,7 +703,7 @@
 
         .btn:active { transform: scale(0.97); }
         .btn span.en { font-size: 0.85rem; font-weight: 700; }
-        .btn span.ur { font-family: var(--font-urdu); font-size: 0.82rem; font-weight: normal; margin-top: 1px; }
+        .btn span.ur { font-family: var(--font-urdu); font-size: 0.95rem; font-weight: normal; margin-top: 1px; }
 
         .btn-primary {
             background: var(--primary);
@@ -749,7 +749,7 @@
         .top-back-btn {
             background: none;
             border: none;
-            color: #6B7280;
+            color: #4B5563;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
@@ -1018,8 +1018,8 @@
             padding: 14px 16px 12px;
         }
         .home-greeting .bismillah {
-            font-family: 'Scheherazade New', serif;
-            font-size: 1.6rem;
+            font-family: var(--font-urdu);
+            font-size: 1.85rem;
             color: var(--accent);
             direction: rtl;
             line-height: 1.5;
@@ -1046,23 +1046,23 @@
         .home-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 12px;
             padding: 0 2px;
         }
 
         .home-card {
             background: white;
-            border-radius: 12px;
-            padding: 16px 10px 14px;
+            border-radius: 14px;
+            padding: 18px 12px 16px;
             text-align: center;
             cursor: pointer;
-            border: 1.5px solid var(--border);
+            border: 1.5px solid #D1D5DB;
             box-shadow: var(--shadow-sm);
             transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             -webkit-tap-highlight-color: transparent;
         }
         .home-card:active { transform: scale(0.96); }
@@ -1086,26 +1086,26 @@
         .home-card.gold-card .card-icon { background: rgba(255,255,255,0.15); }
 
         .card-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            border-radius: 13px;
             background: var(--primary-light);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.35rem;
+            font-size: 1.6rem;
         }
 
         .card-title-en {
             font-family: var(--font-english);
-            font-size: 0.82rem;
+            font-size: 0.88rem;
             font-weight: 700;
             color: var(--slate);
             line-height: 1.2;
         }
         .card-title-ur {
             font-family: var(--font-urdu);
-            font-size: 0.92rem;
+            font-size: 1.05rem;
             color: var(--primary);
             direction: rtl;
             line-height: 1.3;

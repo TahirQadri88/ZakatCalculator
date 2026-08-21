@@ -88,7 +88,7 @@
         .urdu-label-main {
             font-family: var(--font-urdu) !important;
             font-size: 1.05rem;
-            color: var(--danger);
+            color: var(--primary);
             font-weight: normal;
             direction: rtl;
             display: block;
@@ -403,7 +403,7 @@
             box-shadow: 0 0 0 3px rgba(6,78,59,0.08);
         }
 
-        input::placeholder { color: #C0C8D4; font-weight: 400; font-size: 0.88rem; }
+        input::placeholder { color: #6B7280; font-weight: 400; font-size: 0.88rem; opacity: 1; }
 
         /* --- ACCORDIONS --- */
         .accordion-header, .sub-acc-header {
@@ -2508,8 +2508,8 @@
         }
 
         const p = currentCurr.trim() !== "" ? currentCurr + " " : "";
-        document.getElementById('r_total').innerText = p + formatNumber(payableTotal);
-        document.getElementById('r_total_dup').innerText = p + formatNumber(payableTotal);
+        document.getElementById('r_total').innerText = p + formatNumber(Math.ceil(payableTotal));
+        document.getElementById('r_total_dup').innerText = p + formatNumber(Math.ceil(payableTotal));
         document.getElementById('p_now').innerText = p + formatNumber(payNow);
         document.getElementById('p_def').innerText = p + formatNumber(payDef);
         
@@ -2679,7 +2679,7 @@
 
     function msg(m) {
         const t = document.getElementById("toast");
-        t.innerText = m; t.className = "show";
+        t.innerHTML = m; t.className = "show";
         setTimeout(() => t.className = "", 3000);
     }
 

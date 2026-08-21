@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-K3SJB4NF0L"></script>
 <script>
@@ -1237,7 +1237,7 @@
 
 <div class="container">
     
-    <button id="installBtn" onclick="installApp()">📲 Install App</button>
+    <button id="installBtn" onclick="installApp()"><span class="lbl-en">📲 Install App</span><span class="lbl-ur">📲 ایپ انسٹال کریں</span></button>
 
     <!-- HOME SCREEN -->
     <div id="home-screen">
@@ -2269,8 +2269,12 @@
                     let localPerOz = usdPerOz;
                     if (targetCode !== 'USD') {
                         const fx = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
-                        localPerOz = usdPerOz * (await fx.json()).rates[targetCode];
+                        if (!fx.ok) throw new Error('FX API ' + fx.status);
+                        const fxRate = (await fx.json()).rates[targetCode];
+                        if (!fxRate || isNaN(fxRate)) throw new Error('FX rate not found for ' + targetCode);
+                        localPerOz = usdPerOz * fxRate;
                     }
+                    if (!localPerOz || isNaN(localPerOz)) throw new Error('Invalid localPerOz');
                     document.getElementById('s_unit').value = 'oz';
                     document.getElementById('s_rate').value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
                     calcNisab();
@@ -2426,9 +2430,11 @@
 
         const sb = document.getElementById('elig_status_box');
         if(net >= nisabLimit) {
-            sb.style.backgroundColor = "#D1FAE5"; sb.style.color = "#065F46"; sb.innerText = "Status: Eligible for Zakat (Sahib-e-Nisab)";
+            sb.style.backgroundColor = "#D1FAE5"; sb.style.color = "#065F46";
+            sb.innerText = lang === 'ur' ? "✅ صاحبِ نصاب — زکوٰۃ واجب ہے" : "Status: Eligible for Zakat (Sahib-e-Nisab)";
         } else {
-            sb.style.backgroundColor = "#FEE2E2"; sb.style.color = "#991B1B"; sb.innerText = "Status: Not Eligible for Zakat";
+            sb.style.backgroundColor = "#FEE2E2"; sb.style.color = "#991B1B";
+            sb.innerText = lang === 'ur' ? "❌ نصاب سے کم — زکوٰۃ واجب نہیں" : "Status: Not Eligible for Zakat";
         }
 
         lastResult = {

@@ -824,7 +824,7 @@
         #toast.show { visibility: visible; }
 
         /* --- HISTORY MODAL --- */
-        #historyModal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.55); backdrop-filter: blur(6px); align-items: center; justify-content: center; }
+        #historyModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100vh; background-color: rgba(0,0,0,0.65); backdrop-filter: blur(6px); align-items: center; justify-content: center; }
         .modal-content { background-color: white; margin: 5% auto; padding: 20px; border-radius: 14px; width: 95%; max-width: 500px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
         .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.3rem; width: 34px; height: 34px; background: #F3F4F6; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid #E5E7EB; transition: background 0.15s; }
         .close-modal:hover { background: #E5E7EB; }
@@ -2518,8 +2518,8 @@
         const item = log.find(x => x.id === id);
         if(item) { loadInputMap(item.inputs); closeHistory(); nav(1); msg("Loaded for Editing"); }
     }
-    function openHistory() { document.getElementById('historyModal').style.display = 'flex'; loadHistory(); }
-    function closeHistory() { document.getElementById('historyModal').style.display = 'none'; }
+    function openHistory() { document.getElementById('historyModal').style.display = 'flex'; document.body.style.overflow = 'hidden'; loadHistory(); }
+    function closeHistory() { document.getElementById('historyModal').style.display = 'none'; document.body.style.overflow = ''; }
     
     function loadHistory() {
         let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');

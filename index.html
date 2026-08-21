@@ -893,11 +893,12 @@
         html[dir="rtl"] .hist-header { flex-direction: row-reverse; }
         /* Hero & FAQ cards: RTL direction naturally reverses row order (icon→right, arrow→left).
            Only flip the arrow glyph so › becomes ‹ visually. */
-        html[dir="rtl"] .calc-hero-arrow { transform: scaleX(-1); }
+        /* › (U+203A) is a bidi-mirrored glyph — the browser flips it automatically
+           in an RTL context, so no transform is needed (adding one flips it back). */
         html[dir="rtl"] .calc-hero-card .card-title-en { text-align: right; }
         html[dir="rtl"] .calc-hero-card .hero-sub { text-align: right; }
-        html[dir="rtl"] .calc-hero-card .card-title-ur { font-size: 1.35rem; font-weight: 700; }
-        html[dir="rtl"] .card-arrow { transform: scaleX(-1); }
+        html[dir="rtl"] .calc-hero-card .card-title-ur { font-size: 1.35rem; font-weight: 700; text-align: right; }
+        html[dir="rtl"] .calc-hero-card .hero-text { text-align: right; }
         html[dir="rtl"] input, html[dir="rtl"] select { text-align: right; direction: rtl; }
         /* Date input must stay LTR — browser renders it in OS locale format */
         input[type="date"] { direction: ltr !important; text-align: left !important; }

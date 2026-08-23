@@ -1,0 +1,242 @@
+// Bidirectional-text and RTL correctness.
+//
+// Every check here guards a bug that actually shipped and had to be reported
+// from a phone screenshot. See DESIGN.md §2 for the rules being enforced.
+
+const { test, expect } = require('@playwright/test');
+
+/** Switch the app into Urdu (RTL) and wait for the document to flip. */
+async function goUrdu(page) {
+  await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+  await page.locator('#btnUr').click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ur');
+}
+
+/** Walk into the calculator and fill a full set of values, in Urdu mode. */
+async function calculateInUrdu(page) {
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');       // silver rate -> sets Nisab
+  await page.locator('#step-1 .btn-primary').click();
+
+  await page.locator('#v_gold').fill('5000000');    // assets
+  await page.locator('#step-2 .btn-primary').click();
+
+  await page.locator('#v_ds').fill('1232344');      // receivables
+  await page.locator('#step-3 .btn-primary').click();
+
+  await page.locator('#l_per').fill('0');           // liabilities
+  await page.locator('#step-4 .btn-primary').click();
+
+  await expect(page.locator('#step-5')).toBeVisible();
+}
+
+// ── DIRECTION WIRING ──────────────────────────────────────────────────────────
+
+test('language toggle drives both dir and lang on the root element', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+
+  await page.locator('#btnUr').click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ur');
+
+  await page.locator('#btnEn').click();
+  await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+});
+
+// ── RULE: never transform a bidi-mirrored glyph (DESIGN.md §2.1) ──────────────
+
+test('mirrored chevrons are not double-flipped by a transform', async ({ page }) => {
+  await goUrdu(page);
+
+  const arrows = page.locator('.calc-hero-arrow, .card-arrow');
+  const n = await arrows.count();
+  expect(n).toBeGreaterThan(0);
+
+  for (let i = 0; i < n; i++) {
+    const transform = await arrows.nth(i).evaluate(
+      el => getComputedStyle(el).transform
+    );
+    // A horizontal flip shows up as matrix(-1, ...). The browser already
+    // mirrors these glyphs in RTL, so any scaleX(-1) here is a double flip.
+    expect(transform === 'none' || !transform.startsWith('matrix(-1')).toBeTruthy();
+  }
+});
+
+// ── RULE: no row-reverse inside dir=rtl (DESIGN.md §2.2) ──────────────────────
+
+test('RTL rows are not reversed a second time with row-reverse', async ({ page }) => {
+  await goUrdu(page);
+
+  const rows = page.locator('.calc-hero-card, .home-card.gold-card, .faq-inline-link');
+  const n = await rows.count();
+  expect(n).toBeGreaterThan(0);
+
+  for (let i = 0; i < n; i++) {
+    const dir = await rows.nth(i).evaluate(el => getComputedStyle(el).flexDirection);
+    expect(dir).not.toBe('row-reverse');
+  }
+});
+
+test('hero card puts its icon on the right and its arrow on the left in RTL', async ({ page }) => {
+  await goUrdu(page);
+
+  const icon = await page.locator('.calc-hero-card .card-icon').boundingBox();
+  const arrow = await page.locator('.calc-hero-arrow').boundingBox();
+
+  // RTL reading order: icon leads (right edge), arrow trails (left edge).
+  expect(icon.x).toBeGreaterThan(arrow.x);
+});
+
+// ── RULE: isolate English runs inside Urdu context (DESIGN.md §2.3) ───────────
+
+test('the historical-rates source line keeps its written order in RTL', async ({ page }) => {
+  await goUrdu(page);
+
+  const line = page.locator('.hist-rates-card bdi');
+  await expect(line).toHaveText('1947 – 2019 · Source: Daily Jang');
+
+  // The visual order must match the logical order: 1947 left of 2019.
+  const order = await line.evaluate(el => {
+    const range = document.createRange();
+    const text = el.firstChild;
+    range.setStart(text, 0); range.setEnd(text, 4);          // "1947"
+    const a = range.getBoundingClientRect().x;
+    range.setStart(text, 7); range.setEnd(text, 11);         // "2019"
+    const b = range.getBoundingClientRect().x;
+    return { a, b };
+  });
+  expect(order.a).toBeLessThan(order.b);
+});
+
+test('result date line isolates the Gregorian and Hijri halves', async ({ page }) => {
+  await goUrdu(page);
+  await calculateInUrdu(page);
+
+  const greg = page.locator('#rpt_date_greg');
+  const hijri = page.locator('#rpt_date_hijri');
+
+  // Gregorian half stays LTR and in dd/mm/yyyy order.
+  await expect(greg).toHaveText(/^\d{2}\/\d{2}\/\d{4}$/);
+  await expect(greg).toHaveCSS('direction', 'ltr');
+
+  // Hijri half is Urdu, RTL, and isolated so it can't reorder its neighbour.
+  await expect(hijri).toHaveCSS('direction', 'rtl');
+  await expect(hijri).toHaveCSS('unicode-bidi', 'isolate');
+  await expect(hijri).not.toHaveText('');
+});
+
+test('no raw markup leaks into the page as visible text', async ({ page }) => {
+  await goUrdu(page);
+
+  // Translation strings carry <bdi> tags; msg() must render them, not print
+  // them. This catches innerText/textContent regressions anywhere on screen.
+  const body = await page.locator('body').innerText();
+  expect(body).not.toMatch(/<\s*bdi\s*\/?>/i);
+  expect(body).not.toMatch(/<\/\s*bdi\s*>/i);
+});
+
+// ── LAYOUT INTEGRITY ──────────────────────────────────────────────────────────
+
+test('no horizontal overflow anywhere in Urdu mode', async ({ page }) => {
+  await goUrdu(page);
+
+  const overflow = await page.evaluate(() => {
+    const docWidth = document.documentElement.clientWidth;
+    return [...document.querySelectorAll('body *')]
+      .filter(el => {
+        const s = getComputedStyle(el);
+        if (s.display === 'none' || s.visibility === 'hidden') return false;
+        if (s.position === 'fixed') return false;          // overlays
+        if (el.scrollWidth > el.clientWidth) return false;  // own scroller
+        return el.getBoundingClientRect().right > docWidth + 1;
+      })
+      .slice(0, 5)
+      .map(el => el.className || el.tagName);
+  });
+
+  expect(overflow).toEqual([]);
+});
+
+test('Urdu text has enough line-height for Nastaliq descenders', async ({ page }) => {
+  await goUrdu(page);
+
+  const tight = await page.evaluate(() => {
+    return [...document.querySelectorAll('.urdu-label-main, .card-title-ur, .faq-q, .faq-a')]
+      .filter(el => el.offsetParent !== null)
+      .filter(el => {
+        const s = getComputedStyle(el);
+        const lh = parseFloat(s.lineHeight);
+        const fs = parseFloat(s.fontSize);
+        return Number.isFinite(lh) && Number.isFinite(fs) && lh / fs < 1.2;
+      })
+      .slice(0, 5)
+      .map(el => `${el.className}: ${getComputedStyle(el).lineHeight}`);
+  });
+
+  expect(tight).toEqual([]);
+});
+
+test('Urdu text is never letter-spaced', async ({ page }) => {
+  await goUrdu(page);
+
+  const spaced = await page.evaluate(() => {
+    return [...document.querySelectorAll('.urdu-label-main, .card-title-ur, .urdu-subtitle, .faq-q, .faq-a')]
+      .filter(el => el.offsetParent !== null)
+      .filter(el => {
+        const ls = getComputedStyle(el).letterSpacing;
+        return ls !== 'normal' && parseFloat(ls) > 0;
+      })
+      .slice(0, 5)
+      .map(el => `${el.className}: ${getComputedStyle(el).letterSpacing}`);
+  });
+
+  expect(spaced).toEqual([]);
+});
+
+// ── READABILITY ───────────────────────────────────────────────────────────────
+
+test('placeholders are legible, not browser-default faint', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+
+  const { color, opacity } = await page.locator('#s_rate').evaluate(el => {
+    const s = getComputedStyle(el, '::placeholder');
+    return { color: s.color, opacity: s.opacity };
+  });
+
+  expect(parseFloat(opacity)).toBe(1);
+
+  // Relative luminance must be dark enough to read on white.
+  const [r, g, b] = color.match(/\d+/g).map(Number);
+  const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  expect(lum).toBeLessThan(0.55);
+});
+
+test('field labels are not styled as errors', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');   // step 1 gates on a Nisab value
+  await page.locator('#step-1 .btn-primary').click();
+  await expect(page.locator('#step-2')).toBeVisible();
+
+  // --danger (#991B1B) means "money owed" or "something is wrong". Ordinary
+  // Urdu field labels rendered in it once, making the form look like errors.
+  const label = page.locator('#step-2 .urdu-label-main').first();
+  await expect(label).toHaveCSS('color', 'rgb(6, 78, 59)');   // --primary
+});
+
+// ── RESULT PRESENTATION ───────────────────────────────────────────────────────
+
+test('all result amounts display as whole numbers', async ({ page }) => {
+  await goUrdu(page);
+  await calculateInUrdu(page);
+
+  for (const id of ['#r_total', '#p_now', '#p_def']) {
+    const text = await page.locator(id).innerText();
+    expect(text, `${id} should carry no decimal part`).not.toMatch(/\.\d/);
+  }
+});

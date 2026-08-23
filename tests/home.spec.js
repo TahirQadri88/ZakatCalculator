@@ -60,26 +60,59 @@ test('back button from step 1 returns to home', async ({ page }) => {
 
 // ── FAQ ────────────────────────────────────────────────────────────────────────
 
-test('FAQ card opens step-2 with FAQ accordion visible and near top of viewport', async ({ page }) => {
+test('FAQ card opens the FAQ overlay from home, leaving home underneath', async ({ page }) => {
   await page.locator('.home-card.gold-card').click();
 
-  // Step-2 should be visible, home should be hidden
+  // Overlay is open and shows the FAQ content
+  await expect(page.locator('#faqModal')).toBeVisible();
+  await expect(page.locator('#faqModal .faq-item')).toHaveCount(10);
+  await expect(page.locator('#faqModal .faq-item').first()).toBeVisible();
+
+  // We must NOT have navigated into the calculator
+  await expect(page.locator('#step-2')).not.toBeVisible();
+
+  // Overlay covers the viewport, anchored at the top
+  const box = await page.locator('#faqModal').boundingBox();
+  expect(box.y).toBeLessThanOrEqual(1);
+  expect(box.width).toBeGreaterThan(page.viewportSize().width * 0.9);
+});
+
+test('FAQ overlay closes on X and returns to home', async ({ page }) => {
+  await page.locator('.home-card.gold-card').click();
+  await expect(page.locator('#faqModal')).toBeVisible();
+
+  await page.locator('#faqModal .faq-close-btn').click();
+  await expect(page.locator('#faqModal')).not.toBeVisible();
+  await expect(page.locator('#home-screen')).toBeVisible();
+});
+
+test('FAQ overlay closes on backdrop click', async ({ page }) => {
+  await page.locator('.home-card.gold-card').click();
+  await expect(page.locator('#faqModal')).toBeVisible();
+
+  await page.locator('#faqModal').click({ position: { x: 5, y: 5 } });
+  await expect(page.locator('#faqModal')).not.toBeVisible();
+});
+
+test('FAQ overlay opens from step 2 and returns there on close', async ({ page }) => {
+  // Walk into the calculator: home → step 1 → step 2
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#step-1 .btn-primary').click();
   await expect(page.locator('#step-2')).toBeVisible();
-  await expect(page.locator('#home-screen')).not.toBeVisible();
 
-  // FAQ content accordion should be open
-  await expect(page.locator('#faqContent')).toBeVisible();
+  // Type a value so we can prove form state survives the overlay
+  await page.locator('#v_gold').fill('50000');
 
-  // Wait for smooth scroll to settle
-  await page.waitForTimeout(500);
+  await page.locator('.faq-inline-link').click();
+  await expect(page.locator('#faqModal')).toBeVisible();
 
-  // The FAQ header must be in the viewport (not scrolled past)
-  const faqHeader = page.locator('#faqContent').locator('..').locator('.accordion-header').last();
-  const headerBox = await faqHeader.boundingBox();
-  const viewportHeight = page.viewportSize().height;
+  await page.locator('#faqModal .faq-close-btn').click();
+  await expect(page.locator('#faqModal')).not.toBeVisible();
 
-  expect(headerBox.y).toBeGreaterThanOrEqual(0);        // not above viewport
-  expect(headerBox.y).toBeLessThan(viewportHeight);     // not below viewport
+  // Back on step 2 with the entered value intact
+  await expect(page.locator('#step-2')).toBeVisible();
+  await expect(page.locator('#v_gold')).toHaveValue('50,000');
 });
 
 // ── HISTORY MODAL ──────────────────────────────────────────────────────────────
@@ -147,6 +180,6 @@ test('can proceed from step 1 without entering name (name is optional)', async (
 test('historical rates modal opens and closes', async ({ page }) => {
   await page.locator('.home-card').filter({ hasText: 'Historical Gold Rates' }).click();
   await expect(page.locator('#histRatesModal')).toBeVisible();
-  await page.locator('.hist-close-btn').click();
+  await page.locator('#histRatesModal .hist-close-btn').click();
   await expect(page.locator('#histRatesModal')).not.toBeVisible();
 });

@@ -129,6 +129,29 @@ test('result date line isolates the Gregorian and Hijri halves', async ({ page }
   await expect(hijri).not.toHaveText('');
 });
 
+test('the rate-fetch button renders its markup while loading, in Urdu', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+
+  // A past Zakat date takes the fetching(dateLabel) branch — the string that
+  // carries <bdi> markup. Today's date takes a plain-text branch instead.
+  await page.locator('#g_date').fill('2024-08-01');
+  await page.locator('#g_date').dispatchEvent('change');
+
+  // Sample synchronously: the network call fails fast offline and the catch
+  // restores the idle label, so racing it is unreliable. Invoking the handler
+  // and reading the DOM immediately is deterministic.
+  const state = await page.evaluate(() => {
+    fetchSilverRate();
+    const el = document.getElementById('fetchRateTxt');
+    return { text: el.textContent, bdiCount: el.querySelectorAll('bdi').length };
+  });
+
+  // Rendered as markup: a real <bdi> element, and no literal tags in the text.
+  expect(state.bdiCount).toBeGreaterThan(0);
+  expect(state.text).not.toMatch(/<\/?bdi>/i);
+});
+
 test('no raw markup leaks into the page as visible text', async ({ page }) => {
   await goUrdu(page);
 

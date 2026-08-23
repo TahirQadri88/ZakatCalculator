@@ -1996,7 +1996,7 @@
 
 <footer>
     <div style="margin-bottom: 8px;">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v56</span></div>
+    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v57</span></div>
 </footer>
 
 <script>
@@ -2351,7 +2351,9 @@
         const apiDate = isPast ? zakatDateVal : 'latest'; // use exact date for historical, 'latest' for today
 
         icon.textContent = '⏳';
-        txt.textContent = isPast ? t().fetching(dateLabel) : t().fetchingNow;
+        // fetching() carries <bdi> markup (DESIGN.md §2.5) — must render, not print.
+        // dateLabel is derived from the date picker, never free text.
+        txt.innerHTML = isPast ? t().fetching(dateLabel) : t().fetchingNow;
         btn.disabled = true;
 
         const currPref = document.getElementById('currency_pref').value.trim();

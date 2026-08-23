@@ -120,3 +120,22 @@ that reaches them is a test we failed to write.
 - Prefer a CSS rule over an inline `style="…"`. Inline styles are how this
   codebase accumulated 95 ungovernable one-off decisions.
 - Report honestly. If something is unverified, say so.
+
+---
+
+## 6. CI
+
+Every push to `main` or `claude/tender-keller-vmrapr` runs the test suite
+**before** Firebase deploys. The deploy job carries `needs: test`, so a failing
+test means the live site is never touched and keeps serving the last good
+version. Pull requests are gated the same way before a preview channel is
+created.
+
+CI also runs `scripts/check-cache-bump.sh`, which fails the build if
+`index.html` changed without bumping both `CACHE_NAME` in `sw.js` and the
+footer version badge — see §3. That rule is easy to forget and impossible to
+notice, because the symptom is "the fix didn't work" rather than an error.
+
+`playwright.config.js` points at the image's pre-installed Chromium only when
+that path exists; on a CI runner it falls back to a browser Playwright installs
+itself. Do not hardcode the path again.

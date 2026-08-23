@@ -263,3 +263,25 @@ test('all result amounts display as whole numbers', async ({ page }) => {
     expect(text, `${id} should carry no decimal part`).not.toMatch(/\.\d/);
   }
 });
+
+// ── ENGLISH MODE ──────────────────────────────────────────────────────────────
+
+test('UI chrome added by us is bilingual, not Urdu-only in English mode', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+  await page.locator('#btnEn').click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#step-1 .btn-primary').click();
+  await expect(page.locator('#step-2')).toBeVisible();
+
+  // The step-2 FAQ entry point is our own chrome (not fiqh content), so it
+  // must read in English when the app is in English.
+  // useInnerText so the hidden Urdu span doesn't count — textContent would
+  // include it even while display:none.
+  const link = page.locator('.faq-inline-link');
+  await expect(link).toContainText('Zakat FAQs', { useInnerText: true });
+  await expect(link).not.toContainText('عام سوالات', { useInnerText: true });
+});

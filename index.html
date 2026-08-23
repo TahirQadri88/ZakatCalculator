@@ -1230,6 +1230,7 @@
         .faq-inline-link:active { transform:scale(0.985); }
         .faq-inline-icon { font-size:1.2rem; flex-shrink:0; }
         .faq-inline-text { flex:1; font-family:var(--font-urdu); font-size:1.1rem; color:var(--primary); direction:rtl; text-align:start; line-height:1.6; }
+        html[lang="en"] .faq-inline-text { font-family:var(--font-english); font-size:0.95rem; font-weight:700; direction:ltr; letter-spacing:0.3px; }
         .faq-inline-arrow { font-size:1.3rem; color:#9CA3AF; flex-shrink:0; }
 
         #histRatesModal { display:none; position:fixed; z-index:200; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
@@ -1625,7 +1626,7 @@
 
         <div class="faq-inline-link" onclick="openFAQ()">
             <span class="faq-inline-icon">❓</span>
-            <span class="faq-inline-text">زکوٰۃ کے عام سوالات — FAQs</span>
+            <span class="faq-inline-text"><span class="en">Zakat FAQs</span><span class="ur">زکوٰۃ کے عام سوالات</span></span>
             <span class="card-arrow faq-inline-arrow">›</span>
         </div>
         
@@ -1996,7 +1997,7 @@
 
 <footer>
     <div style="margin-bottom: 8px;">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v57</span></div>
+    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v58</span></div>
 </footer>
 
 <script>

@@ -12,7 +12,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # Pinned: @playwright/test 1.40.0 (see CLAUDE.md §4) asks for libasound2,
+    # which Ubuntu 24.04 renamed to libasound2t64. On ubuntu-latest the browser
+    # install fails with "Package 'libasound2' has no installation candidate".
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,6 +46,7 @@ jobs:
             playwright-report/
             test-results/
           retention-days: 7
+          if-no-files-found: ignore
 
   build_and_deploy:
     needs: test

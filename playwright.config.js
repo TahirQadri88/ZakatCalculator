@@ -2,9 +2,12 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
-  timeout: 25000,
-  expect: { timeout: 6000 },
-  fullyParallel: false,
+  // External assets are blocked in tests/fixtures.js, so navigation is ~100ms
+  // rather than ~13s and these timeouts are generous.
+  timeout: 15000,
+  expect: { timeout: 5000 },
+  fullyParallel: true,
+  workers: 4,
   retries: 1,
   reporter: 'list',
   use: {

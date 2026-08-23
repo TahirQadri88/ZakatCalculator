@@ -3,7 +3,7 @@
 // Every check here guards a bug that actually shipped and had to be reported
 // from a phone screenshot. See DESIGN.md §2 for the rules being enforced.
 
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./fixtures');
 
 /** Switch the app into Urdu (RTL) and wait for the document to flip. */
 async function goUrdu(page) {

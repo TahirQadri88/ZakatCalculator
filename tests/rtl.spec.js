@@ -355,7 +355,7 @@ test('shares fiqh accordion opens and cites its source', async ({ page }) => {
   await expect(summary).toContainText('Listed/Quoted');
   await expect(summary).toContainText('Private Equity');
   await expect(summary).toContainText('Unlisted');
-  await expect(summary).toContainText('لِسٹ نہیں کئے گئے');   // owner's gloss
+  await expect(summary).toContainText('لِسٹ نہیں کیے گئے');   // owner's gloss
   await expect(summary.locator('li')).toHaveCount(2);
   await expect(summary.locator('li').nth(1)).toContainText('Net Assets');
 });

@@ -365,9 +365,9 @@
         }
 
         /* Section-specific left accent borders */
-        #step-2 .field-card { border-left: 3px solid var(--primary); }
-        #step-3 .field-card { border-left: 3px solid var(--blue); }
-        #step-4 .field-card { border-left: 3px solid var(--danger); }
+        #step-2 .field-card { border-inline-start: 3px solid var(--primary); }
+        #step-3 .field-card { border-inline-start: 3px solid var(--blue); }
+        #step-4 .field-card { border-inline-start: 3px solid var(--danger); }
 
         label {
             display: block;
@@ -437,7 +437,7 @@
             content: '▼';
             font-size: 0.75rem;
             color: #9CA3AF;
-            margin-right: 10px;
+            margin-inline-end: 10px;
             transition: transform 0.2s;
         }
 
@@ -869,10 +869,10 @@
 
         /* --- GLOBAL URDU RTL ENFORCEMENT --- */
         .accordion-content, .sub-acc-body { direction: rtl; }
-        .accordion-content p, .sub-acc-body p { direction: rtl; text-align: right; }
+        .accordion-content p, .sub-acc-body p { direction: rtl; text-align: start; }
         .advice-box-single-line { direction: rtl; }
         .warning-box .urdu { direction: rtl; }
-        .faq-q, .faq-a { direction: rtl; text-align: right; }
+        .faq-q, .faq-a { direction: rtl; text-align: start; }
         .step-urdu-label { direction: rtl; text-align: center; }
         .sketch-instruction { direction: rtl; }
         .sketch-title-ur { direction: rtl; }
@@ -881,9 +881,9 @@
         .card-title-ur { direction: rtl; text-align: center; }
         .home-greeting .tagline-ur { direction: rtl; text-align: center; }
         .bismillah { direction: rtl; text-align: center; }
-        .hist-rates-ur { direction: rtl; text-align: right; }
-        .hist-rates-note .ur { direction: rtl; text-align: right; }
-        .row-urdu { direction: rtl; text-align: right; display: block; }
+        .hist-rates-ur { direction: rtl; text-align: start; }
+        .hist-rates-note .ur { direction: rtl; text-align: start; }
+        .row-urdu { direction: rtl; text-align: start; display: block; }
         .zakat-split-ur { direction: rtl; }
         .zakat-hero-label-ur { direction: rtl; }
         /* Accordion toggle icon stays LTR even inside RTL container */
@@ -1355,13 +1355,13 @@
         /* display:none is the initial state; updateUrduDateDisplay() sets it inline. */
         .urdu-date-display {
             display: none; font-family: var(--font-urdu); font-size: 1rem;
-            color: var(--danger); text-align: right; direction: rtl;
+            color: var(--danger); text-align: start; direction: rtl;
             padding: 4px 2px 0; font-weight: 600;
         }
         .hijri-value { font-size: 1rem; font-weight: 600; }
         .nisab-explainer { margin-top: 15px; }
         .sub-acc-header.is-compact { font-size: 1rem; }
-        .rtl-para { text-align: right; direction: rtl; }
+        .rtl-para { text-align: start; direction: rtl; }
         .accordion-header.is-spaced { margin-bottom: 12px; }
         .accordion-header.is-spaced-y { margin-bottom: 15px; margin-top: 10px; }
         .rule-dashed { margin: 10px 0; border-top: 1px dashed #ccc; }
@@ -1408,7 +1408,7 @@
             background:linear-gradient(135deg, #064E3B 0%, #0A7A5A 100%); flex-shrink:0;
         }
         .faq-modal-title { font-family:var(--font-english); font-size:1rem; font-weight:800; color:white; letter-spacing:0.3px; }
-        .faq-modal-title-ur { font-family:var(--font-urdu); font-size:1.25rem; color:rgba(255,255,255,0.92); direction:rtl; text-align:right; margin-top:3px; line-height:1.5; }
+        .faq-modal-title-ur { font-family:var(--font-urdu); font-size:1.25rem; color:rgba(255,255,255,0.92); direction:rtl; text-align:start; margin-top:3px; line-height:1.5; }
         .faq-close-btn {
             flex-shrink:0; width:32px; height:32px; border-radius:50%;
             background:rgba(255,255,255,0.18); color:white; cursor:pointer;
@@ -1449,21 +1449,21 @@
         }
         .hist-rates-ur {
             font-family:var(--font-urdu); font-size:1.1rem; color:var(--accent);
-            direction:rtl; display:block; text-align:right; margin-bottom:12px; line-height:1.5;
+            direction:rtl; display:block; text-align:start; margin-bottom:12px; line-height:1.5;
         }
         .hist-rates-note {
             background:#FFF7ED; border:1px solid #FDE68A; border-radius:8px;
             padding:10px 12px; font-size:0.78rem; color:#92400E;
             font-family:var(--font-english); margin-bottom:14px; line-height:1.5;
         }
-        .hist-rates-note .ur { font-family:var(--font-urdu); font-size:0.9rem; direction:rtl; display:block; text-align:right; margin-top:4px; color:#B45309; line-height:1.6; }
+        .hist-rates-note .ur { font-family:var(--font-urdu); font-size:0.9rem; direction:rtl; display:block; text-align:start; margin-top:4px; color:#B45309; line-height:1.6; }
         .hist-table { width:100%; border-collapse:collapse; font-family:var(--font-english); font-size:0.83rem; }
         .hist-table thead th { background:var(--primary); color:white; padding:8px 10px; text-align:left; font-weight:700; position:sticky; top:0; }
         .hist-table tbody tr:nth-child(even) { background:#F9FAFB; }
         .hist-table tbody td { padding:7px 10px; border-bottom:1px solid #F3F4F6; vertical-align:middle; }
         .hist-table .yr { font-weight:700; color:var(--primary-dark); white-space:nowrap; }
         .hist-table .rate { font-weight:800; color:var(--accent); text-align:right; white-space:nowrap; }
-        .hist-table .note-col { font-size:0.75rem; color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:right; line-height:1.4; }
+        .hist-table .note-col { font-size:0.75rem; color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:start; line-height:1.4; }
         .hist-src { font-size:0.72rem; color:#9CA3AF; text-align:center; margin-top:12px; font-family:var(--font-english); }
         .hist-close-btn { position:absolute; top:14px; right:14px; background:#F3F4F6; border:1px solid #E5E7EB; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; }
 
@@ -1477,8 +1477,8 @@
         .adj-btn:hover { background: #D4AF6A; }
 
         /* --- RTL LIST --- */
-        .rtl-list { padding-right: 25px; padding-left: 0; margin: 0; list-style-type: decimal; direction: rtl; text-align: right; }
-        .rtl-list li { margin-bottom: 6px; padding-right: 5px; }
+        .rtl-list { padding-inline-start: 25px; padding-inline-end: 0; margin: 0; list-style-type: decimal; direction: rtl; text-align: start; }
+        .rtl-list li { margin-bottom: 6px; padding-inline-start: 5px; }
 
         /* --- RESULT PAGE MISC --- */
         .result-section-wrap {
@@ -2199,7 +2199,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v60</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v61</span></div>
 </footer>
 
 <script>

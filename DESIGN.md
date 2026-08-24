@@ -104,6 +104,27 @@ User-supplied values (the name field) go through `innerText`.
 
 ---
 
+## 2.6 Extracting an inline style can *change* the rendering
+
+An inline `style="…"` beats every selector except `!important`. So an inline
+declaration may be silently overriding a conflicting rule elsewhere in the
+sheet — and moving it into a class hands the win to that other rule.
+
+This happened with `#nisabVal`. The stylesheet said `1.8rem/900`; the inline
+style said `1.6rem/800`. The inline won, so `1.6rem` is what users saw. Lifting
+those declarations into a class let the **ID** rule take over, the number grew,
+and everything below it shifted down the page.
+
+Before extracting, grep for the element's id and classes to find competing
+rules. When one exists, fold the values that were actually rendering into that
+rule rather than adding a weaker class beside it. An ID selector will always
+outrank the class you just wrote.
+
+This is exactly why the visual baselines exist — run `npm run test:visual`
+after every extraction batch.
+
+---
+
 ## 3. Tokens
 
 Defined in `:root` in `index.html`. **Use the variable, not the hex.**

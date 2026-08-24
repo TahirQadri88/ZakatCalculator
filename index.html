@@ -553,8 +553,11 @@
         }
 
         #nisabVal {
-            font-size: 1.8rem;
-            font-weight: 900;
+            /* 1.6rem/800 are the values that actually rendered: an inline style
+               used to override this rule. letter-spacing only ever came from
+               here, so it stays. */
+            font-size: 1.6rem;
+            font-weight: 800;
             color: var(--accent);
             font-family: var(--font-english);
             letter-spacing: -0.5px;
@@ -1192,6 +1195,85 @@
         body.on-home .progress-bar-wrap { display: none; }
 
         /* --- HISTORICAL RATES MODAL --- */
+
+        /* --- EXTRACTED FROM INLINE STYLES (header + home cards) --- */
+        .header-emblem { cursor: pointer; }
+        .header-actions {
+            display: flex; flex-direction: column; gap: 6px;
+            align-items: flex-end; flex-shrink: 0;
+        }
+        .calc-hero-card .card-icon { font-size: 2rem; }
+
+        /* Wide home cards: full-width row with icon, text block, trailing arrow */
+        .home-card.is-wide {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+        .home-card.is-wide .card-icon { flex-shrink: 0; }
+        .home-card .card-body { flex: 1; text-align: start; }
+        .home-card .card-body .card-title-en,
+        .home-card .card-body .card-title-ur { text-align: start; }
+        .home-card .card-meta {
+            font-size: 0.72rem; color: var(--text-muted);
+            font-family: var(--font-english); margin-top: 4px; text-align: start;
+        }
+
+        .home-card.gold-card { gap: 16px; padding: 16px 20px; }
+        .home-card.gold-card .card-icon { background: rgba(255,255,255,0.18); }
+        .home-card.gold-card .card-body .card-title-en { color: #fff; }
+        .home-card.gold-card .card-body .card-title-ur { color: rgba(255,255,255,0.9); }
+        .home-card.gold-card .card-arrow {
+            font-size: 1.4rem; color: rgba(255,255,255,0.6);
+            align-self: center; flex-shrink: 0;
+        }
+
+        .home-card.hist-rates-card { gap: 14px; padding: 16px; }
+        .home-card.hist-rates-card .card-icon { font-size: 1.5rem; }
+        .home-card.hist-rates-card .card-body .card-title-ur {
+            font-size: 1.05rem; margin-top: 2px; line-height: 1.5;
+        }
+
+
+        /* --- EXTRACTED FROM INLINE STYLES (step 1: nav, rate fetch, nisab) --- */
+        .top-nav-row .ur { font-family: var(--font-urdu); }
+        .step-counter {
+            font-family: var(--font-english); font-size: 0.75rem;
+            color: #9CA3AF; font-weight: 600;
+        }
+        .label-optional { font-size: 0.75rem; color: #9CA3AF; font-weight: 400; }
+
+        .rate-fetch-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .btn-fetch-rate {
+            flex: 1; padding: 10px;
+            background: linear-gradient(135deg, var(--primary), #0A6B52);
+            color: #fff; border: none; border-radius: 8px;
+            font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            gap: 7px; font-family: var(--font-english);
+        }
+        .btn-rate-history {
+            padding: 10px 12px; background: #FFF7ED;
+            border: 1px solid #FDE68A; border-radius: 8px;
+            cursor: pointer; font-size: 1rem; flex-shrink: 0;
+        }
+        /* display:none is the initial state; fetchSilverRate() sets it inline. */
+        .rate-source-info {
+            display: none; text-align: center; font-size: 0.75rem;
+            color: #374151; margin-bottom: 8px; line-height: 1.6;
+        }
+        .sketch-input-row .num-fmt { flex: 2; }
+        .sketch-unit-select { flex: 1.5; padding: 8px 2px; }
+        .sketch-result-label {
+            font-size: 1rem; color: var(--text-muted); text-align: center;
+        }
+        .sketch-result-label .lbl-en { font-family: var(--font-english); font-weight: 600; }
+        .sketch-result-label .lbl-ur { font-family: var(--font-urdu); direction: rtl; }
+        .hijri-note {
+            text-align: center; font-size: 0.95rem; margin-top: 6px;
+            color: var(--text-muted); line-height: 1.6;
+        }
+
         /* --- FAQ OVERLAY --- */
         #faqModal { display:none; position:fixed; z-index:1100; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
         #faqModal.open { display:flex; }
@@ -1305,13 +1387,13 @@
 
 <header>
     <div class="header-top-row">
-        <div class="header-emblem" onclick="goHome()" style="cursor:pointer;" title="Home">☽</div>
+        <div class="header-emblem" onclick="goHome()" title="Home">☽</div>
         <div class="header-content">
             <h1 class="lbl-en">ZAKAT CALCULATOR</h1>
             <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
             <div class="header-urdu-subtitle">دارُالإفتاء النّور</div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end; flex-shrink:0;">
+        <div class="header-actions">
             <div class="lang-pill">
                 <button class="lbtn active" id="btnEn" onclick="setLang('en')">EN</button>
                 <button class="lbtn ur" id="btnUr" onclick="setLang('ur')">اردو</button>
@@ -1373,7 +1455,7 @@
 
         <!-- Calculate Zakat — Hero CTA -->
         <div class="calc-hero-card" onclick="goCalculate()">
-            <div class="card-icon" style="font-size:2rem;">🕌</div>
+            <div class="card-icon">🕌</div>
             <div class="hero-text">
                 <div class="card-title-en">Calculate Zakat</div>
                 <div class="hero-sub">Enter assets · get your exact Zakat amount</div>
@@ -1402,22 +1484,22 @@
             </div>
 
             <!-- FAQs — full width -->
-            <div class="home-card gold-card" onclick="openFAQ()" style="grid-column:1/-1; flex-direction:row; gap:16px; padding:16px 20px; justify-content:flex-start;">
-                <div class="card-icon" style="background:rgba(255,255,255,0.18); flex-shrink:0;">❓</div>
-                <div style="flex:1;">
-                    <div class="card-title-en" style="text-align:left; color:white;">Zakat FAQs</div>
-                    <div class="card-title-ur" style="text-align:right; color:rgba(255,255,255,0.9);">زکوٰۃ کے عام سوالات</div>
+            <div class="home-card gold-card is-wide" onclick="openFAQ()">
+                <div class="card-icon">❓</div>
+                <div class="card-body">
+                    <div class="card-title-en">Zakat FAQs</div>
+                    <div class="card-title-ur">زکوٰۃ کے عام سوالات</div>
                 </div>
-                <div class="card-arrow" style="font-size:1.4rem; color:rgba(255,255,255,0.6); align-self:center; flex-shrink:0;">›</div>
+                <div class="card-arrow">›</div>
             </div>
 
             <!-- Historical Rates -->
-            <div class="home-card hist-rates-card" onclick="openHistRates()" style="grid-column:1/-1; flex-direction:row; gap:14px; padding:16px;">
-                <div class="card-icon" style="flex-shrink:0; font-size:1.5rem;">📊</div>
-                <div style="flex:1; text-align:start;">
-                    <div class="card-title-en" style="text-align:start;">Historical Gold Rates (Pakistan)</div>
-                    <div class="card-title-ur" style="text-align:start; font-size:1.05rem; margin-top:2px; line-height:1.5;">پرانی زکوٰۃ کے لیے تاریخی قیمتیں</div>
-                    <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-english); margin-top:4px; text-align:start;"><bdi>1947 – 2019 · Source: Daily Jang</bdi></div>
+            <div class="home-card hist-rates-card is-wide" onclick="openHistRates()">
+                <div class="card-icon">📊</div>
+                <div class="card-body">
+                    <div class="card-title-en">Historical Gold Rates (Pakistan)</div>
+                    <div class="card-title-ur">پرانی زکوٰۃ کے لیے تاریخی قیمتیں</div>
+                    <div class="card-meta"><bdi>1947 – 2019 · Source: Daily Jang</bdi></div>
                 </div>
             </div>
         </div>
@@ -1426,8 +1508,8 @@
     <!-- STEP 1 -->
     <div id="step-1" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="goHome()"><span class="en">← Home</span><span class="ur" style="font-family:var(--font-urdu)">← ہوم</span></button>
-            <span style="font-family:var(--font-english);font-size:0.75rem;color:#9CA3AF;font-weight:600;">Step 1 / 4</span>
+            <button type="button" class="top-back-btn" onclick="goHome()"><span class="en">← Home</span><span class="ur">← ہوم</span></button>
+            <span class="step-counter">Step 1 / 4</span>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 1: Profile, Eligibility &amp; Nisab</div>
@@ -1435,8 +1517,8 @@
         </div>
 
         <div class="field-card">
-            <label>Full Name <span style="font-size:0.75rem; color:#9CA3AF; font-weight:400;">(Optional)</span></label>
-            <span class="urdu-label-main">پورا نام <span style="font-size:0.75rem; color:#9CA3AF; font-weight:400;">(اختیاری)</span></span>
+            <label>Full Name <span class="label-optional">(Optional)</span></label>
+            <span class="urdu-label-main">پورا نام <span class="label-optional">(اختیاری)</span></span>
             <input type="text" id="u_name" placeholder="Enter Name (optional)">
         </div>
 
@@ -1509,7 +1591,7 @@
                 <div style="font-size:1rem; font-weight:600;"><span id="hijriOutput">Pick a Date</span></div>
                 <button class="adj-btn" onclick="adjH(1)">+</button>
             </div>
-            <div class="urdu-body" style="text-align:center; font-size:0.95rem; margin-top:6px; color:var(--text-muted); line-height:1.6;">سال گزرنے میں قَمری(یعنی چاند کے )مہینوں کا اعتبار ہوگا۔</div>
+            <div class="urdu-body hijri-note">سال گزرنے میں قَمری(یعنی چاند کے )مہینوں کا اعتبار ہوگا۔</div>
         </div>
 
         <div class="nisab-sketch-container">
@@ -1520,16 +1602,16 @@
             <div class="sketch-instruction">
                 اوپر لکھی ہوئی تاریخ پر نصاب کی مقدار کا تعین کرنے کے لئے چاندی کا ریٹ درج کریں
             </div>
-            <div style="display:flex; gap:8px; margin-bottom:8px;">
-                <button type="button" id="fetchRateBtn" onclick="fetchSilverRate()" style="flex:1; padding:10px; background:linear-gradient(135deg,#064E3B,#0A6B52); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; font-family:var(--font-english);">
+            <div class="rate-fetch-row">
+                <button type="button" id="fetchRateBtn" class="btn-fetch-rate" onclick="fetchSilverRate()">
                     <span id="fetchRateIcon">🔄</span> <span id="fetchRateTxt">Fetch Live Silver Rate</span>
                 </button>
-                <button type="button" onclick="openHistRates()" title="Historical rates for past Zakat" style="padding:10px 12px; background:#FFF7ED; border:1px solid #FDE68A; border-radius:8px; cursor:pointer; font-size:1rem; flex-shrink:0;" >📈</button>
+                <button type="button" class="btn-rate-history" onclick="openHistRates()" title="Historical rates for past Zakat">📈</button>
             </div>
-            <div id="rateSourceInfo" style="display:none; text-align:center; font-size:0.75rem; color:#374151; margin-bottom:8px; line-height:1.6;"></div>
+            <div id="rateSourceInfo" class="rate-source-info"></div>
             <div class="sketch-input-row">
-                <input type="text" id="s_rate" class="num-fmt" placeholder="Enter Silver Rate" inputmode="decimal" style="flex:2" oninput="calcNisab()">
-                <select id="s_unit" style="flex:1.5; padding:8px 2px;" onchange="calcNisab()">
+                <input type="text" id="s_rate" class="num-fmt" placeholder="Enter Silver Rate" inputmode="decimal" oninput="calcNisab()">
+                <select id="s_unit" class="sketch-unit-select" onchange="calcNisab()">
                     <option value="tola">Per Tola</option>
                     <option value="10g">Per 10 Grams</option>
                     <option value="1g">Per Gram</option>
@@ -1537,11 +1619,11 @@
                 </select>
             </div>
             <div class="sketch-result-box">
-                <div style="font-size:1rem; color:var(--text-muted); text-align:center;">
-                    <span class="lbl-en" style="font-family:var(--font-english); font-weight:600;">Nisaab Threshold</span>
-                    <span class="lbl-ur" style="font-family:var(--font-urdu); direction:rtl;">نصاب کی مقدار</span>
+                <div class="sketch-result-label">
+                    <span class="lbl-en">Nisaab Threshold</span>
+                    <span class="lbl-ur">نصاب کی مقدار</span>
                 </div>
-                <div id="nisabVal" style="font-size:1.6rem; font-weight:800; color:var(--accent); font-family:var(--font-english);">0</div>
+                <div id="nisabVal">0</div>
             </div>
             
             <div style="margin-top: 15px;">
@@ -1997,7 +2079,7 @@
 
 <footer>
     <div style="margin-bottom: 8px;">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v58</span></div>
+    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v59</span></div>
 </footer>
 
 <script>

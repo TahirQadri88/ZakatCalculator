@@ -344,6 +344,18 @@ test('shares fiqh accordion opens and cites its source', async ({ page }) => {
   await expect(body).toContainText('مالِ تجارت');
   await expect(body.locator('.fiqh-source')).toContainText('مفتی منیب الرحمٰن');
 
+  // At-a-glance summary leads, covering all three cases.
+  await expect(body.locator('.fiqh-glance')).toContainText('ایک نظر میں');
+  await expect(body.locator('.fiqh-glance li')).toHaveCount(3);
+
+  // The published ruling is visually marked as a quotation, and attributed
+  // before it rather than only after.
+  await expect(body.locator('.fiqh-attrib')).toContainText('مفتی منیب الرحمٰن صاحب لکھتے ہیں');
+  await expect(body.locator('blockquote.fiqh-quote .fiqh-source')).toBeVisible();
+
+  // The 2.5% conclusion belongs to method 2, not to both methods.
+  await expect(body.locator('.fiqh-summary ol li').nth(1)).toContainText('ڈھائی فیصد');
+
   // The quoted passage spells it Dividend.
   await expect(body).toContainText('Dividend');
   await expect(body).not.toContainText('Divident');
@@ -357,5 +369,4 @@ test('shares fiqh accordion opens and cites its source', async ({ page }) => {
   await expect(summary).toContainText('درج اور موجود نہیں کیے گئے');   // owner's gloss
   await expect(summary.locator('ol li')).toHaveCount(2);
   await expect(summary).toContainText('Total Assets');
-  await expect(summary).toContainText('ڈھائی فیصد');
 });

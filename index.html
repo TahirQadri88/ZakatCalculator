@@ -1274,6 +1274,126 @@
             color: var(--text-muted); line-height: 1.6;
         }
 
+
+        /* --- EXTRACTED FROM INLINE STYLES (result screen, footer, modals) --- */
+        .urdu-subtitle.is-spaced { margin-bottom: 15px; }
+        .advice-box-single-line.is-warning {
+            text-align: center; color: var(--danger);
+            background: var(--danger-light); border-color: #FCA5A5;
+        }
+        .result-section-wrap.is-header { margin-bottom: 14px; }
+        #res_header { text-align: center; }
+        .report-kicker {
+            font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px;
+            font-family: var(--font-english); margin-bottom: 4px;
+        }
+        #rpt_name {
+            font-weight: 900; color: var(--primary); font-size: 1.5rem;
+            font-family: var(--font-english); line-height: 1.1;
+        }
+        .report-dateline {
+            font-size: 0.82rem; color: var(--text-muted); margin-top: 5px;
+            font-family: var(--font-english);
+            direction: ltr; unicode-bidi: isolate;
+        }
+        .report-dateline span { font-weight: 600; color: var(--slate); }
+        .report-dateline .hijri {
+            font-family: var(--font-urdu); direction: rtl; unicode-bidi: isolate;
+        }
+        #elig_status_box {
+            text-align: center; margin-top: 12px; padding: 9px 12px;
+            border-radius: 8px; font-weight: 700; font-size: 0.92rem;
+            font-family: var(--font-english); letter-spacing: 0.3px;
+        }
+        .row-header.is-liability, .row-val.is-liability { color: var(--danger); }
+        .statement-table tr.row-subtotal { background: #F0FDF4; }
+        .nisab-row-label {
+            font-size: 0.85rem; color: var(--text-muted);
+            font-family: var(--font-english); font-weight: 600;
+        }
+        #r_nisab {
+            text-align: right; font-size: 0.95rem; color: var(--text-muted);
+            font-family: var(--font-english); font-weight: 600;
+        }
+        .row-val.is-grand-total {
+            font-size: 1.4rem; font-weight: 900; color: var(--accent);
+            text-align: right; vertical-align: middle;
+            font-family: var(--font-english);
+        }
+        .advice-box-single-line.is-tight { margin-top: 4px; }
+        .btn-home-wide { width: 100%; margin-top: 8px; }
+
+        .hist-table th.is-numeric { text-align: right; }
+        .hist-modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 15px; border-bottom: 2px solid #EEE; padding-bottom: 10px;
+        }
+        .hist-modal-header .urdu-label-main { font-size: 1.2rem; margin: 0; }
+
+        .footer-presented { margin-bottom: 8px; }
+        .footer-credit {
+            font-size: 0.75rem; border-top: 1px solid var(--border); padding-top: 8px;
+        }
+        .footer-version { opacity: 0.3; margin-inline-start: 5px; }
+
+        /* Links injected from JS translation strings (rate source / fallbacks) */
+        .rate-link { color: var(--primary); font-weight: 700; }
+        .rate-link.is-plaintext { unicode-bidi: plaintext; }
+
+
+        /* --- EXTRACTED FROM INLINE STYLES (accordions, history rows) --- */
+        /* The currency codes are Latin, so this select stays left-aligned even
+           in RTL. Needs to outrank `html[dir="rtl"] select`, which the inline
+           style it replaced used to beat outright (DESIGN.md §2.6). */
+        /* Currency codes are Latin, so this select stays left-aligned even in
+           RTL. It must outrank `html[lang="ur"] .field-card > select`, which the
+           inline style it replaced used to beat outright (DESIGN.md §2.6). */
+        .currency-select,
+        html[dir="rtl"] .currency-select,
+        html[lang="ur"] .field-card > select.currency-select { text-align: left; }
+        /* display:none is the initial state; updateUrduDateDisplay() sets it inline. */
+        .urdu-date-display {
+            display: none; font-family: var(--font-urdu); font-size: 1rem;
+            color: var(--danger); text-align: right; direction: rtl;
+            padding: 4px 2px 0; font-weight: 600;
+        }
+        .hijri-value { font-size: 1rem; font-weight: 600; }
+        .nisab-explainer { margin-top: 15px; }
+        .sub-acc-header.is-compact { font-size: 1rem; }
+        .rtl-para { text-align: right; direction: rtl; }
+        .accordion-header.is-spaced { margin-bottom: 12px; }
+        .accordion-header.is-spaced-y { margin-bottom: 15px; margin-top: 10px; }
+        .rule-dashed { margin: 10px 0; border-top: 1px dashed #ccc; }
+        .step-header-note {
+            font-family: var(--font-urdu); font-size: 0.95rem;
+            color: rgba(255,255,255,0.7); direction: rtl;
+            margin-top: 4px; line-height: 1.5;
+        }
+        .urdu-body.is-example {
+            font-size: 1rem; color: var(--text-muted);
+            text-align: center; margin-bottom: 5px;
+        }
+        .label-note { font-weight: 400; font-size: 0.9rem; }
+        .section-heading {
+            color: var(--primary); font-family: var(--font-english);
+            text-align: center; margin-top: 20px;
+        }
+        .rate-disclaimer { color: var(--label-gold); }
+        .hist-empty {
+            text-align: center; color: #666; font-family: var(--font-english);
+        }
+        .hist-val.is-core, .hist-val.is-recv { color: var(--primary); }
+        .hist-val.is-liab { color: var(--danger); }
+        .hist-val.is-net  { color: var(--slate); }
+        .hist-total-label {
+            font-size: 0.8rem; text-transform: uppercase;
+            color: #047857; font-weight: 700;
+        }
+        .hist-total-value {
+            font-size: 1.2rem; font-weight: 900; color: var(--primary);
+        }
+
         /* --- FAQ OVERLAY --- */
         #faqModal { display:none; position:fixed; z-index:1100; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
         #faqModal.open { display:flex; }
@@ -1569,7 +1689,7 @@
 
         <div class="field-card">
             <label>Currency</label><span class="urdu-label-main">کرنسی منتخب کریں</span>
-            <select id="currency_pref" onchange="updateCurrency()" style="text-align: left;">
+            <select id="currency_pref" class="currency-select" onchange="updateCurrency()">
                 <option value="Rs.">PKR (Rs.)</option>
                 <option value="SAR">SAR (﷼)</option>
                 <option value="AED">AED (د.إ)</option>
@@ -1585,10 +1705,10 @@
             <label>Zakat Year End Date</label>
             <span class="urdu-label-main">زکوٰۃ کے سال کے اختتام کی تاریخ</span>
             <input type="date" id="g_date" onchange="updateHijri(); updateUrduDateDisplay()">
-            <div id="urduDateDisplay" style="display:none; font-family:var(--font-urdu); font-size:1rem; color:var(--danger); text-align:right; direction:rtl; padding:4px 2px 0; font-weight:600;"></div>
+            <div id="urduDateDisplay" class="urdu-date-display"></div>
             <div class="hijri-panel">
                 <button class="adj-btn" onclick="adjH(-1)">-</button>
-                <div style="font-size:1rem; font-weight:600;"><span id="hijriOutput">Pick a Date</span></div>
+                <div class="hijri-value"><span id="hijriOutput">Pick a Date</span></div>
                 <button class="adj-btn" onclick="adjH(1)">+</button>
             </div>
             <div class="urdu-body hijri-note">سال گزرنے میں قَمری(یعنی چاند کے )مہینوں کا اعتبار ہوگا۔</div>
@@ -1626,18 +1746,18 @@
                 <div id="nisabVal">0</div>
             </div>
             
-            <div style="margin-top: 15px;">
-                <div class="sub-acc-header" style="font-size: 1rem;" onclick="toggleSubAcc(this)">ایپلی کیشن میں چاندی کا نصاب کیوں بنیادی معیار بنایا گیا ہے؟</div>
+            <div class="nisab-explainer">
+                <div class="sub-acc-header is-compact" onclick="toggleSubAcc(this)">ایپلی کیشن میں چاندی کا نصاب کیوں بنیادی معیار بنایا گیا ہے؟</div>
                 <div class="sub-acc-body">
                     <!-- UPDATED URDU TEXT WITH RTL DIRECTION -->
-                    <p style="text-align: right; direction: rtl;">اصول یہ ہے کہ:<br>
+                    <p class="rtl-para">اصول یہ ہے کہ:<br>
                     اگر صرف سونا ہو اور اس کے ساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجود نہ ہو، توزکوٰۃ تب ہی فرض ہو گی کہ جب سونا وزن کے اعتبار سے ساڑھے سات تولے ہو، اور دیگر شرائط بھی پائی جائیں۔</p>
 
-                    <p style="text-align: right; direction: rtl;">لیکن عام طور پر ایسا نہیں ہوتا۔ لوگوں کے پاس مختلف قسم کے مال ہوتے ہیں۔لہٰذا:<br>
+                    <p class="rtl-para">لیکن عام طور پر ایسا نہیں ہوتا۔ لوگوں کے پاس مختلف قسم کے مال ہوتے ہیں۔لہٰذا:<br>
                     دیگر شرائط پائے جانے کے ساتھ <br>
                     اگر سونے کےساتھ مالِ زکوۃ میں سے کسی اور جنس کا کوئی بھی مال( مثلاً چاندی، روپیہ پیسہ، مالِ تجارت وغیرہ )موجود ہو، تو اس صورت میں فرضیتِ زکوۃ کا نصاب ’’ساڑھے52 تولے چاندی کی مالیت‘‘ہے، </p>
 
-                    <p style="text-align: right; direction: rtl;">پھر اگر قرض ہو، تو اسےسونے اور دیگراموالِ زکوٰۃ کی کُل مالیت میں سے مِنہا (مائنس) کرنے کے بعد بچنے والی رقم ساڑھے 52 تولہ چاندی کی مالیت کے برابر پہنچتی ہو، اور نصاب پر سال گزر جائے تو قرض کے علاوہ اس تمام مال کی زکوٰۃ فرض ہو گی۔</p>
+                    <p class="rtl-para">پھر اگر قرض ہو، تو اسےسونے اور دیگراموالِ زکوٰۃ کی کُل مالیت میں سے مِنہا (مائنس) کرنے کے بعد بچنے والی رقم ساڑھے 52 تولہ چاندی کی مالیت کے برابر پہنچتی ہو، اور نصاب پر سال گزر جائے تو قرض کے علاوہ اس تمام مال کی زکوٰۃ فرض ہو گی۔</p>
                 </div>
             </div>
         </div>
@@ -1653,7 +1773,7 @@
     <!-- STEP 2 -->
     <div id="step-2" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(1)"><span class="en">← Profile</span><span class="ur" style="font-family:var(--font-urdu)">← پروفائل</span></button>
+            <button type="button" class="top-back-btn" onclick="nav(1)"><span class="en">← Profile</span><span class="ur">← پروفائل</span></button>
             <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
@@ -1662,13 +1782,13 @@
             <div class="step-urdu-label">اثاثے جن پر زکوٰۃ کی ادائیگی فی الفور لازم ہے</div>
         </div>
         
-        <div class="accordion-header" onclick="toggleAccordion('priceDef', this)" style="margin-bottom:12px;">قیمت کی تعریف:</div>
+        <div class="accordion-header is-spaced" onclick="toggleAccordion('priceDef', this)">قیمت کی تعریف:</div>
         <div class="accordion-content" id="priceDef">
             <p>شرعاً قیمت اس کو کہتے ہیں جو اس چیز کا بازار میں بھاؤہو ، اتفاقی طور پر یا بھاؤتاؤ کرنے کے بعد کمی یا زیادتی کے ساتھ کوئی چیز خرید لی جائے تو اس کو قیمت نہیں کہیں گے (بلکہ ثَمَن کہیں گے )۔(فتاویٰ امجدیہ ج ۱ص۳۸۲)</p>
-            <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+            <hr class="rule-dashed">
             <p><strong>کس جگہ کی قیمت لی جائے گی؟</strong></p>
             <p>قیمت اس جگہ کی ہونی چاہیے جہاں مال ہے ۔ (بہارشریعت ، ج۱، حصّہ ۵، مسئلہ ۱۸، ص۹۰۸)</p>
-            <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+            <hr class="rule-dashed">
             <p><strong>قیمت کس دن کی معتبر ہے ؟</strong></p>
             <p>قیمت نہ توبنوانے کے وقت کی معتبر ہے نہ ادائیگیٔ زکوٰۃ کے وقت کی بلکہ جب زکوٰۃ کا سال پورا ہوا اسی وقت کی قیمت کا حساب لگایا جائے گا ۔(ماخوذازفتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ۱۳۳)</p>
         </div>
@@ -1680,7 +1800,7 @@
             <div class="accordion-content" id="goldNoteContent">
                 <p><strong>قیمت کس دن کی معتبر ہے؟</strong> زکوٰۃ کا سال جس دن پورا ہوا اسی وقت کی قیمت کا حساب لگایا جائے گا۔ (ماخوذازفتاویٰ رضویہ مُخَرَّجَہ، ج۱۰، ص۱۳۳)</p>
                 <p><strong>ہیروں پر زکوٰۃ:</strong> ہیروں اور موتی پر زکوٰۃ واجب نہیں ، ہاں ! اگر تجارت کی نیت سے لئے تو زکوٰۃ واجب ہے۔ (الدرالمختار، ج۳، ص۲۳۰)</p>
-                <hr style="margin: 10px 0; border-top: 1px dashed #ccc;">
+                <hr class="rule-dashed">
                 <p><strong>گولڈ کی زکاۃ میں کھوٹ شمار ہو گا یا نہیں؟</strong></p>
                 <p><strong>سوال:</strong> گولڈ کی زکوٰۃ کو شمار کرتے ہوئے، اس میں کھوٹ کو بھی گولڈ میں شمار کر کے اس کا ریٹ لگائیں گے یا کھوٹ کے علاوہ کا اعتبار ہو گا جیسے 18 کیرٹ  کا سونا ہو اور اس میں 75 فیصد گولڈ اور 25 فیصد کھوٹ ہو، تو کھوٹ سمیت پورا گولڈ ہی شمار کیا جائے گا یا کھوٹ کو نکال کر صرف گولڈ کے وزن کا اعتبار ہو گا؟</p>
                 <p><strong>جواب:</strong> سونا ،چاندی میں سے اگر کسی کے ساتھ دوسری دھات مل جائے ،تو جو ان میں سے غالب ہو اسی کا اعتبار ہوتا ہے اورسوال میں بیان کردہ  صورت میں بھی سونا چونکہ کھوٹ پر غالب ہے ، لہذاکھوٹ  کے وزن کو بھی سونے کے وزن کے ساتھ شامل کر کے ٹوٹل وزن کا اعتبار ہو گا ۔ ہاں !  اتنا ضرور ہے کہ جب آپ قیمت کے اعتبار سے زکوۃ ادا کریں گے، تو18 کیرٹ سونے کی  سال پوراہونے کے دن جو مارکیٹ ویلیو ہو گی زکوٰۃ بھی اسی کے مطابق  ہو گی ۔ (فتاویٰ اہلِ سُنّت)</p>
@@ -1721,16 +1841,16 @@
     <!-- STEP 3 -->
     <div id="step-3" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(2)"><span class="en">← Assets</span><span class="ur" style="font-family:var(--font-urdu)">← اثاثے</span></button>
+            <button type="button" class="top-back-btn" onclick="nav(2)"><span class="en">← Assets</span><span class="ur">← اثاثے</span></button>
             <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 3: Receivables</div>
             <div class="step-urdu-label">قابلِ وصول رُقوم</div>
-            <div style="font-family:var(--font-urdu); font-size:0.95rem; color:rgba(255,255,255,0.7); direction:rtl; margin-top:4px; line-height:1.5;">اِن رقوم کی زکوٰۃ وصولی تک مُؤخَر کی جا سکتی ہے۔</div>
+            <div class="step-header-note">اِن رقوم کی زکوٰۃ وصولی تک مُؤخَر کی جا سکتی ہے۔</div>
         </div>
 
-        <div class="accordion-header" onclick="toggleAccordion('receivableTypes', this)" style="margin-bottom:15px; margin-top:10px;">مختلف قسم کے دَین (قابلِ وصول رُقوم)</div>
+        <div class="accordion-header is-spaced-y" onclick="toggleAccordion('receivableTypes', this)">مختلف قسم کے دَین (قابلِ وصول رُقوم)</div>
         <div class="accordion-content" id="receivableTypes">
              <p>ہماری جو رقم کسی کے ذمے ہو اسے’’ دَین‘‘  کہتے ہیں۔</p>
              <p>اس کی 3 قسمیں ہیں۔قوی؛ متوَسّط اور ضعیف۔  اور ہر ایک کا حکم الگ الگ ہے  </p>
@@ -1751,7 +1871,7 @@
         <div class="field-card">
             <label>Non-Business or Private Receivables</label>
             <div class="urdu-subtitle">غیر تجارتی    قابلِ وُصول ادھار (دَین متوسط)</div>
-            <div class="urdu-body" style="font-size:1.0rem; color:#6B7280; text-align:center; margin-bottom:5px;">مثلاً:  گھر کا سامان بیچا اور اس کی قیمت لینے والے پر اُدھار ہو۔</div>
+            <div class="urdu-body is-example">مثلاً:  گھر کا سامان بیچا اور اس کی قیمت لینے والے پر اُدھار ہو۔</div>
             <input type="text" class="r-in num-fmt" id="v_dm" inputmode="decimal" placeholder="Enter Amount in Local Currency">
 
             <div class="sub-acc-header" onclick="toggleSubAcc(this)">(۲)دَین مُتَوَسِّط کیا ہے؟ :</div>
@@ -1762,7 +1882,7 @@
         </div>
 
         <div class="field-card">
-            <label>WEAK RECEIVABLES AGAINST SERVICES<br><em style="font-weight:400; font-size:0.9rem;">(Not Eligible for Zakat)</em></label>
+            <label>WEAK RECEIVABLES AGAINST SERVICES<br><em class="label-note">(Not Eligible for Zakat)</em></label>
             <div class="urdu-subtitle">دَینِ ضعیف وہ ہے جو غیرِ مال کا بدل ہو جیسے مہر مؤجّل وغیرہ</div>
             <input type="text" class="num-fmt" id="v_dw" inputmode="decimal" placeholder="(Not Zakatable yet)" disabled>
 
@@ -1784,13 +1904,13 @@
             </div>
         </div>
 
-        <h4 style="color:var(--primary); font-family:var(--font-english); text-align:center; margin-top:20px;">Other Receivables</h4>
-        <div class="urdu-subtitle" style="margin-bottom:15px;">(With Deferred Zakat Payment Option)</div>
+        <h4 class="section-heading">Other Receivables</h4>
+        <div class="urdu-subtitle is-spaced">(With Deferred Zakat Payment Option)</div>
 
         <div class="field-card">
             <label>Amount in Committee / BC</label>
             <div class="urdu-subtitle">کمیٹی / بیسی میں جمع  شدہ رقم</div>
-            <div class="advice-box-single-line" style="text-align:center; color:#991B1B; background:#FEF2F2; border-color:#FCA5A5;">
+            <div class="advice-box-single-line is-warning">
                 نوٹ: اگر ابھی تک آپ کی کمیٹی نہیں کھلی تو یہ رقم درج کریں۔
             </div>
             <input type="text" class="r-in num-fmt" id="v_bc" inputmode="decimal" placeholder="Enter Amount in Local Currency">
@@ -1813,7 +1933,7 @@
         <div class="field-card">
             <label>Security Deposit (Refundable)</label>
             <div class="urdu-subtitle">قابلِ واپسی سیکیورٹی ڈپازٹ</div>
-             <div class="urdu-body" style="font-size:1.0rem; color:#6B7280; text-align:center; margin-bottom:5px;">(e.g., Rental or Utility Deposit that will be returned)</div>
+             <div class="urdu-body is-example">(e.g., Rental or Utility Deposit that will be returned)</div>
             <input type="text" class="r-in num-fmt" id="v_sec" inputmode="decimal" placeholder="Enter Amount">
         </div>
 
@@ -1826,7 +1946,7 @@
     <!-- STEP 4 -->
     <div id="step-4" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(3)"><span class="en">← Receivables</span><span class="ur" style="font-family:var(--font-urdu)">← واجب الوصول</span></button>
+            <button type="button" class="top-back-btn" onclick="nav(3)"><span class="en">← Receivables</span><span class="ur">← واجب الوصول</span></button>
             <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
@@ -1845,7 +1965,7 @@
         <div class="field-card"><label>All Remaining Installments (for House, Car etc.)</label><span class="urdu-label-main">گھر مکان دکان وغیرہ کی بقایا اَقساط</span><input type="text" class="l-in num-fmt" id="l_installments" inputmode="decimal" placeholder="Enter Amount"></div>
         <div class="field-card">
             <label>Remaining BC Installments IF Full BC is Received</label><span class="urdu-label-main">بیسی کی بقایا اقساط (اگر کمیٹی مل چکی ہے)</span>
-            <div class="advice-box-single-line" style="text-align:center; color:#991B1B; background:#FEF2F2; border-color:#FCA5A5;">نوٹ: یہ رقم صرف اس صورت میں درج کریں اگر آپ کمیٹی وصول کر چکے ہوں۔</div>
+            <div class="advice-box-single-line is-warning">نوٹ: یہ رقم صرف اس صورت میں درج کریں اگر آپ کمیٹی وصول کر چکے ہوں۔</div>
             <input type="text" class="l-in num-fmt" id="l_bc" inputmode="decimal" placeholder="Enter Amount">
         </div>
         <div class="field-card"><label>Unpaid Past Zakat</label><span class="urdu-label-main">گُزشتہ سالوں کی بقایا زکوٰۃ</span><input type="text" class="l-in num-fmt" id="l_past" inputmode="decimal" placeholder="Enter Amount"></div>
@@ -1864,18 +1984,18 @@
     <!-- STEP 5 -->
     <div id="step-5" class="hidden">
         <div class="top-nav-row">
-            <button type="button" class="top-back-btn" onclick="nav(4)"><span class="en">← Edit Data</span><span class="ur" style="font-family:var(--font-urdu)">← تبدیل کریں</span></button>
+            <button type="button" class="top-back-btn" onclick="nav(4)"><span class="en">← Edit Data</span><span class="ur">← تبدیل کریں</span></button>
             <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
 
         <!-- Report Header -->
-        <div class="result-section-wrap" style="margin-bottom:14px;">
-            <div id="res_header" style="text-align:center;">
-                <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; font-family:var(--font-english); margin-bottom:4px;">Zakat Calculation Report</div>
-                <div id="rpt_name" style="font-weight:900; color:var(--primary); font-size:1.5rem; font-family:var(--font-english); line-height:1.1;"></div>
-                <div style="font-size:0.82rem; color:#6B7280; margin-top:5px; font-family:var(--font-english); direction:ltr; unicode-bidi:isolate;">Year Ending: <span id="rpt_date_greg" style="font-weight:600; color:var(--slate);"></span> &nbsp;|&nbsp; <span id="rpt_date_hijri" style="font-weight:600; color:var(--slate); font-family:var(--font-urdu); direction:rtl; unicode-bidi:isolate;"></span></div>
+        <div class="result-section-wrap is-header">
+            <div id="res_header">
+                <div class="report-kicker">Zakat Calculation Report</div>
+                <div id="rpt_name"></div>
+                <div class="report-dateline">Year Ending: <span id="rpt_date_greg"></span> &nbsp;|&nbsp; <span id="rpt_date_hijri" class="hijri"></span></div>
             </div>
-            <div id="elig_status_box" style="text-align:center; margin-top:12px; padding:9px 12px; border-radius:8px; font-weight:700; font-size:0.92rem; font-family:var(--font-english); letter-spacing:0.3px;"></div>
+            <div id="elig_status_box"></div>
         </div>
 
         <!-- Zakat Hero Amount -->
@@ -1921,12 +2041,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <span class="row-header" style="color:var(--danger)">C : Liabilities</span>
+                            <span class="row-header is-liability">C : Liabilities</span>
                             <span class="row-urdu">ج: کُل واجبات (مِنہا ہوں گے)</span>
                         </td>
-                        <td id="r_liab" class="row-val" style="color:var(--danger)">0</td>
+                        <td id="r_liab" class="row-val is-liability">0</td>
                     </tr>
-                    <tr style="background:#F0FDF4;">
+                    <tr class="row-subtotal">
                         <td>
                             <span class="row-header">D : Net Wealth (A+B−C)</span>
                             <span class="row-urdu">کُل قابلِ زکوٰۃ مالیت</span>
@@ -1934,20 +2054,20 @@
                         <td id="r_net" class="row-val">0</td>
                     </tr>
                     <tr>
-                        <td><span style="font-size:0.85rem; color:var(--text-muted); font-family:var(--font-english); font-weight:600;">Nisab Threshold</span></td>
-                        <td id="r_nisab" style="text-align:right; font-size:0.95rem; color:var(--text-muted); font-family:var(--font-english); font-weight:600;">0</td>
+                        <td><span class="nisab-row-label">Nisab Threshold</span></td>
+                        <td id="r_nisab">0</td>
                     </tr>
                     <tr class="row-final">
                         <td>
                             <span class="row-header">E : Total Zakat (2.5%)</span>
                             <span class="row-urdu">کُل واجب الاداء زکوٰۃ</span>
                         </td>
-                        <td class="row-val" style="font-size:1.4rem; font-weight:900; color:var(--accent); text-align:right; vertical-align:middle; font-family:var(--font-english);" id="r_total_dup">0</td>
+                        <td class="row-val is-grand-total" id="r_total_dup">0</td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="advice-box-single-line" style="margin-top:4px;">
+            <div class="advice-box-single-line is-tight">
                 نوٹ: مستند اہل علم کے مطابق واجب الوصول رقوم کی زکوٰۃ اگرچہ وصولی تک مؤخر کرنے کے مسائل موجود ہیں لیکن سال بہ سال ادا کر دینا بہتر ہے تاکہ حساب کتاب میں پیچیدگی نہ رہے۔
             </div>
         </div>
@@ -1957,7 +2077,7 @@
             <button type="button" class="btn btn-primary" onclick="saveToHistory()"><span class="en">💾 Save Record</span><span class="ur">محفوظ کریں</span></button>
         </div>
         <button type="button" class="btn btn-gold" onclick="shareWhatsApp()"><span class="en">📤 Share Detailed Report</span><span class="ur">واٹس ایپ پر شیئر کریں</span></button>
-        <button type="button" class="btn btn-prev" style="width:100%;margin-top:8px;" onclick="goHome()"><span class="en">🏠 Back to Home</span><span class="ur" style="font-family:var(--font-urdu)">🏠 ہوم پر واپس</span></button>
+        <button type="button" class="btn btn-prev btn-home-wide" onclick="goHome()"><span class="en">🏠 Back to Home</span><span class="ur">🏠 ہوم پر واپس</span></button>
     </div>
 </div>
 
@@ -2028,7 +2148,7 @@
         </div>
 
         <table class="hist-table">
-            <thead><tr><th>Year / سال</th><th style="text-align:right">Rate (PKR)</th><th style="text-align:right">Unit</th></tr></thead>
+            <thead><tr><th>Year / سال</th><th class="is-numeric">Rate (PKR)</th><th class="is-numeric">Unit</th></tr></thead>
             <tbody>
                 <tr><td class="yr">1947</td><td class="rate">25</td><td class="note-col">فی تولہ</td></tr>
                 <tr><td class="yr">Feb 1951</td><td class="rate">93</td><td class="note-col">فی تولہ</td></tr>
@@ -2067,8 +2187,8 @@
 <div id="historyModal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeHistory()">&times;</span>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid #EEE; padding-bottom:10px;">
-            <span class="urdu-label-main" style="font-size:1.2rem; margin:0;">گزشتہ ریکارڈ (History)</span>
+        <div class="hist-modal-header">
+            <span class="urdu-label-main">گزشتہ ریکارڈ (History)</span>
             <button type="button" class="btn-clear" onclick="clearAllHistory()">Clear All</button>
         </div>
         <div id="history_list"></div>
@@ -2078,8 +2198,8 @@
 <div id="toast"></div>
 
 <footer>
-    <div style="margin-bottom: 8px;">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div style="font-size: 0.75rem; border-top: 1px solid #E5E7EB; padding-top: 8px;">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span style="opacity:0.3; margin-left:5px;">v59</span></div>
+    <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v60</span></div>
 </footer>
 
 <script>
@@ -2098,11 +2218,11 @@
             silverTola:   (v, c) => `Silver: <strong>${c} ${v} / tola</strong>`,
             silverOz:     (v, c) => `Silver: <strong>${c} ${v} / troy oz</strong>`,
             silverBoth:   (t, o, c) => `Silver: <strong>${c} ${t} / tola</strong> &nbsp;·&nbsp; ${c} ${o} / troy oz`,
-            verify:       `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">Verify: goldpricelive.pk ↗</a>`,
+            verify:       `<a href="https://goldpricelive.pk/" target="_blank" class="rate-link">Verify: goldpricelive.pk ↗</a>`,
             disclaimer:   '⚠ Rates are approximate. Verify with local Sarafa market before Zakat calculation.',
             noHistory:    d => `⚠️ Historical rate not available for ${d}. Data available from Jan 2024.`,
-            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — look up by date &nbsp;·&nbsp; Or tap 📈 for gold rate table<br>• Or enter the rate manually below.`,
-            fetchFailed:  `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a>`,
+            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" class="rate-link">goldpricelive.pk ↗</a> — look up by date &nbsp;·&nbsp; Or tap 📈 for gold rate table<br>• Or enter the rate manually below.`,
+            fetchFailed:  `⚠️ Fetch failed. Visit <a href="https://goldpricelive.pk/" target="_blank" class="rate-link">goldpricelive.pk ↗</a>`,
             btnText:      'Fetch Silver Rate',
             msgOk:        d => `Rate loaded for ${d}`,
             msgFail:      'Could not fetch rate. Please enter manually.',
@@ -2115,11 +2235,11 @@
             silverTola:   (v, c) => `چاندی: <strong><bdi>${c} ${v}</bdi> / تولہ</strong>`,
             silverOz:     (v, c) => `چاندی: <strong><bdi>${c} ${v}</bdi> / ٹرائے اونس</strong>`,
             silverBoth:   (t, o, c) => `چاندی: <strong><bdi>${c} ${t}</bdi> / تولہ</strong> &nbsp;·&nbsp; <bdi>${c} ${o}</bdi> / ٹرائے اونس`,
-            verify:       `<a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;unicode-bidi:plaintext;">تصدیق: goldpricelive.pk ↗</a>`,
+            verify:       `<a href="https://goldpricelive.pk/" target="_blank" class="rate-link is-plaintext">تصدیق: goldpricelive.pk ↗</a>`,
             disclaimer:   '⚠ یہ قیمت تقریبی ہے۔ زکوٰۃ سے پہلے مقامی سرافہ بازار سے تصدیق کریں۔',
             noHistory:    d => `⚠️ <bdi>${d}</bdi> کی تاریخی قیمت دستیاب نہیں۔ ڈیٹا جنوری 2024 سے دستیاب ہے۔`,
-            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> — تاریخ کے مطابق دیکھیں<br>• یا 📈 پر ٹیپ کریں، یا نیچے خود درج کریں۔`,
-            fetchFailed:  `⚠️ قیمت حاصل نہ ہو سکی۔ <a href="https://goldpricelive.pk/" target="_blank" style="color:#064E3B;font-weight:700;">goldpricelive.pk ↗</a> ملاحظہ کریں`,
+            noHistLinks:  `• <a href="https://goldpricelive.pk/" target="_blank" class="rate-link">goldpricelive.pk ↗</a> — تاریخ کے مطابق دیکھیں<br>• یا 📈 پر ٹیپ کریں، یا نیچے خود درج کریں۔`,
+            fetchFailed:  `⚠️ قیمت حاصل نہ ہو سکی۔ <a href="https://goldpricelive.pk/" target="_blank" class="rate-link">goldpricelive.pk ↗</a> ملاحظہ کریں`,
             btnText:      'چاندی کی قیمت حاصل کریں',
             msgOk:        d => `<bdi>${d}</bdi> کی قیمت لوڈ ہو گئی`,
             msgFail:      'قیمت حاصل نہ ہو سکی۔ خود درج کریں۔',
@@ -2482,7 +2602,7 @@
             const verifyLine = isPKR ? (lang === 'ur' ? `<br>${TR.verify}` : ` &nbsp;·&nbsp; ${TR.verify}`) : '';
             info.innerHTML = (isHistorical ? TR.histLabel(dateLabel) : TR.liveLabel(dateLabel))
                 + `<br>` + silverLine + verifyLine
-                + `<br><em style="color:#B45309;">${TR.disclaimer}</em>`;
+                + `<br><em class="rate-disclaimer">${TR.disclaimer}</em>`;
 
             msg(TR.msgOk(dateLabel));
 
@@ -2517,7 +2637,7 @@
                     info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
                     info.innerHTML = TR3.liveLabel(dateLabel) + `<br>`
                         + TR3.silverOz(localPerOz.toFixed(2), targetCode)
-                        + `<br><em style="color:#B45309;">${TR3.disclaimer}</em>`;
+                        + `<br><em class="rate-disclaimer">${TR3.disclaimer}</em>`;
                     msg(TR3.msgOk(dateLabel));
                 } catch (_) {
                     const TR4 = t();
@@ -2703,7 +2823,7 @@
             try {
                 localStorage.setItem(STOR_KEY, '[]');
                 const box = document.getElementById('history_list');
-                if(box) box.innerHTML = '<div style="text-align:center;color:#666; font-family:var(--font-english);">No records.</div>';
+                if(box) box.innerHTML = '<div class="hist-empty">No records.</div>';
                 localStorage.removeItem(STOR_KEY);
                 loadHistory();
                 msg("History Cleared");
@@ -2725,7 +2845,7 @@
     function loadHistory() {
         let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
         const box = document.getElementById('history_list');
-        if(log.length === 0) { box.innerHTML = '<div style="text-align:center;color:#666; font-family:var(--font-english);">No records.</div>'; return; }
+        if(log.length === 0) { box.innerHTML = '<div class="hist-empty">No records.</div>'; return; }
         box.innerHTML = log.map(i => {
             const p = i.curr.trim();
             const d = i.formattedDate || i.date;
@@ -2744,25 +2864,25 @@
                 <div class="hist-grid">
                     <div class="hist-item">
                         <span class="hist-lbl">A: Assets</span>
-                        <span class="hist-val" style="color:#064E3B">${formatNumber(core)}</span>
+                        <span class="hist-val is-core">${formatNumber(core)}</span>
                     </div>
                     <div class="hist-item">
                         <span class="hist-lbl">B: Receivables</span>
-                        <span class="hist-val" style="color:#064E3B">${formatNumber(recv)}</span>
+                        <span class="hist-val is-recv">${formatNumber(recv)}</span>
                     </div>
                     <div class="hist-item">
                         <span class="hist-lbl">C: Liabilities</span>
-                        <span class="hist-val" style="color:#991B1B">-${formatNumber(liab)}</span>
+                        <span class="hist-val is-liab">-${formatNumber(liab)}</span>
                     </div>
                     <div class="hist-item">
                         <span class="hist-lbl">D: Net Wealth</span>
-                        <span class="hist-val" style="color:#1F2937">${formatNumber(i.net)}</span>
+                        <span class="hist-val is-net">${formatNumber(i.net)}</span>
                     </div>
                 </div>
                 
                 <div class="hist-total-box">
-                    <span style="font-size:0.8rem; text-transform:uppercase; color:#047857; font-weight:700;">Total Zakat (E)</span>
-                    <div style="font-size:1.2rem; font-weight:900; color:#064E3B;">${p}${formatNumber(i.total)}</div>
+                    <span class="hist-total-label">Total Zakat (E)</span>
+                    <div class="hist-total-value">${p}${formatNumber(i.total)}</div>
                 </div>
 
                 <div class="hist-actions-row">

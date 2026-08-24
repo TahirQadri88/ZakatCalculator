@@ -197,12 +197,13 @@ overlays and the hero CTA go heavier.
 
 Tracked honestly so it isn't rediscovered as a surprise:
 
-- ~95 inline `style="…"` attributes in `index.html` hold design decisions outside
-  the stylesheet.
+- ~~inline `style="…"` attributes~~ — **done.** All 95 extracted into classes;
+  `index.html` now has zero. Keep it that way: add a class, not an attribute.
 - ~45 physical `text-align: left/right` vs ~5 logical `start/end`; no
   `margin-inline`/`padding-inline`/`border-inline` anywhere yet.
 - 48 distinct hex literals against 21 tokens — the token system is bypassed.
 - 54 distinct `font-size` values; there is no formal type scale.
 
-Migrating these is safe, mechanical, and test-covered. Do it opportunistically
-when touching a region — don't do a big-bang refactor.
+Migrating these is safe, mechanical, and covered by both the functional suite
+and the visual baselines. Do it opportunistically when touching a region —
+don't do a big-bang refactor.

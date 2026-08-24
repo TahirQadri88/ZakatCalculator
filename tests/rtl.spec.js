@@ -310,3 +310,18 @@ test('eligibility status box styles both outcomes', async ({ page }) => {
   await expect(box).toHaveCSS('background-color', 'rgb(254, 226, 226)');
   await expect(box).toContainText('نصاب سے کم');
 });
+
+test('advice-box accent leads the Urdu text it contains', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#step-2 .btn-primary').click();
+
+  // These boxes always hold Urdu and pin direction:rtl, so their accent must
+  // sit on the inline-start edge — the right — where the text begins. Using
+  // border-left here would leave it trailing the text instead.
+  const box = page.locator('#step-3 .advice-box-single-line').first();
+  await expect(box).toHaveCSS('border-right-width', '4px');
+  await expect(box).toHaveCSS('border-left-width', '0px');
+});

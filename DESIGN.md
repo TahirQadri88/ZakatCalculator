@@ -204,6 +204,10 @@ Tracked honestly so it isn't rediscovered as a surprise:
   accents use `-inline-` properties.
 - ~~hex literals matching an existing token~~ — **done.** 41 folded into
   `var()`; no hex left in JavaScript.
+- ~~`border-left` accents on the advice and warning boxes~~ — **done.** Now
+  `border-inline-start`. Those elements pin `direction: rtl` globally (their
+  content is always Urdu), so the accent now leads the text on the right in
+  *both* languages. Guarded by a test in `tests/rtl.spec.js`.
 
 Still open, each a **design decision** rather than a mechanical change:
 
@@ -211,11 +215,6 @@ Still open, each a **design decision** rather than a mechanical change:
   hero card titles. These do not flip with the page today. Converting them to
   `start`/`end` would re-align the Urdu result screen — an improvement, but a
   visible one. Numeric columns should arguably stay physical regardless.
-- **`border-left` accents** on `.advice-box-single-line`, `.warning-box`, and the
-  result note. Those elements pin `direction: rtl`, so `border-inline-start`
-  moves the accent to the right edge in Urdu — where it would *lead* the text
-  rather than trail it. Verified this is the only effect; the field-card accents
-  were unaffected because `.field-card` forces `direction: ltr` in Urdu.
 - **69 hex literals** with no matching token. Naming them means deciding what
   deserves to be part of the system.
 - **54 distinct `font-size` values**; there is no formal type scale.

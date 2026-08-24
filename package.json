@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "playwright test",
+    "test": "playwright test --ignore-snapshots tests/home.spec.js tests/rtl.spec.js",
     "test:ui": "playwright test --ui",
-    "test:headed": "playwright test --headed"
+    "test:headed": "playwright test --headed",
+    "test:visual": "playwright test tests/visual.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "1.40.0",

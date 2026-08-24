@@ -1,4 +1,6 @@
-node_modules/
-test-results/
-playwright-report/
+
+# Playwright visual-diff output (baselines in tests/*-snapshots/ ARE tracked)
 .playwright/
+node_modules/
+playwright-report/
+test-results/

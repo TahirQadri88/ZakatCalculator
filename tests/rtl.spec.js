@@ -285,3 +285,28 @@ test('UI chrome added by us is bilingual, not Urdu-only in English mode', async 
   await expect(link).toContainText('Zakat FAQs', { useInnerText: true });
   await expect(link).not.toContainText('عام سوالات', { useInnerText: true });
 });
+
+test('eligibility status box styles both outcomes', async ({ page }) => {
+  await goUrdu(page);
+
+  // Above Nisab -> eligible
+  await calculateInUrdu(page);
+  const box = page.locator('#elig_status_box');
+  await expect(box).toHaveClass('is-eligible');
+  await expect(box).toHaveCSS('background-color', 'rgb(209, 250, 229)');
+  await expect(box).toContainText('صاحبِ نصاب');
+
+  // Below Nisab -> not eligible. Go back and zero the assets out.
+  await page.locator('#step-5 .top-back-btn').click();
+  await page.locator('#step-4 .btn-prev').click();
+  await page.locator('#step-3 .btn-prev').click();
+  await page.locator('#v_gold').fill('1');
+  await page.locator('#step-2 .btn-primary').click();
+  await page.locator('#v_ds').fill('0');
+  await page.locator('#step-3 .btn-primary').click();
+  await page.locator('#step-4 .btn-primary').click();
+
+  await expect(box).toHaveClass('is-not-eligible');
+  await expect(box).toHaveCSS('background-color', 'rgb(254, 226, 226)');
+  await expect(box).toContainText('نصاب سے کم');
+});

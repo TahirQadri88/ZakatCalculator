@@ -345,8 +345,8 @@ test('shares fiqh accordion opens and cites its source', async ({ page }) => {
   await expect(body.locator('.fiqh-source')).toContainText('مفتی منیب الرحمٰن');
 
   // At-a-glance summary leads, covering all three cases.
-  await expect(body.locator('.fiqh-glance')).toContainText('ایک نظر میں');
-  await expect(body.locator('.fiqh-glance li')).toHaveCount(3);
+  await expect(body.locator('.fiqh-glance')).toContainText('آسان الفاظ میں');
+  await expect(body.locator('.fiqh-glance .fiqh-case')).toHaveCount(3);
 
   // The published ruling is visually marked as a quotation, and attributed
   // before it rather than only after.

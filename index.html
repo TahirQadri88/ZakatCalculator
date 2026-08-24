@@ -1410,7 +1410,10 @@
         }
         .fiqh-quote p { margin: 0 0 8px; }
         .fiqh-quote p:last-child { margin-bottom: 0; }
-        .fiqh-case { margin: 10px 0 12px; }
+        .fiqh-case { margin: 0 0 10px; }
+        .fiqh-case:last-child { margin-bottom: 0; }
+        .fiqh-case p { margin: 0 0 5px; }
+        .fiqh-glance .fiqh-case-title { color: #92400E; font-size: 1.05rem; }
         .fiqh-case-title {
             font-family: var(--font-urdu); font-size: 1.1rem; font-weight: 600;
             color: var(--primary); direction: rtl; text-align: start; margin-bottom: 4px;
@@ -1893,14 +1896,23 @@
         <div class="accordion-header is-spaced-y" onclick="toggleAccordion('sharesFiqh', this)">حِصص (Shares) کی زکوٰۃ کا حکم</div>
         <div class="accordion-content" id="sharesFiqh">
             <div class="fiqh-glance">
-                <div class="fiqh-glance-title">ایک نظر میں</div>
-                <ul class="rtl-list">
-                    <li>بیچنے کی نیت سے خریدے گئے شیئرز — پوری بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> پر زکوٰۃ۔</li>
-                    <li>منافع <bdi>(Dividend)</bdi> کے لیے رکھے گئے لسٹڈ شیئرز — بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> میں سے ایک مخصوص فیصد منہا کر کے باقی پر زکوٰۃ ہوگی۔
-                        <span class="fiqh-note">وہ فیصد یہ ہے کہ کمپنی کے ناقابلِ زکوٰۃ جامد اثاثہ جات <bdi class="nowrap">(Fixed&nbsp;Assets)</bdi> کُل اثاثہ جات کا کتنے فیصد ہیں۔</span>
-                    </li>
-                    <li>اَن لسٹڈ شیئرز اور کاروباری شراکت — کاروبار کے قابلِ زکوٰۃ اثاثوں میں سے اپنے حصّے کے تناسب پر زکوٰۃ۔</li>
-                </ul>
+                <div class="fiqh-glance-title">آسان الفاظ میں</div>
+
+                <div class="fiqh-case">
+                    <div class="fiqh-case-title">۱۔ وہ شیئرز جو بیچنے کے لیے خریدے ہوں</div>
+                    <p>اگر شیئرز اِس نیت سے خریدے ہوں کہ قیمت بڑھنے پر بیچ دیں گے، تو یہ مالِ تجارت ہیں۔ زکوٰۃ کے دن اِن کی جو بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> ہو، وہ پوری رقم قابلِ زکوٰۃ اثاثوں میں شامل کر لیں۔</p>
+                </div>
+
+                <div class="fiqh-case">
+                    <div class="fiqh-case-title">۲۔ وہ لسٹڈ شیئرز جو منافع کے لیے رکھے ہوں</div>
+                    <p>اگر شیئرز بیچنے کے لیے نہیں، بلکہ کمپنی میں شریک رہ کر سالانہ منافع <bdi>(Dividend)</bdi> لینے کے لیے رکھے ہوں، تو پوری بازاری قیمت پر زکوٰۃ نہیں ہوگی۔</p>
+                    <p>پہلے یہ دیکھیں کہ کمپنی کے جامد اثاثے <bdi class="nowrap">(Fixed&nbsp;Assets)</bdi> — یعنی عمارت، مشینری، گاڑیاں وغیرہ، جن پر زکوٰۃ نہیں ہوتی — کمپنی کے کُل اثاثوں کا کتنے فیصد ہیں۔ پھر اُتنا ہی فیصد اپنے شیئرز کی بازاری قیمت میں سے نکال دیں، اور جو رقم بچے اُس پر زکوٰۃ دیں۔</p>
+                </div>
+
+                <div class="fiqh-case">
+                    <div class="fiqh-case-title">۳۔ اَن لسٹڈ شیئرز اور کاروباری شراکت</div>
+                    <p>اگر آپ کے شیئرز اسٹاک مارکیٹ میں فروخت کے لیے درج نہیں <bdi class="nowrap">(Unlisted&nbsp;Shares)</bdi>، یا آپ کسی کاروبار میں شریک ہیں، تو پہلے اُس کاروبار کے قابلِ زکوٰۃ اثاثے معلوم کریں، پھر اُن میں سے اپنے حصّے کے تناسب سے زکوٰۃ ادا کریں۔ اِس کے دو طریقے نیچے <strong>خلاصہ</strong> میں دیے گئے ہیں۔</p>
+                </div>
             </div>
 
             <p class="fiqh-attrib">شیئرز کی زکوٰۃ سے متعلق مفتی منیب الرحمٰن صاحب لکھتے ہیں:</p>
@@ -2300,7 +2312,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v73</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v74</span></div>
 </footer>
 
 <script>

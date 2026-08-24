@@ -1383,6 +1383,16 @@
         }
         .fiqh-summary p { margin: 0 0 6px; }
         .nowrap { white-space: nowrap; }
+        .fiqh-case { margin: 10px 0 12px; }
+        .fiqh-case-title {
+            font-family: var(--font-urdu); font-size: 1.1rem; font-weight: 600;
+            color: var(--primary); direction: rtl; text-align: start; margin-bottom: 4px;
+        }
+        .fiqh-example {
+            background: #FFFBEB; border-inline-start: 3px solid #FDE68A;
+            border-radius: 6px; padding: 8px 10px; margin-top: 6px;
+            direction: rtl; text-align: start;
+        }
         /* Urdu numerals, matching the (۱)/(۲) used in the quoted passage above. */
         .fiqh-summary .rtl-list { list-style-type: arabic-indic; }
         .fiqh-source {
@@ -1855,19 +1865,40 @@
 
         <div class="accordion-header is-spaced-y" onclick="toggleAccordion('sharesFiqh', this)">حِصص (Shares) کی زکوٰۃ کا حکم</div>
         <div class="accordion-content" id="sharesFiqh">
-            <p>پبلک لمیٹڈ کمپنیوں کے حِصص (Shares) کی خرید و فروخت بازارِ حِصص (Stock Market/Stock Exchange) میں ہوتی ہے۔ حِصص خریدنے والے دو طرح کے لوگ ہوتے ہیں:</p>
-            <p><strong>(۱)</strong> وہ لوگ جو کمپنی کے شریک بن کر رہنا چاہتے ہیں۔ Dividend کی صورت میں کمپنی جو منافع شرکاء میں تقسیم کرتی ہے، وہ اس کے حق دار ہوتے ہیں اور اپنی شراکت داری کمپنی کے ساتھ جاری رکھنا چاہتے ہیں۔ ایسی صورت میں دیکھا جائے گا کہ کمپنی کے جامد اثاثہ جات (Fixed Assets) کی مالیت کا فیصد تناسب کمپنی کے کل اثاثہ جات کے ساتھ کیا ہے؟ فرض کیجئے کہ جامد اثاثہ جات کا تناسب کمپنی کے کل اثاثوں کا چالیس فیصد ہے، تو ایسی صورت میں شیئر کی Face Value نہیں بلکہ بازاری قیمتِ فروخت (Market Value) نکال کر اس کا چالیس فیصد منہا کر کے بقیہ رقم پر زکوٰۃ واجب ہوگی۔</p>
-            <p><strong>(۲)</strong> وہ لوگ جو کمپنی کے شیئرز کاروباری مقصد کے لئے خریدتے ہیں، جیسا کہ عام طور پہ Stock Exchange میں ہوتا ہے، تو یہ مالِ تجارت ہے اور اس کی کل بازاری قیمتِ فروخت (Market Value) پر زکوٰۃ شراکت دار (Share Holder) پر واجب ہوگی۔</p>
-            <p class="fiqh-source">(کتاب الزکوٰۃ، مفتی منیب الرحمٰن، ضیاء القرآن پبلی کیشنز، لاہور)</p>
+            <p>شیئرز خریدنے والوں کی دو قسمیں ہیں، اور دونوں کا حکم الگ ہے:</p>
+
+            <div class="fiqh-case">
+                <div class="fiqh-case-title">(۱) جو کمپنی میں شریک رہنا چاہتے ہیں</div>
+                <p>اِن کا مقصد منافع <bdi>(Dividend)</bdi> لینا اور کمپنی کے ساتھ شراکت جاری رکھنا ہوتا ہے۔ اِن کے لیے حساب یوں ہے:</p>
+                <ol class="rtl-list">
+                    <li>دیکھیں کہ کمپنی کے جامد اثاثے <bdi class="nowrap">(Fixed&nbsp;Assets)</bdi> کُل اثاثوں کا کتنے فیصد ہیں۔</li>
+                    <li>شیئر کی بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> میں سے اُتنا ہی فیصد منہا کر دیں۔</li>
+                    <li>جو رقم بچے، اُس پر زکوٰۃ ہے۔</li>
+                </ol>
+                <p class="fiqh-example"><strong>مثال:</strong> اگر جامد اثاثے کُل اثاثوں کا چالیس فیصد ہوں، تو بازاری قیمت میں سے چالیس فیصد نکال کر باقی رقم پر زکوٰۃ دیں۔ شیئر کی <bdi class="nowrap">Face&nbsp;Value</bdi> کا اعتبار نہیں۔</p>
+            </div>
+
+            <div class="fiqh-case">
+                <div class="fiqh-case-title">(۲) جو شیئرز بیچنے کے لیے خریدتے ہیں</div>
+                <p>جیسا کہ عام طور پر <bdi class="nowrap">Stock&nbsp;Exchange</bdi> میں ہوتا ہے۔ یہ مالِ تجارت ہے، اِس لیے اِس کی پوری بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> پر زکوٰۃ واجب ہے۔</p>
+            </div>
 
             <div class="fiqh-summary">
                 <div class="fiqh-summary-title">خلاصہ</div>
-                <p>اسٹاک ایکسچینج میں درج (Listed/Quoted) حِصص اور قابلِ فروخت سیکیورٹیز کو اُن کی بازاری قیمت (Market Value) پر قابلِ زکوٰۃ اثاثوں میں شامل کیا جائے گا۔</p>
-                <p>البتہ پرائیویٹ ایکویٹی (Private Equity)، یعنی وہ شیئرز جو شیئرز بازار میں فروخت کے لیے لِسٹ نہیں کیے گئے <bdi class="nowrap">(Unlisted&nbsp;Shares)</bdi>، اور اُن کاروباری سرمایہ کاریوں کی قابلِ زکوٰۃ مالیت — جو منافع (Dividend) کی غرض سے ہوں — دو طریقوں سے نکالی جا سکتی ہے:</p>
+                <p>اسٹاک ایکسچینج میں درج <bdi class="nowrap">(Listed/Quoted)</bdi> حِصص اور قابلِ فروخت سیکیورٹیز کو اُن کی بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> پر قابلِ زکوٰۃ اثاثوں میں شامل کیا جائے گا۔</p>
+                <p>البتہ پرائیویٹ ایکویٹی <bdi class="nowrap">(Private&nbsp;Equity)</bdi>، یعنی وہ شیئرز جو شیئرز بازار میں فروخت کے لیے لِسٹ نہیں کیے گئے <bdi class="nowrap">(Unlisted&nbsp;Shares)</bdi>، اور اُن کاروباری سرمایہ کاریوں کی قابلِ زکوٰۃ مالیت — جو منافع <bdi>(Dividend)</bdi> کی غرض سے ہوں — دو طریقوں سے نکالی جا سکتی ہے:</p>
                 <ol class="rtl-list">
                     <li>اگر کاروبار کے مکمل اعداد و شمار دستیاب ہوں تو فقہی اصولوں کے مطابق اُس پر زکوٰۃ کا حساب لگا کر اپنے حصّے کے تناسب سے زکوٰۃ ادا کی جائے۔</li>
-                    <li>اگر تفصیلی اعداد و شمار دستیاب نہ ہوں تو خالص اثاثوں (Net Assets) میں سے غیر قابلِ زکوٰۃ جامد اثاثہ جات (Fixed Assets) کا تناسب منہا کر کے قابلِ زکوٰۃ مالیت نکالی جائے۔</li>
+                    <li>اگر تفصیلی اعداد و شمار دستیاب نہ ہوں تو خالص اثاثوں <bdi class="nowrap">(Net&nbsp;Assets)</bdi> میں سے غیر قابلِ زکوٰۃ جامد اثاثہ جات <bdi class="nowrap">(Fixed&nbsp;Assets)</bdi> کا تناسب منہا کر کے قابلِ زکوٰۃ مالیت نکالی جائے۔</li>
                 </ol>
+            </div>
+
+            <div class="sub-acc-header" onclick="toggleSubAcc(this)">اصل عبارت (کتاب الزکوٰۃ سے)</div>
+            <div class="sub-acc-body">
+                <p>پبلک لمیٹڈ کمپنیوں کے حِصص (Shares) کی خرید و فروخت بازارِ حِصص (Stock Market/Stock Exchange) میں ہوتی ہے۔ حِصص خریدنے والے دو طرح کے لوگ ہوتے ہیں:</p>
+                <p>(۱) وہ لوگ جو کمپنی کے شریک بن کر رہنا چاہتے ہیں۔ Dividend کی صورت میں کمپنی جو منافع شرکاء میں تقسیم کرتی ہے، وہ اس کے حق دار ہوتے ہیں اور اپنی شراکت داری کمپنی کے ساتھ جاری رکھنا چاہتے ہیں۔ ایسی صورت میں دیکھا جائے گا کہ کمپنی کے جامد اثاثہ جات (Fixed Assets) کی مالیت کا فیصد تناسب کمپنی کے کل اثاثہ جات کے ساتھ کیا ہے؟ فرض کیجئے کہ جامد اثاثہ جات کا تناسب کمپنی کے کل اثاثوں کا چالیس فیصد ہے، تو ایسی صورت میں شیئر کی Face Value نہیں بلکہ بازاری قیمتِ فروخت (Market Value) نکال کر اس کا چالیس فیصد منہا کر کے بقیہ رقم پر زکوٰۃ واجب ہوگی۔</p>
+                <p>(۲) وہ لوگ جو کمپنی کے شیئرز کاروباری مقصد کے لئے خریدتے ہیں، جیسا کہ عام طور پہ Stock Exchange میں ہوتا ہے، تو یہ مالِ تجارت ہے اور اس کی کل بازاری قیمتِ فروخت (Market Value) پر زکوٰۃ شراکت دار (Share Holder) پر واجب ہوگی۔</p>
+                <p class="fiqh-source">(کتاب الزکوٰۃ، مفتی منیب الرحمٰن، ضیاء القرآن پبلی کیشنز، لاہور)</p>
             </div>
         </div>
 
@@ -2244,7 +2275,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v68</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v69</span></div>
 </footer>
 
 <script>

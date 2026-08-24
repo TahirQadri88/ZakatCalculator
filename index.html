@@ -1365,6 +1365,10 @@
         .nisab-explainer { margin-top: 15px; }
         .sub-acc-header.is-compact { font-size: 1rem; }
         .rtl-para { text-align: start; direction: rtl; }
+        .fiqh-source {
+            font-size: 0.9rem; color: var(--text-muted);
+            direction: rtl; text-align: start; margin-top: 8px;
+        }
         .accordion-header.is-spaced { margin-bottom: 12px; }
         .accordion-header.is-spaced-y { margin-bottom: 15px; margin-top: 10px; }
         .rule-dashed { margin: 10px 0; border-top: 1px dashed #ccc; }
@@ -1817,7 +1821,7 @@
         <div class="field-card"><label>Finished Goods / Inventory</label><span class="urdu-label-main">بیچنے کے لیے تیار سامان کی مارکیٹ ویلیو</span><input type="text" class="c-in num-fmt" id="v_inv" inputmode="decimal" placeholder="Enter Market Value"></div>
         <div class="field-card"><label>Raw Materials</label><span class="urdu-label-main">خام مال</span><input type="text" class="c-in num-fmt" id="v_raw" inputmode="decimal" placeholder="Enter Market Value"></div>
         <div class="field-card">
-            <label>Property for Resale</label><span class="urdu-label-main">بیچنے کی نیت سے خریدی ہوئی جائیداد کی قیمت</span>
+            <label>Property (Purchased for Resale)</label><span class="urdu-label-main">بیچنے کی نیت سے خریدی ہوئی جائیداد کی قیمت</span>
             <input type="text" class="c-in num-fmt" id="v_re" inputmode="decimal" placeholder="Enter Market Value">
             <div class="accordion-header" onclick="toggleAccordion('propertyNote', this)">مکانات اور گاڑیوں پر زکوٰۃ</div>
             <div class="accordion-content" id="propertyNote">
@@ -1828,6 +1832,14 @@
 
         <div class="field-card"><label>Shares & Tradable Certificates</label><span class="urdu-label-main">شیئرز اور قابلِ فروخت انویسٹمنٹ سرٹیفیکیٹ کی مارکیٹ ویلیو</span><input type="text" class="c-in num-fmt" id="v_sh" inputmode="decimal" placeholder="Enter Market Value"></div>
         <div class="field-card"><label>Private Business Share</label><span class="urdu-label-main">پرائیویٹ کاروبارمیں آپ کے حصّے کے قابلِ زکوٰۃ اثاثے</span><input type="text" class="c-in num-fmt" id="v_pb" inputmode="decimal" placeholder="Enter Market Value"></div>
+
+        <div class="accordion-header is-spaced-y" onclick="toggleAccordion('sharesFiqh', this)">حِصص (Shares) کی زکوٰۃ کا حکم</div>
+        <div class="accordion-content" id="sharesFiqh">
+            <p>پبلک لمیٹڈ کمپنیوں کے حِصص (Shares) کی خرید و فروخت بازارِ حِصص (Stock Market/Stock Exchange) میں ہوتی ہے۔ حِصص خریدنے والے دو طرح کے لوگ ہوتے ہیں:</p>
+            <p><strong>(۱)</strong> وہ لوگ جو کمپنی کے شریک بن کر رہنا چاہتے ہیں۔ Divident کی صورت میں کمپنی جو منافع شرکاء میں تقسیم کرتی ہے، وہ اس کے حق دار ہوتے ہیں اور اپنی شراکت داری کمپنی کے ساتھ جاری رکھنا چاہتے ہیں۔ ایسی صورت میں دیکھا جائے گا کہ کمپنی کے جامد اثاثہ جات (Fixed Assets) کی مالیت کا فیصد تناسب کمپنی کے کل اثاثہ جات کے ساتھ کیا ہے؟ فرض کیجئے کہ جامد اثاثہ جات کا تناسب کمپنی کے کل اثاثوں کا چالیس فیصد ہے، تو ایسی صورت میں شیئر کی Face Value نہیں بلکہ بازاری قیمتِ فروخت (Market Value) نکال کر اس کا چالیس فیصد منہا کر کے بقیہ رقم پر زکوٰۃ واجب ہوگی۔</p>
+            <p><strong>(۲)</strong> وہ لوگ جو کمپنی کے شیئرز کاروباری مقصد کے لئے خریدتے ہیں، جیسا کہ عام طور پہ Stock Exchange میں ہوتا ہے، تو یہ مالِ تجارت ہے اور اس کی کل بازاری قیمتِ فروخت (Market Value) پر زکوٰۃ شراکت دار (Share Holder) پر واجب ہوگی۔</p>
+            <p class="fiqh-source">(کتاب الزکوٰۃ، مفتی منیب الرحمٰن، ضیاء القرآن پبلی کیشنز، لاہور)</p>
+        </div>
 
         <div class="faq-inline-link" onclick="openFAQ()">
             <span class="faq-inline-icon">❓</span>
@@ -2202,7 +2214,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v63</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v64</span></div>
 </footer>
 
 <script>

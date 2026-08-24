@@ -325,3 +325,22 @@ test('advice-box accent leads the Urdu text it contains', async ({ page }) => {
   await expect(box).toHaveCSS('border-right-width', '4px');
   await expect(box).toHaveCSS('border-left-width', '0px');
 });
+
+test('shares fiqh accordion opens and cites its source', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#step-1 .btn-primary').click();
+
+  const body = page.locator('#sharesFiqh');
+  await expect(body).not.toBeVisible();
+
+  await page.locator('.accordion-header', { hasText: 'حِصص' }).click();
+  await expect(body).toBeVisible();
+
+  // Both rulings and the citation must be present.
+  await expect(body).toContainText('Fixed Assets');
+  await expect(body).toContainText('Market Value');
+  await expect(body).toContainText('مالِ تجارت');
+  await expect(body.locator('.fiqh-source')).toContainText('مفتی منیب الرحمٰن');
+});

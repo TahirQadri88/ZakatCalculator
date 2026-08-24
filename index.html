@@ -1383,7 +1383,9 @@
         }
         .fiqh-summary p { margin: 0 0 6px; }
         .nowrap { white-space: nowrap; }
-        .rtl-bullets { list-style-type: disc; }
+        /* Numbered lists here use arabic-indic; a ul must out-specify that
+           rule to stay bulleted, hence the element type (DESIGN.md §2.6). */
+        .fiqh-summary ul.rtl-list { list-style-type: disc; }
         .fiqh-case { margin: 10px 0 12px; }
         .fiqh-case-title {
             font-family: var(--font-urdu); font-size: 1.1rem; font-weight: 600;
@@ -1875,7 +1877,7 @@
                 <div class="fiqh-summary-title">خلاصہ</div>
                 <p>اسٹاک ایکسچینج میں درج <bdi>(Listed)</bdi> شیئرز اور قابلِ فروخت سیکیورٹیز کو اُن کی بازاری قیمت <bdi class="nowrap">(Market&nbsp;Value)</bdi> پر دیگر قابلِ زکوٰۃ اثاثوں میں شامل کیا جائے گا۔</p>
                 <p>البتہ</p>
-                <ul class="rtl-list rtl-bullets">
+                <ul class="rtl-list">
                     <li>اَن لسٹڈ شیئرز <bdi class="nowrap">(Unlisted&nbsp;Shares)</bdi> یعنی وہ شیئرز جو اسٹاک مارکیٹ میں فروخت کے لیے درج اور موجود نہیں کیے گئے،</li>
                     <li>یا کمپنیز کے علاوہ تمام انفرادی کاروباری سرمایہ کاریوں میں شراکت کی قابلِ زکوٰۃ مالیت،</li>
                 </ul>
@@ -2261,7 +2263,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v70</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v71</span></div>
 </footer>
 
 <script>

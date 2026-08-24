@@ -198,12 +198,27 @@ overlays and the hero CTA go heavier.
 Tracked honestly so it isn't rediscovered as a surprise:
 
 - ~~inline `style="…"` attributes~~ — **done.** All 95 extracted into classes;
-  `index.html` now has zero. Keep it that way: add a class, not an attribute.
-- ~45 physical `text-align: left/right` vs ~5 logical `start/end`; no
-  `margin-inline`/`padding-inline`/`border-inline` anywhere yet.
-- 48 distinct hex literals against 21 tokens — the token system is bypassed.
-- 54 distinct `font-size` values; there is no formal type scale.
+  `index.html` has zero. Keep it that way: add a class, not an attribute.
+- ~~physical properties that were direction-equivalent~~ — **done.** 13 rules
+  pinning `direction: rtl` now use `start`; `.rtl-list` and the field-card
+  accents use `-inline-` properties.
+- ~~hex literals matching an existing token~~ — **done.** 41 folded into
+  `var()`; no hex left in JavaScript.
 
-Migrating these is safe, mechanical, and covered by both the functional suite
-and the visual baselines. Do it opportunistically when touching a region —
-don't do a big-bang refactor.
+Still open, each a **design decision** rather than a mechanical change:
+
+- **Direction-neutral `text-align`** in the statement and history tables and the
+  hero card titles. These do not flip with the page today. Converting them to
+  `start`/`end` would re-align the Urdu result screen — an improvement, but a
+  visible one. Numeric columns should arguably stay physical regardless.
+- **`border-left` accents** on `.advice-box-single-line`, `.warning-box`, and the
+  result note. Those elements pin `direction: rtl`, so `border-inline-start`
+  moves the accent to the right edge in Urdu — where it would *lead* the text
+  rather than trail it. Verified this is the only effect; the field-card accents
+  were unaffected because `.field-card` forces `direction: ltr` in Urdu.
+- **69 hex literals** with no matching token. Naming them means deciding what
+  deserves to be part of the system.
+- **54 distinct `font-size` values**; there is no formal type scale.
+
+Anything in this list changes what users see. Show a before/after and get a
+decision — do not fold it into a refactor commit.

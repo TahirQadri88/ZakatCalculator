@@ -343,4 +343,17 @@ test('shares fiqh accordion opens and cites its source', async ({ page }) => {
   await expect(body).toContainText('Market Value');
   await expect(body).toContainText('مالِ تجارت');
   await expect(body.locator('.fiqh-source')).toContainText('مفتی منیب الرحمٰن');
+
+  // The quoted passage spells it Dividend.
+  await expect(body).toContainText('Dividend');
+  await expect(body).not.toContainText('Divident');
+
+  // Summary follows the citation and lists both valuation methods.
+  const summary = body.locator('.fiqh-summary');
+  await expect(summary).toBeVisible();
+  await expect(summary).toContainText('خلاصہ');
+  await expect(summary).toContainText('Listed/Quoted');
+  await expect(summary).toContainText('Private Equity');
+  await expect(summary.locator('li')).toHaveCount(2);
+  await expect(summary.locator('li').nth(1)).toContainText('Net Assets');
 });

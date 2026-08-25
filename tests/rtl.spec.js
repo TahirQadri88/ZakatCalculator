@@ -370,3 +370,29 @@ test('shares fiqh accordion opens and cites its source', async ({ page }) => {
   await expect(summary.locator('ol li')).toHaveCount(2);
   await expect(summary).toContainText('Total Assets');
 });
+
+test('result screen re-renders its language-dependent parts on a switch', async ({ page }) => {
+  // Calculate in English, then switch to Urdu while the result is on screen.
+  await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+  await page.locator('#btnEn').click();
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#g_date').fill('2026-08-25');
+  await page.locator('#g_date').dispatchEvent('change');
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#step-2 .btn-primary').click();
+  await page.locator('#step-3 .btn-primary').click();
+  await page.locator('#step-4 .btn-primary').click();
+
+  const hijri = page.locator('#rpt_date_hijri');
+  await expect(hijri).toContainText('Rabi-I');
+
+  await page.locator('#btnUr').click();
+
+  // Must become Urdu; a stale English string here bidi-reorders on screen into
+  // "Rabi-I 1448 AH11" with the digits drawn as Urdu glyphs.
+  await expect(hijri).toContainText('ربیع الاول');
+  await expect(hijri).not.toContainText('Rabi-I');
+  await expect(page.locator('#elig_status_box')).toContainText('نصاب');
+});

@@ -2106,7 +2106,7 @@
             <div id="res_header">
                 <div class="report-kicker">Zakat Calculation Report</div>
                 <div id="rpt_name"></div>
-                <div class="report-dateline">Year Ending: <span id="rpt_date_greg"></span> &nbsp;|&nbsp; <span id="rpt_date_hijri" class="hijri"></span></div>
+                <div class="report-dateline"><span class="en">Year Ending:</span><span class="ur">سالِ زکوٰۃ کا اختتام:</span> <span id="rpt_date_greg"></span> &nbsp;|&nbsp; <span id="rpt_date_hijri" class="hijri"></span></div>
             </div>
             <div id="elig_status_box"></div>
         </div>
@@ -2312,7 +2312,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v74</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v75</span></div>
 </footer>
 
 <script>
@@ -2502,6 +2502,7 @@
         });
         // Refresh date displays in new language
         updateHijri();
+        refreshResultLanguage();
         updateUrduDateDisplay();
     }
 
@@ -2625,6 +2626,25 @@
         const mo = dt.toLocaleDateString('en-GB', {month:'short'});
         return `${toUrduNum(dt.getDate())} ${mnths[mo] || mo} ${toUrduNum(dt.getFullYear())}ء`;
     }
+    // calculate() renders the result screen once. These two pieces depend on the
+    // active language, so switching language while the result is on screen must
+    // re-render them - otherwise the Hijri date keeps its old-language string and
+    // bidi-reorders into something like "Rabi-I 1448 AH11".
+    function refreshResultLanguage() {
+        const step5 = document.getElementById('step-5');
+        if (!step5 || step5.classList.contains('hidden')) return;
+
+        const hij = document.getElementById('rpt_date_hijri');
+        if (hij) hij.innerText = getHijri(document.getElementById('g_date').value, hijriOffset);
+
+        const sb = document.getElementById('elig_status_box');
+        if (sb && sb.className) {
+            sb.innerText = sb.classList.contains('is-eligible')
+                ? (lang === 'ur' ? "✅ صاحبِ نصاب — زکوٰۃ واجب ہے" : "Status: Eligible for Zakat (Sahib-e-Nisab)")
+                : (lang === 'ur' ? "❌ نصاب سے کم — زکوٰۃ واجب نہیں" : "Status: Not Eligible for Zakat");
+        }
+    }
+
     function updateHijri() { const g = document.getElementById('g_date').value; document.getElementById('hijriOutput').innerText = getHijri(g, hijriOffset); }
     function updateUrduDateDisplay() {
         const el = document.getElementById('urduDateDisplay');

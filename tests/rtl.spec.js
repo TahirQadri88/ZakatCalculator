@@ -396,3 +396,31 @@ test('result screen re-renders its language-dependent parts on a switch', async 
   await expect(hijri).not.toContainText('Rabi-I');
   await expect(page.locator('#elig_status_box')).toContainText('نصاب');
 });
+
+test('rate-source line and history re-render on a language switch', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+  await page.locator('#btnEn').click();
+  await page.locator('.calc-hero-card').click();
+
+  // fetchSilverRate writes #rateSourceInfo in the active language. Offline this
+  // takes the "no historical data" branch, which is language-dependent too.
+  await page.locator('#g_date').fill('2024-08-01');
+  await page.locator('#g_date').dispatchEvent('change');
+  await page.evaluate(() => fetchSilverRate());
+  const info = page.locator('#rateSourceInfo');
+  await expect(info).toContainText('Aug 2024');
+
+  await page.locator('#btnUr').click();
+  // Both the sentence and the date inside it must convert.
+  await expect(info).not.toContainText('Aug 2024');
+  await expect(info).toContainText('اگست');
+
+  // The empty-history message is bilingual and refreshes while the modal is open.
+  await page.evaluate(() => { setLang('en'); openHistory(); });
+  // useInnerText: the hidden sibling span counts toward textContent.
+  const hist = page.locator('#history_list');
+  await expect(hist).toHaveText('No records.', { useInnerText: true });
+  await page.evaluate(() => setLang('ur'));
+  await expect(hist).toHaveText('کوئی ریکارڈ محفوظ نہیں۔', { useInnerText: true });
+});

@@ -2312,10 +2312,11 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v75</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v76</span></div>
 </footer>
 
 <script>
+    let renderRateInfo = null;   // rebuilds #rateSourceInfo in the active language
     let hijriOffset = 0, nisabLimit = 0, lastResult = null, currentCurr = "Rs.";
     let deferredPrompt;
     let currentStep = 1; // GLOBAL STATE
@@ -2503,6 +2504,8 @@
         // Refresh date displays in new language
         updateHijri();
         refreshResultLanguage();
+        if (renderRateInfo) renderRateInfo();
+        if (document.getElementById('historyModal').style.display === 'flex') loadHistory();
         updateUrduDateDisplay();
     }
 
@@ -2680,9 +2683,10 @@
         const zakatDate = zakatDateVal ? new Date(zakatDateVal) : null;
         const today = new Date(); today.setHours(0,0,0,0);
         if (zakatDate) zakatDate.setHours(0,0,0,0);
-        const dateLabel = zakatDate
+        const mkDateLabel = () => zakatDate
             ? (lang === 'ur' ? toUrduDate(zakatDateVal) : zakatDate.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }))
             : '—';
+        const dateLabel = mkDateLabel();
         const isPast = zakatDate && zakatDate < today;
         const apiDate = isPast ? zakatDateVal : 'latest'; // use exact date for historical, 'latest' for today
 
@@ -2728,14 +2732,19 @@
             const isHistorical = isPast;
             const tolaVal = (pricePerOz * (11.664/31.1035)).toLocaleString('en-US',{maximumFractionDigits:0});
             const ozVal   = pricePerOz.toLocaleString('en-US',{maximumFractionDigits:0});
+            renderRateInfo = () => {
+                const TR = t();
+                const d = mkDateLabel();
+                info.style.display = 'block';
+                info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                const silverLine = isPKR ? TR.silverBoth(tolaVal, ozVal, 'PKR') : TR.silverOz(pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2}), targetCode);
+                const verifyLine = isPKR ? (lang === 'ur' ? `<br>${TR.verify}` : ` &nbsp;·&nbsp; ${TR.verify}`) : '';
+                info.innerHTML = (isHistorical ? TR.histLabel(d) : TR.liveLabel(d))
+                    + `<br>` + silverLine + verifyLine
+                    + `<br><em class="rate-disclaimer">${TR.disclaimer}</em>`;
+            };
+            renderRateInfo();
             const TR = t();
-            info.style.display = 'block';
-            info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
-            const silverLine = isPKR ? TR.silverBoth(tolaVal, ozVal, 'PKR') : TR.silverOz(pricePerOz.toLocaleString('en-US',{maximumFractionDigits:2}), targetCode);
-            const verifyLine = isPKR ? (lang === 'ur' ? `<br>${TR.verify}` : ` &nbsp;·&nbsp; ${TR.verify}`) : '';
-            info.innerHTML = (isHistorical ? TR.histLabel(dateLabel) : TR.liveLabel(dateLabel))
-                + `<br>` + silverLine + verifyLine
-                + `<br><em class="rate-disclaimer">${TR.disclaimer}</em>`;
 
             msg(TR.msgOk(dateLabel));
 
@@ -2743,10 +2752,14 @@
             // CDN failed (date too old <2024, or network issue) — fallback to Coinbase for today only
             console.warn('jsDelivr XAG fetch failed:', e.message);
             if (isPast) {
+                renderRateInfo = () => {
+                    const T = t();
+                    info.style.display = 'block';
+                    info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                    info.innerHTML = T.noHistory(mkDateLabel()) + `<br>` + T.noHistLinks;
+                };
+                renderRateInfo();
                 const TR2 = t();
-                info.style.display = 'block';
-                info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
-                info.innerHTML = TR2.noHistory(dateLabel) + `<br>` + TR2.noHistLinks;
                 msg(TR2.msgFail);
             } else {
                 // Today but CDN failed — try Coinbase
@@ -2765,19 +2778,26 @@
                     document.getElementById('s_unit').value = 'oz';
                     document.getElementById('s_rate').value = localPerOz.toLocaleString('en-US', { maximumFractionDigits: 2 });
                     calcNisab();
+                    renderRateInfo = () => {
+                        const T = t();
+                        info.style.display = 'block';
+                        info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                        info.innerHTML = T.liveLabel(mkDateLabel()) + `<br>`
+                            + T.silverOz(localPerOz.toFixed(2), targetCode)
+                            + `<br><em class="rate-disclaimer">${T.disclaimer}</em>`;
+                    };
+                    renderRateInfo();
                     const TR3 = t();
-                    info.style.display = 'block';
-                    info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
-                    info.innerHTML = TR3.liveLabel(dateLabel) + `<br>`
-                        + TR3.silverOz(localPerOz.toFixed(2), targetCode)
-                        + `<br><em class="rate-disclaimer">${TR3.disclaimer}</em>`;
                     msg(TR3.msgOk(dateLabel));
                 } catch (_) {
                     const TR4 = t();
                     msg(TR4.msgFail);
-                    info.style.display = 'block';
-                    info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
-                    info.innerHTML = TR4.fetchFailed;
+                    renderRateInfo = () => {
+                        info.style.display = 'block';
+                        info.style.direction = lang === 'ur' ? 'rtl' : 'ltr';
+                        info.innerHTML = t().fetchFailed;
+                    };
+                    renderRateInfo();
                 }
             }
         } finally {
@@ -2978,7 +2998,7 @@
     function loadHistory() {
         let log = JSON.parse(localStorage.getItem(STOR_KEY) || '[]');
         const box = document.getElementById('history_list');
-        if(log.length === 0) { box.innerHTML = '<div class="hist-empty">No records.</div>'; return; }
+        if(log.length === 0) { box.innerHTML = '<div class="hist-empty"><span class="en">No records.</span><span class="ur">کوئی ریکارڈ محفوظ نہیں۔</span></div>'; return; }
         box.innerHTML = log.map(i => {
             const p = i.curr.trim();
             const d = i.formattedDate || i.date;

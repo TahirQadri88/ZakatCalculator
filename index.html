@@ -2312,7 +2312,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v76</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v77</span></div>
 </footer>
 
 <script>
@@ -2822,7 +2822,13 @@
         
         const totalNisabGrams = 612.36;
         nisabLimit = pricePerGram * totalNisabGrams;
-        document.getElementById('nisabVal').innerText = currentCurr + " " + formatNumber(nisabLimit);
+        // Display rounding only (CLAUDE.md §1): every other amount on screen is a
+        // whole number, so showing the threshold to 2dp was the odd one out.
+        // Math.ceil, not round: a threshold must never be shown BELOW its true
+        // value, or someone whose wealth equals the figure on screen would be
+        // told they are under it. nisabLimit keeps full precision for the
+        // `net >= nisabLimit` gate.
+        document.getElementById('nisabVal').innerText = currentCurr + " " + formatNumber(Math.ceil(nisabLimit));
     }
 
     function updateProgressBar(s) {
@@ -2929,7 +2935,7 @@
         document.getElementById('r_recv').innerText = p + formatNumber(recv);
         document.getElementById('r_liab').innerText = p + formatNumber(liab);
         document.getElementById('r_net').innerText = p + formatNumber(net);
-        document.getElementById('r_nisab').innerText = p + formatNumber(nisabLimit);
+        document.getElementById('r_nisab').innerText = p + formatNumber(Math.ceil(nisabLimit));
         
         document.getElementById('rpt_name').innerText = document.getElementById('u_name').value || 'My Zakat';
         const h = document.getElementById('hijriOutput').innerText;

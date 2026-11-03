@@ -424,3 +424,38 @@ test('rate-source line and history re-render on a language switch', async ({ pag
   await page.evaluate(() => setLang('ur'));
   await expect(hist).toHaveText('کوئی ریکارڈ محفوظ نہیں۔', { useInnerText: true });
 });
+
+test('Nisab is shown whole, never below its true value, and compared exactly', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+  await page.locator('#btnEn').click();
+  await page.locator('.calc-hero-card').click();
+
+  // Per-10g at 5942 gives 363864.312 — a fractional threshold whose .312 would
+  // round DOWN. With tola the figure is always rate x 52.5, i.e. .0 or .5, so
+  // it cannot exercise this at all.
+  await page.locator('#s_unit').selectOption('10g');
+  await page.locator('#s_rate').fill('5942');
+  await page.locator('#s_rate').dispatchEvent('input');
+
+  const exact = await page.evaluate(() => nisabLimit);
+  expect(exact % 1).toBeGreaterThan(0);
+  expect(exact % 1).toBeLessThan(0.5);          // the case round() gets wrong
+
+  // Strip thousands separators, then take the trailing number — the currency
+  // prefix "Rs." would otherwise contribute its dot as a decimal point.
+  const shownText = (await page.locator('#nisabVal').innerText()).replace(/,/g, '');
+  const shown = Number(shownText.match(/([\d.]+)\s*$/)[1]);
+  expect(shown % 1).toBe(0);                     // whole, like every other amount
+  expect(shown).toBeGreaterThanOrEqual(exact);   // never below the real bar
+
+  // Wealth at floor(exact) is under the true threshold. If the gate ever read a
+  // rounded figure instead, this would come back eligible.
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill(String(Math.floor(exact)));
+  await page.locator('#step-2 .btn-primary').click();
+  await page.locator('#step-3 .btn-primary').click();
+  await page.locator('#step-4 .btn-primary').click();
+  await expect(page.locator('#elig_status_box')).toHaveClass('is-not-eligible');
+  await expect(page.locator('#r_nisab')).not.toHaveText(/\.\d/);
+});

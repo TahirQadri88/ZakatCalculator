@@ -164,7 +164,7 @@
         header h1 {
             font-family: var(--font-english);
             font-size: 1.1rem;
-            font-weight: 800;
+            font-weight: 600;
             margin: 0;
             line-height: 1.1;
             color: #FEF3C7;
@@ -372,13 +372,12 @@
         label {
             display: block;
             font-weight: 600;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             margin-bottom: 1px;
             color: var(--label-gold);
             text-align: center;
             font-family: var(--font-english);
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
+            letter-spacing: 0;
         }
 
         input, select {
@@ -531,7 +530,7 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .sketch-title-en { font-family: var(--font-english); font-size: 0.95rem; font-weight: 800; color: var(--primary); display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sketch-title-en { font-family: var(--font-english); font-size: 0.95rem; font-weight: 600; color: var(--primary); display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         .sketch-title-ur { font-family: var(--font-urdu); font-size: 1.2rem; color: var(--primary); display: block; line-height: 1.3; }
         .sketch-instruction { font-family: var(--font-urdu); font-size: 1.05rem; text-align: center; line-height: 1.5; color: var(--slate); margin-bottom: 12px; }
         .sketch-input-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
@@ -557,7 +556,7 @@
                used to override this rule. letter-spacing only ever came from
                here, so it stays. */
             font-size: 1.6rem;
-            font-weight: 800;
+            font-weight: 600;
             color: var(--accent);
             font-family: var(--font-english);
             letter-spacing: -0.5px;
@@ -565,7 +564,7 @@
 
         /* --- SUMMARY TABLE (RESULT) --- */
         .statement-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; background: white; box-shadow: var(--shadow-sm); }
-        .statement-table th { background: #F0FDF4; padding: 10px 12px; text-align: left; font-weight: 800; color: var(--primary); font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-english); letter-spacing: 0.5px; border-bottom: 1px solid #D1FAE5; }
+        .statement-table th { background: #F0FDF4; padding: 10px 12px; text-align: left; font-weight: 600; color: var(--primary); font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-english); letter-spacing: 0.5px; border-bottom: 1px solid #D1FAE5; }
         .statement-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         .statement-table tr:last-child td { border-bottom: none; }
         .row-header { font-weight: 700; color: var(--slate); font-size: 0.9rem; display: block; font-family: var(--font-english); }
@@ -588,7 +587,7 @@
         .row-final td { border-bottom: none !important; }
         .row-final .row-header { color: white !important; font-size: 1.1rem; }
         .row-final .row-urdu { color: rgba(255,255,255,0.8) !important; font-size: 1.0rem; }
-        .row-final .row-val { color: white !important; font-size: 1.5rem; font-weight: 900; }
+        .row-final .row-val { color: white !important; font-size: 1.5rem; font-weight: 700; }
 
         /* --- ZAKAT AMOUNT HERO --- */
         .zakat-hero {
@@ -621,7 +620,7 @@
         .zakat-hero-amount {
             font-family: var(--font-english);
             font-size: 2.8rem;
-            font-weight: 900;
+            font-weight: 700;
             color: var(--accent);
             line-height: 1;
             letter-spacing: -1px;
@@ -669,7 +668,7 @@
         .zakat-split-amount {
             font-family: var(--font-english);
             font-size: 1.2rem;
-            font-weight: 800;
+            font-weight: 600;
             color: white;
             margin-top: 4px;
             display: block;
@@ -844,7 +843,7 @@
         }
 
         .hist-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--bg); }
-        .hist-name { font-family: var(--font-english); font-size: 1.1rem; font-weight: 800; color: var(--primary-dark); }
+        .hist-name { font-family: var(--font-english); font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); }
         .hist-date { font-family: var(--font-english); font-size: 0.8rem; color: var(--text-muted); }
 
         .hist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
@@ -1090,7 +1089,7 @@
             border: 1px solid rgba(255,255,255,0.25);
         }
         .calc-hero-card .hero-text { flex: 1; min-width: 0; }
-        .calc-hero-card .card-title-en { color: white; font-size: 1.18rem; font-weight: 800; text-align: left; letter-spacing: 0.2px; }
+        .calc-hero-card .card-title-en { color: white; font-size: 1.18rem; font-weight: 600; text-align: left; letter-spacing: 0.2px; }
         .calc-hero-card .hero-sub { font-family: var(--font-english); font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 3px; font-weight: 500; }
         .calc-hero-card .card-title-ur { color: rgba(255,255,255,0.88); font-size: 1.1rem; text-align: right; margin-top: 4px; display: block; }
         .calc-hero-arrow { font-size: 2rem; color: rgba(255,255,255,0.6); flex-shrink: 0; font-weight: 300; line-height: 1; }
@@ -1289,7 +1288,7 @@
             font-family: var(--font-english); margin-bottom: 4px;
         }
         #rpt_name {
-            font-weight: 900; color: var(--primary); font-size: 1.5rem;
+            font-weight: 700; color: var(--primary); font-size: 1.5rem;
             font-family: var(--font-english); line-height: 1.1;
         }
         .report-dateline {
@@ -1320,7 +1319,7 @@
             font-family: var(--font-english); font-weight: 600;
         }
         .row-val.is-grand-total {
-            font-size: 1.4rem; font-weight: 900; color: var(--accent);
+            font-size: 1.4rem; font-weight: 700; color: var(--accent);
             text-align: right; vertical-align: middle;
             font-family: var(--font-english);
         }
@@ -1458,8 +1457,24 @@
             color: #047857; font-weight: 700;
         }
         .hist-total-value {
-            font-size: 1.2rem; font-weight: 900; color: var(--primary);
+            font-size: 1.2rem; font-weight: 700; color: var(--primary);
         }
+
+
+        /* --- ICONS -------------------------------------------------------
+           Lucide (ISC, v1.67.0) plus one mosque drawn to match. Inlined as a
+           sprite: no network, no build step, and CSP never sees it. Geometry
+           follows tahirqadri.com.pk so the app and the site read as one hand:
+           24x24, stroke 1.5, round caps, sized in em so icons track the text. */
+        .icon {
+            width: 1em; height: 1em;
+            fill: none; stroke: currentColor; stroke-width: 1.5;
+            stroke-linecap: round; stroke-linejoin: round;
+            flex: none;
+        }
+        /* Nastaliq and Naskh sit lower in their line box than Latin, so an icon
+           on the same baseline needs nudging rather than vertical-align:middle. */
+        .icon-inline { width: 1.05em; height: 1.05em; vertical-align: -0.16em; }
 
         /* --- FAQ OVERLAY --- */
         #faqModal { display:none; position:fixed; z-index:1100; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
@@ -1474,7 +1489,7 @@
             padding:16px 18px 12px; border-bottom:1px solid var(--border);
             background:linear-gradient(135deg, var(--primary) 0%, #0A7A5A 100%); flex-shrink:0;
         }
-        .faq-modal-title { font-family:var(--font-english); font-size:1rem; font-weight:800; color:white; letter-spacing:0.3px; }
+        .faq-modal-title { font-family:var(--font-english); font-size:1rem; font-weight: 600; color:white; letter-spacing:0.3px; }
         .faq-modal-title-ur { font-family:var(--font-urdu); font-size:1.25rem; color:rgba(255,255,255,0.92); direction:rtl; text-align:start; margin-top:3px; line-height:1.5; }
         .faq-close-btn {
             flex-shrink:0; width:32px; height:32px; border-radius:50%;
@@ -1511,7 +1526,7 @@
             position:relative;
         }
         .hist-rates-title {
-            font-family:var(--font-english); font-size:1rem; font-weight:800;
+            font-family:var(--font-english); font-size:1rem; font-weight: 600;
             color:var(--primary); margin-bottom:4px;
         }
         .hist-rates-ur {
@@ -1529,14 +1544,14 @@
         .hist-table tbody tr:nth-child(even) { background:#F9FAFB; }
         .hist-table tbody td { padding:7px 10px; border-bottom:1px solid var(--bg); vertical-align:middle; }
         .hist-table .yr { font-weight:700; color:var(--primary-dark); white-space:nowrap; }
-        .hist-table .rate { font-weight:800; color:var(--accent); text-align:right; white-space:nowrap; }
+        .hist-table .rate { font-weight: 600; color:var(--accent); text-align:right; white-space:nowrap; }
         .hist-table .note-col { font-size:0.75rem; color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:start; line-height:1.4; }
         .hist-src { font-size:0.72rem; color:#9CA3AF; text-align:center; margin-top:12px; font-family:var(--font-english); }
         .hist-close-btn { position:absolute; top:14px; right:14px; background:var(--bg); border:1px solid var(--border); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; }
 
         /* --- FOOTER --- */
         footer { text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: 0.78rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
-        footer strong { color: var(--label-gold); font-weight: 900; }
+        footer strong { color: var(--label-gold); font-weight: 700; }
 
         /* --- HIJRI PANEL --- */
         .hijri-panel { background: var(--primary-dark); color: white; padding: 9px 12px; border-radius: 7px; display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
@@ -1560,7 +1575,7 @@
         .result-section-title {
             font-family: var(--font-english);
             font-size: 0.8rem;
-            font-weight: 800;
+            font-weight: 600;
             color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.8px;
@@ -1572,9 +1587,12 @@
 </head>
 <body>
 
+<svg id="icon-sprite" aria-hidden="true" width="0" height="0" style="position:absolute"><symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></symbol><symbol id="i-records" viewBox="0 0 24 24"><path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" /><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></symbol><symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></symbol><symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></symbol><symbol id="i-trend" viewBox="0 0 24 24"><path d="M16 7h6v6" /><path d="m22 7-8.5 8.5-5-5L2 17" /></symbol><symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" x2="15.42" y1="13.51" y2="17.49" /><line x1="15.41" x2="8.59" y1="6.51" y2="10.49" /></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol><symbol id="i-mosque" viewBox="0 0 24 24"><path d="M8 19v-8a4 4 0 0 1 8 0v8"/><path d="M4 19h16"/><path d="M5.5 19v-5M18.5 19v-5"/><path d="M10.5 19v-2.5a1.5 1.5 0 0 1 3 0V19"/></symbol></svg>
+
+
 <header>
     <div class="header-top-row">
-        <div class="header-emblem" onclick="goHome()" title="Home">☽</div>
+        <div class="header-emblem" onclick="goHome()" title="Home"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg></div>
         <div class="header-content">
             <h1 class="lbl-en">ZAKAT CALCULATOR</h1>
             <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
@@ -1586,7 +1604,7 @@
                 <button class="lbtn ur" id="btnUr" onclick="setLang('ur')">اردو</button>
             </div>
             <div class="hist-btn-top" onclick="openHistory()">
-                <span class="icon">📜</span>
+                <span class="hist-btn-icon"><svg class="icon" aria-hidden="true"><use href="#i-records"/></svg></span>
                 <span class="lbl-en">History</span>
                 <span class="lbl-ur">ریکارڈ</span>
             </div>
@@ -1642,7 +1660,7 @@
 
         <!-- Calculate Zakat — Hero CTA -->
         <div class="calc-hero-card" onclick="goCalculate()">
-            <div class="card-icon">🕌</div>
+            <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-mosque"/></svg></div>
             <div class="hero-text">
                 <div class="card-title-en">Calculate Zakat</div>
                 <div class="hero-sub">Enter assets · get your exact Zakat amount</div>
@@ -1654,7 +1672,7 @@
         <div class="home-cards">
             <!-- Language -->
             <div class="home-card" onclick="">
-                <div class="card-icon">🌐</div>
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg></div>
                 <div class="card-title-en">App Language</div>
                 <div class="card-title-ur">زبان منتخب کریں</div>
                 <div class="lang-card-inner">
@@ -1665,14 +1683,14 @@
 
             <!-- My Records -->
             <div class="home-card" onclick="openHistory()">
-                <div class="card-icon">📜</div>
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-records"/></svg></div>
                 <div class="card-title-en">My Zakat Records</div>
                 <div class="card-title-ur">میرا ریکارڈ</div>
             </div>
 
             <!-- FAQs — full width -->
             <div class="home-card gold-card is-wide" onclick="openFAQ()">
-                <div class="card-icon">❓</div>
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></div>
                 <div class="card-body">
                     <div class="card-title-en">Zakat FAQs</div>
                     <div class="card-title-ur">زکوٰۃ کے عام سوالات</div>
@@ -1682,7 +1700,7 @@
 
             <!-- Historical Rates -->
             <div class="home-card hist-rates-card is-wide" onclick="openHistRates()">
-                <div class="card-icon">📊</div>
+                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg></div>
                 <div class="card-body">
                     <div class="card-title-en">Historical Gold Rates (Pakistan)</div>
                     <div class="card-title-ur">پرانی زکوٰۃ کے لیے تاریخی قیمتیں</div>
@@ -1791,9 +1809,9 @@
             </div>
             <div class="rate-fetch-row">
                 <button type="button" id="fetchRateBtn" class="btn-fetch-rate" onclick="fetchSilverRate()">
-                    <span id="fetchRateIcon">🔄</span> <span id="fetchRateTxt">Fetch Live Silver Rate</span>
+                    <span id="fetchRateIcon"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg></span> <span id="fetchRateTxt">Fetch Live Silver Rate</span>
                 </button>
-                <button type="button" class="btn-rate-history" onclick="openHistRates()" title="Historical rates for past Zakat">📈</button>
+                <button type="button" class="btn-rate-history" onclick="openHistRates()" title="Historical rates for past Zakat"><svg class="icon" aria-hidden="true"><use href="#i-trend"/></svg></button>
             </div>
             <div id="rateSourceInfo" class="rate-source-info"></div>
             <div class="sketch-input-row">
@@ -1841,7 +1859,7 @@
     <div id="step-2" class="hidden">
         <div class="top-nav-row">
             <button type="button" class="top-back-btn" onclick="nav(1)"><span class="en">← Profile</span><span class="ur">← پروفائل</span></button>
-            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 2: Core Assets Eligible for Zakat</div>
@@ -1940,7 +1958,7 @@
         </div>
 
         <div class="faq-inline-link" onclick="openFAQ()">
-            <span class="faq-inline-icon">❓</span>
+            <span class="faq-inline-icon"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></span>
             <span class="faq-inline-text"><span class="en">Zakat FAQs</span><span class="ur">زکوٰۃ کے عام سوالات</span></span>
             <span class="card-arrow faq-inline-arrow">›</span>
         </div>
@@ -1955,7 +1973,7 @@
     <div id="step-3" class="hidden">
         <div class="top-nav-row">
             <button type="button" class="top-back-btn" onclick="nav(2)"><span class="en">← Assets</span><span class="ur">← اثاثے</span></button>
-            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 3: Receivables</div>
@@ -2060,7 +2078,7 @@
     <div id="step-4" class="hidden">
         <div class="top-nav-row">
             <button type="button" class="top-back-btn" onclick="nav(3)"><span class="en">← Receivables</span><span class="ur">← واجب الوصول</span></button>
-            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
         <div class="step-header-card">
             <div class="step-title">Step 4: Liabilities (Deductions)</div>
@@ -2098,7 +2116,7 @@
     <div id="step-5" class="hidden">
         <div class="top-nav-row">
             <button type="button" class="top-back-btn" onclick="nav(4)"><span class="en">← Edit Data</span><span class="ur">← تبدیل کریں</span></button>
-            <button type="button" class="top-home-btn" onclick="goHome()">🏠 <span class="en">Home</span><span class="ur">ہوم</span></button>
+            <button type="button" class="top-home-btn" onclick="goHome()"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> <span class="en">Home</span><span class="ur">ہوم</span></button>
         </div>
 
         <!-- Report Header -->
@@ -2189,8 +2207,8 @@
             <button type="button" class="btn btn-prev" onclick="nav(4)"><span class="en">Edit Data</span><span class="ur">تبدیل کریں</span></button>
             <button type="button" class="btn btn-primary" onclick="saveToHistory()"><span class="en">💾 Save Record</span><span class="ur">محفوظ کریں</span></button>
         </div>
-        <button type="button" class="btn btn-gold" onclick="shareWhatsApp()"><span class="en">📤 Share Detailed Report</span><span class="ur">واٹس ایپ پر شیئر کریں</span></button>
-        <button type="button" class="btn btn-prev btn-home-wide" onclick="goHome()"><span class="en">🏠 Back to Home</span><span class="ur">🏠 ہوم پر واپس</span></button>
+        <button type="button" class="btn btn-gold" onclick="shareWhatsApp()"><span class="en"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-share"/></svg> Share Detailed Report</span><span class="ur"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-share"/></svg> واٹس ایپ پر شیئر کریں</span></button>
+        <button type="button" class="btn btn-prev btn-home-wide" onclick="goHome()"><span class="en"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> Back to Home</span><span class="ur"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> ہوم پر واپس</span></button>
     </div>
 </div>
 
@@ -2312,7 +2330,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v77</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v78</span></div>
 </footer>
 
 <script>

@@ -68,6 +68,24 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
             --radius: 10px;
+
+            /* TYPE SCALE — 13 steps replacing 32 ad-hoc sizes. Anchored on the
+               values already carrying the most weight, so most text does not
+               move. font-size on an icon box is a dimension, not type, and is
+               left as an explicit value. */
+            --fs-3xs: 0.65rem;
+            --fs-2xs: 0.72rem;
+            --fs-xs: 0.78rem;
+            --fs-sm: 0.85rem;
+            --fs-md: 0.92rem;
+            --fs-base: 1.0rem;
+            --fs-lg: 1.1rem;
+            --fs-xl: 1.2rem;
+            --fs-2xl: 1.35rem;
+            --fs-3xl: 1.55rem;
+            --fs-4xl: 1.8rem;
+            --fs-5xl: 2.0rem;
+            --fs-hero: 2.8rem;
             --font-english: 'Outfit', system-ui, sans-serif;
             --font-urdu: 'Mehr Nastaleeq', 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
             --font-urdu-title: 'Mehr Nastaleeq', 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
@@ -87,7 +105,7 @@
         /* --- TYPOGRAPHY --- */
         .urdu-label-main {
             font-family: var(--font-urdu) !important;
-            font-size: 1.05rem;
+            font-size: var(--fs-base);
             color: var(--primary);
             font-weight: normal;
             direction: rtl;
@@ -101,7 +119,7 @@
         .urdu-subtitle {
             font-family: var(--font-urdu) !important;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: var(--fs-md);
             text-align: center;
             display: block;
             direction: rtl;
@@ -115,7 +133,7 @@
             unicode-bidi: embed;
             line-height: 1.9;
             text-align: right;
-            font-size: 1rem;
+            font-size: var(--fs-base);
             color: #374151;
         }
 
@@ -147,7 +165,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: var(--fs-2xl);
             flex-shrink: 0;
             background: rgba(255,255,255,0.07);
         }
@@ -163,7 +181,7 @@
 
         header h1 {
             font-family: var(--font-english);
-            font-size: 1.1rem;
+            font-size: var(--fs-lg);
             font-weight: 600;
             margin: 0;
             line-height: 1.1;
@@ -175,7 +193,7 @@
 
         .header-urdu-title {
             font-family: 'Scheherazade New', serif;
-            font-size: 1.55rem;
+            font-size: var(--fs-3xl);
             color: var(--white);
             margin-top: 1px;
             line-height: 1.2;
@@ -185,7 +203,7 @@
 
         .header-urdu-subtitle {
             font-family: 'Scheherazade New', serif;
-            font-size: 1.05rem;
+            font-size: var(--fs-base);
             color: var(--accent);
             margin-top: 0;
             font-weight: 700;
@@ -210,8 +228,8 @@
         }
         .hist-btn-top:hover { background: rgba(255,255,255,0.22); }
         .hist-btn-top .icon { font-size: 1.1rem; }
-        .hist-btn-top .lbl-en { font-family: var(--font-english); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .hist-btn-top .lbl-ur { font-family: var(--font-urdu); font-size: 0.85rem; margin-top: 1px; line-height: 1.2; }
+        .hist-btn-top .lbl-en { font-family: var(--font-english); font-size: var(--fs-2xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hist-btn-top .lbl-ur { font-family: var(--font-urdu); font-size: var(--fs-sm); margin-top: 1px; line-height: 1.2; }
 
         /* --- PROGRESS BAR --- */
         .progress-bar-wrap {
@@ -245,7 +263,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: var(--fs-2xs);
             font-weight: 700;
             color: rgba(255,255,255,0.5);
             font-family: var(--font-english);
@@ -269,7 +287,7 @@
 
         .prog-label {
             font-family: var(--font-english);
-            font-size: 0.62rem;
+            font-size: var(--fs-3xs);
             font-weight: 600;
             color: rgba(255,255,255,0.5);
             text-transform: uppercase;
@@ -282,7 +300,7 @@
         /* Urdu progress labels need larger size — Nastaliq is unreadable at small sizes */
         .prog-label.lbl-ur {
             font-family: var(--font-urdu);
-            font-size: 0.8rem;
+            font-size: var(--fs-xs);
             text-transform: none;
             letter-spacing: 0;
             line-height: 1.2;
@@ -324,7 +342,7 @@
             color: #FEF3C7;
             font-family: var(--font-english);
             font-weight: 700;
-            font-size: 1rem;
+            font-size: var(--fs-base);
             line-height: 1.2;
             letter-spacing: 0.2px;
         }
@@ -332,14 +350,14 @@
         .step-title-sub {
             color: rgba(255,255,255,0.65);
             font-family: var(--font-english);
-            font-size: 0.75rem;
+            font-size: var(--fs-2xs);
             font-weight: 500;
             margin-top: 1px;
         }
 
         .step-urdu-label {
             font-family: var(--font-urdu) !important;
-            font-size: 1rem;
+            font-size: var(--fs-base);
             color: rgba(255,255,255,0.85);
             direction: rtl;
             display: block;
@@ -372,7 +390,7 @@
         label {
             display: block;
             font-weight: 600;
-            font-size: 0.82rem;
+            font-size: var(--fs-sm);
             margin-bottom: 1px;
             color: var(--label-gold);
             text-align: center;
@@ -385,7 +403,7 @@
             padding: 9px 10px;
             border: 1.5px solid #D1D5DB;
             border-radius: 7px;
-            font-size: 1rem;
+            font-size: var(--fs-base);
             text-align: center;
             background: #FAFAFA;
             color: #111;
@@ -402,12 +420,12 @@
             box-shadow: 0 0 0 3px rgba(6,78,59,0.08);
         }
 
-        input::placeholder { color: var(--text-muted); font-weight: 400; font-size: 0.88rem; opacity: 1; }
-        html[lang="ur"] input::placeholder { font-family: var(--font-urdu) !important; font-size: 1rem; color: var(--text-muted); }
+        input::placeholder { color: var(--text-muted); font-weight: 400; font-size: var(--fs-sm); opacity: 1; }
+        html[lang="ur"] input::placeholder { font-family: var(--font-urdu) !important; font-size: var(--fs-base); color: var(--text-muted); }
 
         /* --- ACCORDIONS --- */
         .accordion-header, .sub-acc-header {
-            font-size: 0.92rem;
+            font-size: var(--fs-md);
             padding: 8px 10px;
             background: #F8FAFB;
             border: 1px solid var(--border);
@@ -434,7 +452,7 @@
 
         .accordion-header::after, .sub-acc-header::after {
             content: '▼';
-            font-size: 0.75rem;
+            font-size: var(--fs-2xs);
             color: #9CA3AF;
             margin-inline-end: 10px;
             transition: transform 0.2s;
@@ -442,7 +460,7 @@
 
         .accordion-header.active::after, .sub-acc-header.active::after {
             content: '✕';
-            font-size: 0.9rem;
+            font-size: var(--fs-md);
             color: var(--danger);
             font-weight: bold;
         }
@@ -456,7 +474,7 @@
             text-align: right;
             font-family: var(--font-urdu);
             line-height: 1.9;
-            font-size: 0.95rem;
+            font-size: var(--fs-md);
             color: #374151;
             border-radius: 0 0 7px 7px;
             margin-bottom: 5px;
@@ -479,8 +497,8 @@
             transition: background 0.15s;
         }
         .read-first-btn:hover { background: #FEF3C7; }
-        .read-first-btn span.en { font-family: var(--font-english); font-weight: 700; font-size: 0.9rem; }
-        .read-first-btn span.ur { font-family: var(--font-urdu); font-weight: 400; font-size: 1.1rem; }
+        .read-first-btn span.en { font-family: var(--font-english); font-weight: 700; font-size: var(--fs-md); }
+        .read-first-btn span.ur { font-family: var(--font-urdu); font-weight: 400; font-size: var(--fs-lg); }
         .read-first-content { display: none; border: 1px solid #FCD34D; border-top: none; padding: 12px; background: #FFF; border-radius: 0 0 var(--radius) var(--radius); margin-bottom: 15px; }
 
         .advice-box-single-line {
@@ -488,7 +506,7 @@
             border-inline-start: 4px solid #3B82F6;
             padding: 9px 12px;
             border-radius: 6px;
-            font-size: 1.0rem;
+            font-size: var(--fs-base);
             margin: 8px 0;
             color: var(--blue);
             text-align: right;
@@ -501,12 +519,12 @@
             border-inline-start: 4px solid #F59E0B;
             padding: 10px 12px;
             border-radius: 7px;
-            font-size: 0.9rem;
+            font-size: var(--fs-md);
             margin-bottom: 10px;
             font-family: var(--font-english);
             color: #78350F;
         }
-        .warning-box .urdu { font-family: var(--font-urdu) !important; font-size: 1.05rem; display: block; margin-top: 6px; text-align: right; line-height: 2.0; color: #92400E; }
+        .warning-box .urdu { font-family: var(--font-urdu) !important; font-size: var(--fs-base); display: block; margin-top: 6px; text-align: right; line-height: 2.0; color: #92400E; }
 
         /* --- NISAB CALCULATOR --- */
         .nisab-sketch-container {
@@ -530,9 +548,9 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .sketch-title-en { font-family: var(--font-english); font-size: 0.95rem; font-weight: 600; color: var(--primary); display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-        .sketch-title-ur { font-family: var(--font-urdu); font-size: 1.2rem; color: var(--primary); display: block; line-height: 1.3; }
-        .sketch-instruction { font-family: var(--font-urdu); font-size: 1.05rem; text-align: center; line-height: 1.5; color: var(--slate); margin-bottom: 12px; }
+        .sketch-title-en { font-family: var(--font-english); font-size: var(--fs-md); font-weight: 600; color: var(--primary); display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sketch-title-ur { font-family: var(--font-urdu); font-size: var(--fs-xl); color: var(--primary); display: block; line-height: 1.3; }
+        .sketch-instruction { font-family: var(--font-urdu); font-size: var(--fs-base); text-align: center; line-height: 1.5; color: var(--slate); margin-bottom: 12px; }
         .sketch-input-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 
         .sketch-result-box {
@@ -547,7 +565,7 @@
             font-family: var(--font-urdu);
             direction: rtl;
             text-align: right;
-            font-size: 0.88rem;
+            font-size: var(--fs-sm);
             line-height: 1.8;
         }
 
@@ -555,7 +573,7 @@
             /* 1.6rem/800 are the values that actually rendered: an inline style
                used to override this rule. letter-spacing only ever came from
                here, so it stays. */
-            font-size: 1.6rem;
+            font-size: var(--fs-3xl);
             font-weight: 600;
             color: var(--accent);
             font-family: var(--font-english);
@@ -564,15 +582,15 @@
 
         /* --- SUMMARY TABLE (RESULT) --- */
         .statement-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 14px; background: white; box-shadow: var(--shadow-sm); }
-        .statement-table th { background: #F0FDF4; padding: 10px 12px; text-align: left; font-weight: 600; color: var(--primary); font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-english); letter-spacing: 0.5px; border-bottom: 1px solid #D1FAE5; }
+        .statement-table th { background: #F0FDF4; padding: 10px 12px; text-align: left; font-weight: 600; color: var(--primary); font-size: var(--fs-sm); text-transform: uppercase; font-family: var(--font-english); letter-spacing: 0.5px; border-bottom: 1px solid #D1FAE5; }
         .statement-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         .statement-table tr:last-child td { border-bottom: none; }
-        .row-header { font-weight: 700; color: var(--slate); font-size: 0.9rem; display: block; font-family: var(--font-english); }
+        .row-header { font-weight: 700; color: var(--slate); font-size: var(--fs-md); display: block; font-family: var(--font-english); }
 
         .row-urdu {
             font-family: var(--font-urdu);
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: var(--fs-md);
             font-weight: normal;
             display: block;
             text-align: left;
@@ -581,13 +599,13 @@
             margin-top: 2px;
         }
 
-        .row-val { font-weight: 700; color: var(--primary); text-align: right; font-size: 1.05rem; vertical-align: middle; font-family: var(--font-english); white-space: nowrap; }
+        .row-val { font-weight: 700; color: var(--primary); text-align: right; font-size: var(--fs-base); vertical-align: middle; font-family: var(--font-english); white-space: nowrap; }
 
         .row-final { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; }
         .row-final td { border-bottom: none !important; }
-        .row-final .row-header { color: white !important; font-size: 1.1rem; }
-        .row-final .row-urdu { color: rgba(255,255,255,0.8) !important; font-size: 1.0rem; }
-        .row-final .row-val { color: white !important; font-size: 1.5rem; font-weight: 700; }
+        .row-final .row-header { color: white !important; font-size: var(--fs-lg); }
+        .row-final .row-urdu { color: rgba(255,255,255,0.8) !important; font-size: var(--fs-base); }
+        .row-final .row-val { color: white !important; font-size: var(--fs-3xl); font-weight: 700; }
 
         /* --- ZAKAT AMOUNT HERO --- */
         .zakat-hero {
@@ -601,7 +619,7 @@
 
         .zakat-hero-label-en {
             font-family: var(--font-english);
-            font-size: 0.8rem;
+            font-size: var(--fs-xs);
             font-weight: 700;
             color: rgba(255,255,255,0.7);
             text-transform: uppercase;
@@ -610,7 +628,7 @@
 
         .zakat-hero-label-ur {
             font-family: var(--font-urdu);
-            font-size: 1.1rem;
+            font-size: var(--fs-lg);
             color: rgba(255,255,255,0.8);
             direction: rtl;
             display: block;
@@ -619,7 +637,7 @@
 
         .zakat-hero-amount {
             font-family: var(--font-english);
-            font-size: 2.8rem;
+            font-size: var(--fs-hero);
             font-weight: 700;
             color: var(--accent);
             line-height: 1;
@@ -647,7 +665,7 @@
 
         .zakat-split-label {
             font-family: var(--font-english);
-            font-size: 0.68rem;
+            font-size: var(--fs-3xs);
             font-weight: 700;
             color: rgba(255,255,255,0.65);
             text-transform: uppercase;
@@ -657,7 +675,7 @@
 
         .zakat-split-ur {
             font-family: var(--font-urdu);
-            font-size: 0.85rem;
+            font-size: var(--fs-sm);
             color: rgba(255,255,255,0.6);
             display: block;
             direction: rtl;
@@ -667,7 +685,7 @@
 
         .zakat-split-amount {
             font-family: var(--font-english);
-            font-size: 1.2rem;
+            font-size: var(--fs-xl);
             font-weight: 600;
             color: white;
             margin-top: 4px;
@@ -681,8 +699,8 @@
 
         /* --- FAQ --- */
         .faq-item { margin-bottom: 10px; border-bottom: 1px dashed var(--border); padding-bottom: 10px; }
-        .faq-q { color: var(--danger); font-weight: bold; font-family: var(--font-urdu); font-size: 1.05rem; text-align: right; margin-bottom: 4px; line-height: 1.6; }
-        .faq-a { color: var(--primary); font-family: var(--font-urdu); font-size: 1.0rem; text-align: right; line-height: 2.0; }
+        .faq-q { color: var(--danger); font-weight: bold; font-family: var(--font-urdu); font-size: var(--fs-base); text-align: right; margin-bottom: 4px; line-height: 1.6; }
+        .faq-a { color: var(--primary); font-family: var(--font-urdu); font-size: var(--fs-base); text-align: right; line-height: 2.0; }
 
         /* --- BUTTONS --- */
         .btn-row { display: flex; gap: 10px; margin-top: 16px; }
@@ -695,7 +713,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.1s, box-shadow 0.15s, background 0.15s;
-            font-size: 0.88rem;
+            font-size: var(--fs-sm);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -705,8 +723,8 @@
         }
 
         .btn:active { transform: scale(0.97); }
-        .btn span.en { font-size: 0.85rem; font-weight: 700; }
-        .btn span.ur { font-family: var(--font-urdu); font-size: 0.95rem; font-weight: normal; margin-top: 1px; }
+        .btn span.en { font-size: var(--fs-sm); font-weight: 700; }
+        .btn span.ur { font-family: var(--font-urdu); font-size: var(--fs-md); font-weight: normal; margin-top: 1px; }
 
         .btn-primary {
             background: var(--primary);
@@ -741,7 +759,7 @@
             cursor: pointer;
             font-weight: 700;
             font-family: var(--font-english);
-            font-size: 0.85rem;
+            font-size: var(--fs-sm);
             transition: background 0.15s;
         }
         .btn-clear:hover { background: #FEE2E2; }
@@ -753,7 +771,7 @@
             background: none;
             border: none;
             color: #4B5563;
-            font-size: 0.9rem;
+            font-size: var(--fs-md);
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -769,7 +787,7 @@
             background: none;
             border: 1px solid var(--border);
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: var(--fs-xs);
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -781,7 +799,7 @@
             transition: all 0.15s;
         }
         .top-home-btn:hover { color: var(--primary); border-color: var(--primary); background: var(--primary-light); }
-        .top-home-btn .ur { font-family: var(--font-urdu); font-size: 0.9rem; }
+        .top-home-btn .ur { font-family: var(--font-urdu); font-size: var(--fs-md); }
 
         /* Clickable progress dots */
         .prog-step.done { cursor: pointer; }
@@ -819,7 +837,7 @@
             left: 50%;
             bottom: 30px;
             transform: translateX(-50%);
-            font-size: 0.9rem;
+            font-size: var(--fs-md);
             font-family: var(--font-english);
             box-shadow: 0 4px 20px rgba(0,0,0,0.25);
             transition: opacity 0.3s;
@@ -829,7 +847,7 @@
         /* --- HISTORY MODAL --- */
         #historyModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100vh; background-color: rgba(0,0,0,0.65); backdrop-filter: blur(6px); align-items: center; justify-content: center; }
         .modal-content { background-color: white; margin: 5% auto; padding: 20px; border-radius: 14px; width: 95%; max-width: 500px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.3rem; width: 34px; height: 34px; background: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border); transition: background 0.15s; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: var(--fs-2xl); width: 34px; height: 34px; background: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border); transition: background 0.15s; }
         .close-modal:hover { background: var(--border); }
 
         .history-card {
@@ -843,13 +861,13 @@
         }
 
         .hist-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--bg); }
-        .hist-name { font-family: var(--font-english); font-size: 1.1rem; font-weight: 600; color: var(--primary-dark); }
-        .hist-date { font-family: var(--font-english); font-size: 0.8rem; color: var(--text-muted); }
+        .hist-name { font-family: var(--font-english); font-size: var(--fs-lg); font-weight: 600; color: var(--primary-dark); }
+        .hist-date { font-family: var(--font-english); font-size: var(--fs-xs); color: var(--text-muted); }
 
         .hist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
         .hist-item { background: #F9FAFB; padding: 8px; border-radius: 7px; text-align: center; }
-        .hist-lbl { display: block; font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-        .hist-val { display: block; font-size: 0.95rem; font-weight: 700; color: var(--slate); margin-top: 2px; }
+        .hist-lbl { display: block; font-size: var(--fs-2xs); color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+        .hist-val { display: block; font-size: var(--fs-md); font-weight: 700; color: var(--slate); margin-top: 2px; }
 
         .hist-total-box {
             background: linear-gradient(135deg, var(--primary-light), #D1FAE5);
@@ -860,7 +878,7 @@
         }
 
         .hist-actions-row { display: flex; gap: 8px; margin-top: 10px; }
-        .h-btn { flex: 1; padding: 8px 6px; border-radius: 7px; border: none; font-weight: 600; cursor: pointer; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; gap: 4px; transition: opacity 0.15s; }
+        .h-btn { flex: 1; padding: 8px 6px; border-radius: 7px; border: none; font-weight: 600; cursor: pointer; font-size: var(--fs-sm); display: flex; align-items: center; justify-content: center; gap: 4px; transition: opacity 0.15s; }
         .h-btn:hover { opacity: 0.8; }
         .h-btn-edit { background: var(--blue-light); color: var(--blue); }
         .h-btn-share { background: #FFF7ED; color: #9A3412; }
@@ -899,7 +917,7 @@
            in an RTL context, so no transform is needed (adding one flips it back). */
         html[dir="rtl"] .calc-hero-card .card-title-en { text-align: right; }
         html[dir="rtl"] .calc-hero-card .hero-sub { text-align: right; }
-        html[dir="rtl"] .calc-hero-card .card-title-ur { font-size: 1.35rem; font-weight: 700; text-align: right; }
+        html[dir="rtl"] .calc-hero-card .card-title-ur { font-size: var(--fs-2xl); font-weight: 700; text-align: right; }
         html[dir="rtl"] .calc-hero-card .hero-text { text-align: right; }
         html[dir="rtl"] input, html[dir="rtl"] select { text-align: right; direction: rtl; }
         /* Date input must stay LTR — browser renders it in OS locale format */
@@ -935,7 +953,7 @@
             padding-bottom: 8px; /* room for Nastaliq descenders */
             overflow: visible;
             line-height: 1.3;
-            font-size: 0.9rem;
+            font-size: var(--fs-md);
             text-align: right;
             direction: rtl;
             display: inline-block !important;
@@ -977,7 +995,7 @@
             background: none;
             border: none;
             color: rgba(255,255,255,0.65);
-            font-size: 0.72rem;
+            font-size: var(--fs-2xs);
             font-weight: 700;
             cursor: pointer;
             padding: 4px 9px;
@@ -985,7 +1003,7 @@
             transition: all 0.2s;
             line-height: 1;
         }
-        .lbtn.ur { font-family: var(--font-urdu); font-size: 0.85rem; padding: 2px 8px; }
+        .lbtn.ur { font-family: var(--font-urdu); font-size: var(--fs-sm); padding: 2px 8px; }
         .lbtn.active { background: var(--accent); color: var(--primary-dark); }
 
         /* ===== LANGUAGE VISIBILITY — GLOBAL ===== */
@@ -1031,7 +1049,7 @@
         }
         .home-greeting .bismillah {
             font-family: 'Scheherazade New', serif;
-            font-size: 1.75rem;
+            font-size: var(--fs-4xl);
             color: var(--accent);
             direction: rtl;
             line-height: 1.5;
@@ -1040,14 +1058,14 @@
         }
         .home-greeting .tagline-en {
             font-family: var(--font-english);
-            font-size: 0.8rem;
+            font-size: var(--fs-xs);
             color: var(--text-muted);
             font-weight: 500;
             letter-spacing: 0.2px;
         }
         .home-greeting .tagline-ur {
             font-family: var(--font-urdu);
-            font-size: 1rem;
+            font-size: var(--fs-base);
             color: var(--primary);
             direction: rtl;
             display: block;
@@ -1089,10 +1107,10 @@
             border: 1px solid rgba(255,255,255,0.25);
         }
         .calc-hero-card .hero-text { flex: 1; min-width: 0; }
-        .calc-hero-card .card-title-en { color: white; font-size: 1.18rem; font-weight: 600; text-align: left; letter-spacing: 0.2px; }
-        .calc-hero-card .hero-sub { font-family: var(--font-english); font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 3px; font-weight: 500; }
-        .calc-hero-card .card-title-ur { color: rgba(255,255,255,0.88); font-size: 1.1rem; text-align: right; margin-top: 4px; display: block; }
-        .calc-hero-arrow { font-size: 2rem; color: rgba(255,255,255,0.6); flex-shrink: 0; font-weight: 300; line-height: 1; }
+        .calc-hero-card .card-title-en { color: white; font-size: var(--fs-xl); font-weight: 600; text-align: left; letter-spacing: 0.2px; }
+        .calc-hero-card .hero-sub { font-family: var(--font-english); font-size: var(--fs-2xs); color: rgba(255,255,255,0.65); margin-top: 3px; font-weight: 500; }
+        .calc-hero-card .card-title-ur { color: rgba(255,255,255,0.88); font-size: var(--fs-lg); text-align: right; margin-top: 4px; display: block; }
+        .calc-hero-arrow { font-size: var(--fs-5xl); color: rgba(255,255,255,0.6); flex-shrink: 0; font-weight: 300; line-height: 1; }
 
         .home-cards {
             display: grid;
@@ -1105,16 +1123,16 @@
         @media (min-width: 600px) {
             .container { padding: 16px 20px; }
             .home-greeting { padding: 18px 20px 14px; }
-            .home-greeting .bismillah { font-size: 2rem; }
+            .home-greeting .bismillah { font-size: var(--fs-5xl); }
             .calc-hero-card { padding: 26px 28px; gap: 22px; }
             .calc-hero-card .card-icon { width: 68px; height: 68px; font-size: 2.1rem; }
-            .calc-hero-card .card-title-en { font-size: 1.25rem; }
-            .calc-hero-card .card-title-ur { font-size: 1.3rem; }
+            .calc-hero-card .card-title-en { font-size: var(--fs-xl); }
+            .calc-hero-card .card-title-ur { font-size: var(--fs-2xl); }
             .home-cards { gap: 14px; }
             .home-card { padding: 22px 16px 20px; }
             .card-icon { width: 56px; height: 56px; font-size: 1.75rem; }
-            .card-title-en { font-size: 0.92rem; }
-            .card-title-ur { font-size: 1.1rem; }
+            .card-title-en { font-size: var(--fs-md); }
+            .card-title-ur { font-size: var(--fs-lg); }
         }
 
         .home-card {
@@ -1156,14 +1174,14 @@
 
         .card-title-en {
             font-family: var(--font-english);
-            font-size: 0.88rem;
+            font-size: var(--fs-sm);
             font-weight: 700;
             color: var(--slate);
             line-height: 1.2;
         }
         .card-title-ur {
             font-family: var(--font-urdu);
-            font-size: 1.15rem;
+            font-size: var(--fs-lg);
             color: var(--primary);
             direction: rtl;
             line-height: 1.3;
@@ -1182,12 +1200,12 @@
             background: #F9FAFB;
             cursor: pointer;
             font-weight: 700;
-            font-size: 0.82rem;
+            font-size: var(--fs-sm);
             color: var(--text-muted);
             transition: all 0.15s;
             font-family: var(--font-english);
         }
-        .lang-choice.ur-opt { font-family: var(--font-urdu); font-size: 1rem; }
+        .lang-choice.ur-opt { font-family: var(--font-urdu); font-size: var(--fs-base); }
         .lang-choice.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
 
         /* Hide progress bar on home screen */
@@ -1214,7 +1232,7 @@
         .home-card .card-body .card-title-en,
         .home-card .card-body .card-title-ur { text-align: start; }
         .home-card .card-meta {
-            font-size: 0.72rem; color: var(--text-muted);
+            font-size: var(--fs-2xs); color: var(--text-muted);
             font-family: var(--font-english); margin-top: 4px; text-align: start;
         }
 
@@ -1223,53 +1241,53 @@
         .home-card.gold-card .card-body .card-title-en { color: #fff; }
         .home-card.gold-card .card-body .card-title-ur { color: rgba(255,255,255,0.9); }
         .home-card.gold-card .card-arrow {
-            font-size: 1.4rem; color: rgba(255,255,255,0.6);
+            font-size: var(--fs-2xl); color: rgba(255,255,255,0.6);
             align-self: center; flex-shrink: 0;
         }
 
         .home-card.hist-rates-card { gap: 14px; padding: 16px; }
         .home-card.hist-rates-card .card-icon { font-size: 1.5rem; }
         .home-card.hist-rates-card .card-body .card-title-ur {
-            font-size: 1.05rem; margin-top: 2px; line-height: 1.5;
+            font-size: var(--fs-base); margin-top: 2px; line-height: 1.5;
         }
 
 
         /* --- EXTRACTED FROM INLINE STYLES (step 1: nav, rate fetch, nisab) --- */
         .top-nav-row .ur { font-family: var(--font-urdu); }
         .step-counter {
-            font-family: var(--font-english); font-size: 0.75rem;
+            font-family: var(--font-english); font-size: var(--fs-2xs);
             color: #9CA3AF; font-weight: 600;
         }
-        .label-optional { font-size: 0.75rem; color: #9CA3AF; font-weight: 400; }
+        .label-optional { font-size: var(--fs-2xs); color: #9CA3AF; font-weight: 400; }
 
         .rate-fetch-row { display: flex; gap: 8px; margin-bottom: 8px; }
         .btn-fetch-rate {
             flex: 1; padding: 10px;
             background: linear-gradient(135deg, var(--primary), #0A6B52);
             color: #fff; border: none; border-radius: 8px;
-            font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            font-weight: 700; font-size: var(--fs-md); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             gap: 7px; font-family: var(--font-english);
         }
         .btn-rate-history {
             padding: 10px 12px; background: #FFF7ED;
             border: 1px solid #FDE68A; border-radius: 8px;
-            cursor: pointer; font-size: 1rem; flex-shrink: 0;
+            cursor: pointer; font-size: var(--fs-base); flex-shrink: 0;
         }
         /* display:none is the initial state; fetchSilverRate() sets it inline. */
         .rate-source-info {
-            display: none; text-align: center; font-size: 0.75rem;
+            display: none; text-align: center; font-size: var(--fs-2xs);
             color: #374151; margin-bottom: 8px; line-height: 1.6;
         }
         .sketch-input-row .num-fmt { flex: 2; }
         .sketch-unit-select { flex: 1.5; padding: 8px 2px; }
         .sketch-result-label {
-            font-size: 1rem; color: var(--text-muted); text-align: center;
+            font-size: var(--fs-base); color: var(--text-muted); text-align: center;
         }
         .sketch-result-label .lbl-en { font-family: var(--font-english); font-weight: 600; }
         .sketch-result-label .lbl-ur { font-family: var(--font-urdu); direction: rtl; }
         .hijri-note {
-            text-align: center; font-size: 0.95rem; margin-top: 6px;
+            text-align: center; font-size: var(--fs-md); margin-top: 6px;
             color: var(--text-muted); line-height: 1.6;
         }
 
@@ -1283,16 +1301,16 @@
         .result-section-wrap.is-header { margin-bottom: 14px; }
         #res_header { text-align: center; }
         .report-kicker {
-            font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+            font-size: var(--fs-2xs); font-weight: 700; color: var(--text-muted);
             text-transform: uppercase; letter-spacing: 1px;
             font-family: var(--font-english); margin-bottom: 4px;
         }
         #rpt_name {
-            font-weight: 700; color: var(--primary); font-size: 1.5rem;
+            font-weight: 700; color: var(--primary); font-size: var(--fs-3xl);
             font-family: var(--font-english); line-height: 1.1;
         }
         .report-dateline {
-            font-size: 0.82rem; color: var(--text-muted); margin-top: 5px;
+            font-size: var(--fs-sm); color: var(--text-muted); margin-top: 5px;
             font-family: var(--font-english);
             direction: ltr; unicode-bidi: isolate;
         }
@@ -1302,7 +1320,7 @@
         }
         #elig_status_box {
             text-align: center; margin-top: 12px; padding: 9px 12px;
-            border-radius: 8px; font-weight: 700; font-size: 0.92rem;
+            border-radius: 8px; font-weight: 700; font-size: var(--fs-md);
             font-family: var(--font-english); letter-spacing: 0.3px;
         }
         /* Eligibility outcome is a state, not a colour calculate() should know. */
@@ -1311,15 +1329,15 @@
         .row-header.is-liability, .row-val.is-liability { color: var(--danger); }
         .statement-table tr.row-subtotal { background: #F0FDF4; }
         .nisab-row-label {
-            font-size: 0.85rem; color: var(--text-muted);
+            font-size: var(--fs-sm); color: var(--text-muted);
             font-family: var(--font-english); font-weight: 600;
         }
         #r_nisab {
-            text-align: right; font-size: 0.95rem; color: var(--text-muted);
+            text-align: right; font-size: var(--fs-md); color: var(--text-muted);
             font-family: var(--font-english); font-weight: 600;
         }
         .row-val.is-grand-total {
-            font-size: 1.4rem; font-weight: 700; color: var(--accent);
+            font-size: var(--fs-2xl); font-weight: 700; color: var(--accent);
             text-align: right; vertical-align: middle;
             font-family: var(--font-english);
         }
@@ -1331,11 +1349,11 @@
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 15px; border-bottom: 2px solid #EEE; padding-bottom: 10px;
         }
-        .hist-modal-header .urdu-label-main { font-size: 1.2rem; margin: 0; }
+        .hist-modal-header .urdu-label-main { font-size: var(--fs-xl); margin: 0; }
 
         .footer-presented { margin-bottom: 8px; }
         .footer-credit {
-            font-size: 0.75rem; border-top: 1px solid var(--border); padding-top: 8px;
+            font-size: var(--fs-2xs); border-top: 1px solid var(--border); padding-top: 8px;
         }
         .footer-version { opacity: 0.3; margin-inline-start: 5px; }
 
@@ -1356,13 +1374,13 @@
         html[lang="ur"] .field-card > select.currency-select { text-align: left; }
         /* display:none is the initial state; updateUrduDateDisplay() sets it inline. */
         .urdu-date-display {
-            display: none; font-family: var(--font-urdu); font-size: 1rem;
+            display: none; font-family: var(--font-urdu); font-size: var(--fs-base);
             color: var(--danger); text-align: start; direction: rtl;
             padding: 4px 2px 0; font-weight: 600;
         }
-        .hijri-value { font-size: 1rem; font-weight: 600; }
+        .hijri-value { font-size: var(--fs-base); font-weight: 600; }
         .nisab-explainer { margin-top: 15px; }
-        .sub-acc-header.is-compact { font-size: 1rem; }
+        .sub-acc-header.is-compact { font-size: var(--fs-base); }
         .rtl-para { text-align: start; direction: rtl; }
         .fiqh-summary {
             background: var(--primary-light);
@@ -1375,7 +1393,7 @@
         }
         .fiqh-summary-title {
             font-family: var(--font-urdu);
-            font-size: 1.1rem;
+            font-size: var(--fs-lg);
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 6px;
@@ -1391,7 +1409,7 @@
             direction: rtl; text-align: start;
         }
         .fiqh-glance-title {
-            font-family: var(--font-urdu); font-size: 1.1rem; font-weight: 600;
+            font-family: var(--font-urdu); font-size: var(--fs-lg); font-weight: 600;
             color: #92400E; margin-bottom: 6px;
         }
         .fiqh-note {
@@ -1412,9 +1430,9 @@
         .fiqh-case { margin: 0 0 10px; }
         .fiqh-case:last-child { margin-bottom: 0; }
         .fiqh-case p { margin: 0 0 5px; }
-        .fiqh-glance .fiqh-case-title { color: #92400E; font-size: 1.05rem; }
+        .fiqh-glance .fiqh-case-title { color: #92400E; font-size: var(--fs-base); }
         .fiqh-case-title {
-            font-family: var(--font-urdu); font-size: 1.1rem; font-weight: 600;
+            font-family: var(--font-urdu); font-size: var(--fs-lg); font-weight: 600;
             color: var(--primary); direction: rtl; text-align: start; margin-bottom: 4px;
         }
         .fiqh-example {
@@ -1425,22 +1443,22 @@
         /* Urdu numerals, matching the (۱)/(۲) used in the quoted passage above. */
         .fiqh-summary .rtl-list { list-style-type: arabic-indic; }
         .fiqh-source {
-            font-size: 0.9rem; color: var(--text-muted);
+            font-size: var(--fs-md); color: var(--text-muted);
             direction: rtl; text-align: start; margin-top: 8px;
         }
         .accordion-header.is-spaced { margin-bottom: 12px; }
         .accordion-header.is-spaced-y { margin-bottom: 15px; margin-top: 10px; }
         .rule-dashed { margin: 10px 0; border-top: 1px dashed #ccc; }
         .step-header-note {
-            font-family: var(--font-urdu); font-size: 0.95rem;
+            font-family: var(--font-urdu); font-size: var(--fs-md);
             color: rgba(255,255,255,0.7); direction: rtl;
             margin-top: 4px; line-height: 1.5;
         }
         .urdu-body.is-example {
-            font-size: 1rem; color: var(--text-muted);
+            font-size: var(--fs-base); color: var(--text-muted);
             text-align: center; margin-bottom: 5px;
         }
-        .label-note { font-weight: 400; font-size: 0.9rem; }
+        .label-note { font-weight: 400; font-size: var(--fs-md); }
         .section-heading {
             color: var(--primary); font-family: var(--font-english);
             text-align: center; margin-top: 20px;
@@ -1453,11 +1471,11 @@
         .hist-val.is-liab { color: var(--danger); }
         .hist-val.is-net  { color: var(--slate); }
         .hist-total-label {
-            font-size: 0.8rem; text-transform: uppercase;
+            font-size: var(--fs-xs); text-transform: uppercase;
             color: #047857; font-weight: 700;
         }
         .hist-total-value {
-            font-size: 1.2rem; font-weight: 700; color: var(--primary);
+            font-size: var(--fs-xl); font-weight: 700; color: var(--primary);
         }
 
 
@@ -1489,12 +1507,12 @@
             padding:16px 18px 12px; border-bottom:1px solid var(--border);
             background:linear-gradient(135deg, var(--primary) 0%, #0A7A5A 100%); flex-shrink:0;
         }
-        .faq-modal-title { font-family:var(--font-english); font-size:1rem; font-weight: 600; color:white; letter-spacing:0.3px; }
-        .faq-modal-title-ur { font-family:var(--font-urdu); font-size:1.25rem; color:rgba(255,255,255,0.92); direction:rtl; text-align:start; margin-top:3px; line-height:1.5; }
+        .faq-modal-title { font-family:var(--font-english); font-size: var(--fs-base); font-weight: 600; color:white; letter-spacing:0.3px; }
+        .faq-modal-title-ur { font-family:var(--font-urdu); font-size: var(--fs-xl); color:rgba(255,255,255,0.92); direction:rtl; text-align:start; margin-top:3px; line-height:1.5; }
         .faq-close-btn {
             flex-shrink:0; width:32px; height:32px; border-radius:50%;
             background:rgba(255,255,255,0.18); color:white; cursor:pointer;
-            display:flex; align-items:center; justify-content:center; font-size:1rem;
+            display:flex; align-items:center; justify-content:center; font-size: var(--fs-base);
             border:1px solid rgba(255,255,255,0.25); transition:background 0.15s;
         }
         .faq-close-btn:hover { background:rgba(255,255,255,0.3); }
@@ -1513,9 +1531,9 @@
         .faq-inline-link:hover { background:var(--primary-light); box-shadow:0 3px 10px rgba(6,78,59,0.1); }
         .faq-inline-link:active { transform:scale(0.985); }
         .faq-inline-icon { font-size:1.2rem; flex-shrink:0; }
-        .faq-inline-text { flex:1; font-family:var(--font-urdu); font-size:1.1rem; color:var(--primary); direction:rtl; text-align:start; line-height:1.6; }
-        html[lang="en"] .faq-inline-text { font-family:var(--font-english); font-size:0.95rem; font-weight:700; direction:ltr; letter-spacing:0.3px; }
-        .faq-inline-arrow { font-size:1.3rem; color:#9CA3AF; flex-shrink:0; }
+        .faq-inline-text { flex:1; font-family:var(--font-urdu); font-size: var(--fs-lg); color:var(--primary); direction:rtl; text-align:start; line-height:1.6; }
+        html[lang="en"] .faq-inline-text { font-family:var(--font-english); font-size: var(--fs-md); font-weight:700; direction:ltr; letter-spacing:0.3px; }
+        .faq-inline-arrow { font-size: var(--fs-2xl); color:#9CA3AF; flex-shrink:0; }
 
         #histRatesModal { display:none; position:fixed; z-index:200; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
         #histRatesModal.open { display:flex; }
@@ -1526,36 +1544,36 @@
             position:relative;
         }
         .hist-rates-title {
-            font-family:var(--font-english); font-size:1rem; font-weight: 600;
+            font-family:var(--font-english); font-size: var(--fs-base); font-weight: 600;
             color:var(--primary); margin-bottom:4px;
         }
         .hist-rates-ur {
-            font-family:var(--font-urdu); font-size:1.1rem; color:var(--accent);
+            font-family:var(--font-urdu); font-size: var(--fs-lg); color:var(--accent);
             direction:rtl; display:block; text-align:start; margin-bottom:12px; line-height:1.5;
         }
         .hist-rates-note {
             background:#FFF7ED; border:1px solid #FDE68A; border-radius:8px;
-            padding:10px 12px; font-size:0.78rem; color:#92400E;
+            padding:10px 12px; font-size: var(--fs-xs); color:#92400E;
             font-family:var(--font-english); margin-bottom:14px; line-height:1.5;
         }
-        .hist-rates-note .ur { font-family:var(--font-urdu); font-size:0.9rem; direction:rtl; display:block; text-align:start; margin-top:4px; color:var(--label-gold); line-height:1.6; }
-        .hist-table { width:100%; border-collapse:collapse; font-family:var(--font-english); font-size:0.83rem; }
+        .hist-rates-note .ur { font-family:var(--font-urdu); font-size: var(--fs-md); direction:rtl; display:block; text-align:start; margin-top:4px; color:var(--label-gold); line-height:1.6; }
+        .hist-table { width:100%; border-collapse:collapse; font-family:var(--font-english); font-size: var(--fs-sm); }
         .hist-table thead th { background:var(--primary); color:white; padding:8px 10px; text-align:left; font-weight:700; position:sticky; top:0; }
         .hist-table tbody tr:nth-child(even) { background:#F9FAFB; }
         .hist-table tbody td { padding:7px 10px; border-bottom:1px solid var(--bg); vertical-align:middle; }
         .hist-table .yr { font-weight:700; color:var(--primary-dark); white-space:nowrap; }
         .hist-table .rate { font-weight: 600; color:var(--accent); text-align:right; white-space:nowrap; }
-        .hist-table .note-col { font-size:0.75rem; color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:start; line-height:1.4; }
-        .hist-src { font-size:0.72rem; color:#9CA3AF; text-align:center; margin-top:12px; font-family:var(--font-english); }
-        .hist-close-btn { position:absolute; top:14px; right:14px; background:var(--bg); border:1px solid var(--border); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1rem; }
+        .hist-table .note-col { font-size: var(--fs-2xs); color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:start; line-height:1.4; }
+        .hist-src { font-size: var(--fs-2xs); color:#9CA3AF; text-align:center; margin-top:12px; font-family:var(--font-english); }
+        .hist-close-btn { position:absolute; top:14px; right:14px; background:var(--bg); border:1px solid var(--border); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size: var(--fs-base); }
 
         /* --- FOOTER --- */
-        footer { text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: 0.78rem; background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
+        footer { text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: var(--fs-xs); background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
         footer strong { color: var(--label-gold); font-weight: 700; }
 
         /* --- HIJRI PANEL --- */
         .hijri-panel { background: var(--primary-dark); color: white; padding: 9px 12px; border-radius: 7px; display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
-        .adj-btn { background: var(--accent); border: none; color: var(--primary-dark); width: 32px; height: 32px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: background 0.15s; flex-shrink: 0; }
+        .adj-btn { background: var(--accent); border: none; color: var(--primary-dark); width: 32px; height: 32px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: var(--fs-lg); transition: background 0.15s; flex-shrink: 0; }
         .adj-btn:hover { background: #D4AF6A; }
 
         /* --- RTL LIST --- */
@@ -1574,7 +1592,7 @@
 
         .result-section-title {
             font-family: var(--font-english);
-            font-size: 0.8rem;
+            font-size: var(--fs-xs);
             font-weight: 600;
             color: var(--primary);
             text-transform: uppercase;
@@ -2330,7 +2348,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v79</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v80</span></div>
 </footer>
 
 <script>
@@ -2846,7 +2864,7 @@
         // value, or someone whose wealth equals the figure on screen would be
         // told they are under it. nisabLimit keeps full precision for the
         // `net >= nisabLimit` gate.
-        document.getElementById('nisabVal').innerText = currentCurr + " " + formatNumber(Math.ceil(nisabLimit));
+        document.getElementById('nisabVal').innerText = currentCurr + " " + formatNumber(Math.ceil(Number(nisabLimit.toFixed(2))));
     }
 
     function updateProgressBar(s) {
@@ -2953,7 +2971,7 @@
         document.getElementById('r_recv').innerText = p + formatNumber(recv);
         document.getElementById('r_liab').innerText = p + formatNumber(liab);
         document.getElementById('r_net').innerText = p + formatNumber(net);
-        document.getElementById('r_nisab').innerText = p + formatNumber(Math.ceil(nisabLimit));
+        document.getElementById('r_nisab').innerText = p + formatNumber(Math.ceil(Number(nisabLimit.toFixed(2))));
         
         document.getElementById('rpt_name').innerText = document.getElementById('u_name').value || 'My Zakat';
         const h = document.getElementById('hijriOutput').innerText;

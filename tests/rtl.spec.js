@@ -450,6 +450,7 @@ test('Nisab is shown whole, never below its true value, and compared exactly', a
   const shown = Number(shownText.match(/([\d.]+)\s*$/)[1]);
   expect(shown % 1).toBe(0);                     // whole, like every other amount
   expect(shown).toBeGreaterThanOrEqual(exact);   // never below the real bar
+  expect(shown - exact).toBeLessThan(1);         // and never more than a rupee above
 
   // Wealth at floor(exact) is under the true threshold. If the gate ever read a
   // rounded figure instead, this would come back eligible.
@@ -460,6 +461,18 @@ test('Nisab is shown whole, never below its true value, and compared exactly', a
   await page.locator('#step-4 .btn-primary').click();
   await expect(page.locator('#elig_status_box')).toHaveClass('is-not-eligible');
   await expect(page.locator('#r_nisab')).not.toHaveText(/\.\d/);
+});
+
+test('a whole-number threshold is not pushed up by float noise', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('domcontentloaded');
+  await page.locator('#btnEn').click();
+  await page.locator('.calc-hero-card').click();
+  // 3000/tola is exactly 157500, but the float lands on 157500.00000000003.
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await expect(page.locator('#nisabVal')).toContainText('157,500');
+  await expect(page.locator('#nisabVal')).not.toContainText('157,501');
 });
 
 test('icon sprite is out of layout but its icons still render', async ({ page }) => {

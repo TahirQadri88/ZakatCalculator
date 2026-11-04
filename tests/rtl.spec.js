@@ -178,7 +178,9 @@ test('no horizontal overflow anywhere in Urdu mode', async ({ page }) => {
         return el.getBoundingClientRect().right > docWidth + 1;
       })
       .slice(0, 5)
-      .map(el => el.className || el.tagName);
+      // className on an SVG element is an SVGAnimatedString, not a string, so
+      // read the attribute - otherwise a failure prints an unreadable "{}".
+      .map(el => `${el.tagName.toLowerCase()}.${el.getAttribute('class') || '(none)'}`);
   });
 
   expect(overflow).toEqual([]);
@@ -458,4 +460,23 @@ test('Nisab is shown whole, never below its true value, and compared exactly', a
   await page.locator('#step-4 .btn-primary').click();
   await expect(page.locator('#elig_status_box')).toHaveClass('is-not-eligible');
   await expect(page.locator('#r_nisab')).not.toHaveText(/\.\d/);
+});
+
+test('icon sprite is out of layout but its icons still render', async ({ page }) => {
+  await goUrdu(page);
+
+  // The sprite is a definitions block, not content. If it ever re-enters
+  // layout it shows up as phantom overflow — which is how it first broke CI.
+  await expect(page.locator('#icon-sprite')).toHaveCSS('display', 'none');
+
+  // But <use> must still resolve from the hidden host: every icon on screen
+  // needs a real box, or we have shipped invisible buttons.
+  const boxes = await page.locator('.card-icon svg.icon').evaluateAll(
+    els => els.map(el => el.getBoundingClientRect()).map(r => [r.width, r.height])
+  );
+  expect(boxes.length).toBeGreaterThanOrEqual(4);
+  for (const [w, h] of boxes) {
+    expect(w).toBeGreaterThan(8);
+    expect(h).toBeGreaterThan(8);
+  }
 });

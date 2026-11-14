@@ -779,3 +779,27 @@ test('step 3 Urdu names sit above their boxes, as labels, box at full width', as
     expect(r.size, r.t).toBeGreaterThanOrEqual(14);
   }
 });
+
+test('type hierarchy: label > placeholder, headings distinct from labels, icons contrast', async ({ page }) => {
+  for (const lang of ['ur', 'en']) {
+    await page.goto('/');
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    const icon = await page.locator('.calc-hero-card .card-icon').evaluate(e => getComputedStyle(e).color);
+    expect(icon, 'hero icon is light on the teal button').toBe('rgb(255, 255, 255)');
+    await page.locator('.calc-hero-card').click();
+    await page.locator('#s_rate').fill('3000');
+    await page.locator('#s_rate').dispatchEvent('input');
+    await page.locator('#step-1 .btn-primary').click();
+    const m = await page.evaluate(lang => {
+      const lab = document.querySelector(lang === 'ur' ? '#step-2 .field-card > .urdu-label-main' : '#step-2 .field-card > label');
+      const inp = document.querySelector('#v_silver');
+      const acc = document.querySelector('#step-2 .accordion-header');
+      const px = (e, p) => parseFloat(getComputedStyle(e, p).fontSize);
+      return { label: px(lab), ph: px(inp, '::placeholder'), labC: getComputedStyle(lab).color,
+               phC: getComputedStyle(inp, '::placeholder').color, accC: getComputedStyle(acc).color };
+    }, lang);
+    expect(m.label, `${lang}: label larger than placeholder`).toBeGreaterThan(m.ph);
+    expect(m.phC, `${lang}: placeholder colour differs from label`).not.toBe(m.labC);
+    expect(m.accC, `${lang}: section heading colour differs from label`).not.toBe(m.labC);
+  }
+});

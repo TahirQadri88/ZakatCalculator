@@ -69,6 +69,7 @@
             --accent-ink: #8A6420;
             /* Input outlines must reach 3:1 to be seen (WCAG 1.4.11); #D1D5DB was 1.3:1. */
             --input-line: #7D848E;
+            --placeholder: #687180;      /* 4.7:1: readable, clearly lighter than text */
             /* Named surfaces, inks and lines - light values; dark mode redefines them. */
             --amber-ink: #92400E;
             --amber-ink-2: #78350F;
@@ -1815,6 +1816,7 @@
             --accent-ink: var(--accent);
             --input-line: #62767C;
             --bismillah-ink: var(--accent);
+            --placeholder: #8C9AA0;
         }
         html[data-theme="dark"] body { background: var(--bg); color: var(--slate); }
 
@@ -1898,6 +1900,30 @@
         }
         html[lang="ur"] #step-3 .field-card > input { order: 1; }
         html[lang="ur"] #step-3 .field-card > :not(.urdu-subtitle):not(input):not(label) { order: 2; }
+
+        /* --- TYPE HIERARCHY ---
+           Measured before: Urdu labels and section headings were identical
+           (14.7px teal) and placeholders were LARGER (16px) and nearly as dark
+           as text, so everything read at one level. Now each role differs. */
+        /* 1. Field label: the strongest text in a card. */
+        html[lang="ur"] .field-card > .urdu-label-main { font-size: var(--fs-base); color: var(--primary-ink); }
+        .field-card > label { font-size: var(--fs-md); font-weight: 700; }
+        /* 2. Placeholder: smaller and lighter than the label - a hint, not text. */
+        input::placeholder, html[lang="ur"] input::placeholder { color: var(--placeholder); }
+        html[lang="ur"] input::placeholder { font-size: var(--fs-md); }
+        input::placeholder { font-size: var(--fs-xs); }
+        /* 3. Typed amount: bold and dark, clearly the user's own entry. */
+        input:not(:placeholder-shown) { font-size: var(--fs-lg); font-weight: 700; }
+        /* 4. Expandable explanations: secondary - neutral ink, slightly smaller,
+              so they don't compete with the field label above them. */
+        .accordion-header, .sub-acc-header { color: var(--slate); font-size: var(--fs-sm); }
+        html[lang="ur"] .accordion-header, html[lang="ur"] .sub-acc-header { font-size: var(--fs-md); }
+        .accordion-header.active, .sub-acc-header.active { color: var(--primary-dark-ink); }
+
+        /* --- ICON CONTRAST on the home buttons --- */
+        .calc-hero-card .card-icon { color: #fff; }
+        .home-card .card-icon, .hist-rates-card .card-icon { color: var(--primary-ink); }
+        .home-card.gold-card .card-icon { color: #fff; }
 </style>
 </head>
 <body>
@@ -2643,7 +2669,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v97</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v98</span></div>
 </footer>
 
 <script>

@@ -128,9 +128,10 @@
             --font-english: 'Outfit', system-ui, sans-serif;
             /* English headings only; numbers, inputs and labels stay in Outfit. */
             --font-display: 'Fraunces', Georgia, serif;
-            /* Phase D: an original 8-point star lattice (two squares, one turned 45°),
-               drawn here as SVG at 6% white. Decorative only. */
-            --pattern-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23fff' stroke-opacity='.06' stroke-width='1'%3E%3Crect x='14' y='14' width='20' height='20'/%3E%3Cpath d='M24 9.86L38.14 24L24 38.14L9.86 24Z'/%3E%3Crect x='-10' y='-10' width='20' height='20'/%3E%3Cpath d='M0 -14.14L14.14 0L0 14.14L-14.14 0Z'/%3E%3Crect x='38' y='-10' width='20' height='20'/%3E%3Cpath d='M48 -14.14L62.14 0L48 14.14L33.86 0Z'/%3E%3Crect x='-10' y='38' width='20' height='20'/%3E%3Cpath d='M0 33.86L14.14 48L0 62.14L-14.14 48Z'/%3E%3Crect x='38' y='38' width='20' height='20'/%3E%3Cpath d='M48 33.86L62.14 48L48 62.14L33.86 48Z'/%3E%3Cpath d='M24 0V9.86M24 38.14V48M0 24H9.86M38.14 24H48'/%3E%3C/g%3E%3C/svg%3E");
+            /* Ornament: a 10-fold rosette made of ten overlapping hexagons turned
+               about a centre - traditional construction, drawn here. Used as one
+               large, faint emblem rather than a repeating tile. */
+            --rosette: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M61.0 50.0L68.5 37.0L83.5 37.0L91.0 50.0L83.5 63.0L68.5 63.0ZM58.9 56.5L72.6 50.4L84.7 59.2L83.2 74.1L69.5 80.2L57.3 71.4ZM53.4 60.5L68.1 63.6L72.7 77.8L62.7 89.0L48.0 85.9L43.4 71.6ZM46.6 60.5L56.6 71.6L52.0 85.9L37.3 89.0L27.3 77.8L31.9 63.6ZM41.1 56.5L42.7 71.4L30.5 80.2L16.8 74.1L15.3 59.2L27.4 50.4ZM39.0 50.0L31.5 63.0L16.5 63.0L9.0 50.0L16.5 37.0L31.5 37.0ZM41.1 43.5L27.4 49.6L15.3 40.8L16.8 25.9L30.5 19.8L42.7 28.6ZM46.6 39.5L31.9 36.4L27.3 22.2L37.3 11.0L52.0 14.1L56.6 28.4ZM53.4 39.5L43.4 28.4L48.0 14.1L62.7 11.0L72.7 22.2L68.1 36.4ZM58.9 43.5L57.3 28.6L69.5 19.8L83.2 25.9L84.7 40.8L72.6 49.6Z' fill='none' stroke='%23fff' stroke-opacity='.08' stroke-width='.9' stroke-linejoin='round'/%3E%3C/svg%3E");
             --font-urdu: 'Mehr Nastaleeq', 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
             --font-urdu-title: 'Mehr Nastaleeq', 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
         }
@@ -183,7 +184,7 @@
 
         /* --- HEADER --- */
         header {
-            background: var(--pattern-star), linear-gradient(150deg, var(--primary-dark) 0%, #0A6B52 100%);
+            background: var(--rosette) right -36px center / 180px no-repeat, linear-gradient(150deg, var(--primary-dark) 0%, #0A6B52 100%);
             color: white;
             border-bottom: 3px solid var(--accent);
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
@@ -662,7 +663,7 @@
 
         /* --- ZAKAT AMOUNT HERO --- */
         .zakat-hero {
-            background: var(--pattern-star), linear-gradient(135deg, var(--primary-dark), #0A6B52);
+            background: var(--rosette) right -70px top -50px / 280px no-repeat, linear-gradient(135deg, var(--primary-dark), #0A6B52);
             border-radius: var(--radius);
             padding: 20px 16px;
             text-align: center;
@@ -2596,7 +2597,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v92</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v93</span></div>
 </footer>
 
 <script>

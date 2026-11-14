@@ -567,3 +567,23 @@ test('controls meet the touch floor on a 360px phone', async ({ page }) => {
   const fs = await page.locator('.prog-label').first().evaluate(el => parseFloat(getComputedStyle(el).fontSize));
   expect(fs).toBeGreaterThanOrEqual(11.5);
 });
+
+test('only the step bar stays pinned while scrolling a step', async ({ page }) => {
+  // The whole header used to stay pinned: 189px, 26% of a 360x740 phone.
+  await page.setViewportSize({ width: 360, height: 740 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+
+  const pinned = () => page.evaluate(() =>
+    Math.max(0, document.querySelector('header').getBoundingClientRect().bottom));
+
+  expect(await pinned()).toBeGreaterThan(150);          // full header at the top
+  await page.evaluate(() => window.scrollTo(0, 700));
+  await expect.poll(pinned).toBeLessThan(80);            // just the step bar
+  await expect(page.locator('#progressBarWrap')).toBeInViewport();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect.poll(pinned).toBeGreaterThan(150);        // title and toggle return
+});

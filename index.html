@@ -144,7 +144,13 @@
             border-bottom: 3px solid var(--accent);
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             position: sticky;
-            top: 0;
+            /* Pin only the step bar. Offsetting by the title row's height lets
+               the title, language toggle and History scroll away, and they come
+               back on scrolling up. The whole header pinned was 189px, 26% of a
+               360x740 phone; the step bar alone is about 65px. --hdr-top is
+               measured by a ResizeObserver, since the row differs by language,
+               width and font load. */
+            top: calc(-1 * var(--hdr-top, 0px));
             z-index: 50;
             display: flex;
             flex-direction: column;
@@ -2425,7 +2431,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v83</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v84</span></div>
 </footer>
 
 <script>
@@ -2522,6 +2528,15 @@
         document.getElementById('btnEn').classList.toggle('active', l === 'en');
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
     }
+
+    (function pinStepBarOnly() {
+        const row = document.querySelector('.header-top-row');
+        if (!row) return;
+        const set = () => document.documentElement.style.setProperty('--hdr-top', row.offsetHeight + 'px');
+        set();
+        if ('ResizeObserver' in window) new ResizeObserver(set).observe(row);
+        else window.addEventListener('resize', set);
+    })();
 
     function setLang(l) {
         lang = l;

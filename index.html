@@ -28,7 +28,7 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Gulzar&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Mehr Nastaleeq - Free font, Creative Commons license, by Zeeshan Nasar / ITU Punjab -->
     <style>
@@ -122,6 +122,8 @@
             --fs-5xl: 2.0rem;
             --fs-hero: 2.8rem;
             --font-english: 'Outfit', system-ui, sans-serif;
+            /* English headings only; numbers, inputs and labels stay in Outfit. */
+            --font-display: 'Fraunces', Georgia, serif;
             --font-urdu: 'Mehr Nastaleeq', 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
             --font-urdu-title: 'Mehr Nastaleeq', 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
         }
@@ -1814,6 +1816,32 @@
         .theme-row .to-light { display: none; }
         html[data-theme="dark"] .theme-row .to-light { display: inline; }
         html[data-theme="dark"] .theme-row .to-dark { display: none; }
+
+        /* --- TYPE: display serif + calligraphy (see ASSETS.md for licences) --- */
+        header h1, .card-title-en, .step-title, #rpt_name, .zakat-hero-label-en {
+            font-family: var(--font-display);
+            letter-spacing: 0;
+            text-transform: none;
+        }
+        header h1 { font-size: var(--fs-xl); font-weight: 600; }
+        .zakat-hero-label-en { font-size: var(--fs-sm); font-weight: 500; }
+        .zakat-hero-label-ur { margin-top: 4px; }
+        .header-urdu-title { font-family: 'Gulzar', var(--font-urdu-title); font-weight: 400; }
+        /* Gulzar's tall strokes rise well above its line box; under the English
+           title they would cross it, so give them room there. */
+        html[lang="en"] .header-urdu-title { margin-top: 12px; }
+
+        /* Bismillah as calligraphy. The SVG file is used unmodified as a mask and
+           coloured here, so it follows the theme. Text stays in aria-label. */
+        .home-greeting .bismillah {
+            width: min(300px, 82%); aspect-ratio: 17168 / 3372; height: auto;
+            margin: 6px auto 10px; font-size: 0; line-height: 0;
+            background: var(--accent);
+            -webkit-mask: url('bismillah.svg') center / contain no-repeat;
+                    mask: url('bismillah.svg') center / contain no-repeat;
+        }
+        .footer-license { font-size: var(--fs-3xs); color: var(--text-muted); margin-top: 6px; }
+        .footer-license a { color: inherit; }
 </style>
 </head>
 <body>
@@ -1825,7 +1853,7 @@
     <div class="header-top-row">
         <div class="header-emblem" onclick="goHome()" title="Home"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg></div>
         <div class="header-content">
-            <h1 class="lbl-en">ZAKAT CALCULATOR</h1>
+            <h1 class="lbl-en">Zakat Calculator</h1>
             <div class="header-urdu-title">زکوٰۃ کیلکولیٹر</div>
             <div class="header-urdu-subtitle">دارُالإفتاء النّور</div>
         </div>
@@ -1884,7 +1912,7 @@
     <!-- HOME SCREEN -->
     <div id="home-screen">
         <div class="home-greeting">
-            <span class="bismillah">بِسْمِ اللّٰہِ الرَّحْمٰنِ الرَّحِیْم</span>
+            <span class="bismillah" role="img" aria-label="بِسْمِ اللّٰہِ الرَّحْمٰنِ الرَّحِیْم"></span>
             <span class="tagline-en">Calculate your Zakat with confidence</span>
             <span class="tagline-ur">اپنی زکوٰۃ درست طریقے سے نکالیں</span>
         </div>
@@ -2558,7 +2586,8 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v89</span></div>
+    <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v90</span></div>
 </footer>
 
 <script>

@@ -221,3 +221,37 @@ test('dark mode is off by default, toggles, and survives a reload', async ({ pag
   await page.locator('#themeToggle').click();
   await expect(html).not.toHaveAttribute('data-theme', 'dark');
 });
+
+test('Bismillah is calligraphy art with its text kept for screen readers, and credited', async ({ page, request }) => {
+  const b = page.locator('.home-greeting .bismillah');
+  await expect(b).toHaveAttribute('role', 'img');
+  await expect(b).toHaveAttribute('aria-label', /بِسْمِ/);
+  const mask = await b.evaluate(e => getComputedStyle(e).webkitMaskImage || getComputedStyle(e).maskImage);
+  expect(mask).toContain('bismillah.svg');
+  const box = await b.boundingBox();
+  expect(box.width).toBeGreaterThan(150);
+  expect(box.height).toBeGreaterThan(25);
+  const res = await request.get('/bismillah.svg');
+  expect(res.status()).toBe(200);
+  expect(await res.text()).toContain('<svg');
+  await expect(page.locator('.footer-license')).toContainText('CC BY-SA 3.0');
+});
+
+for (const width of [320, 360]) {
+  test(`header title clears the language switch at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 740 });
+    await page.reload();
+    for (const sel of ['#btnEn', '#btnUr']) {
+      await page.locator(sel).click();
+      const t = await page.locator('header .header-content').boundingBox();
+      const pill = await page.locator('.lang-pill').boundingBox();
+      const overlap = t.x < pill.x + pill.width && pill.x < t.x + t.width && t.y < pill.y + pill.height && pill.y < t.y + t.height;
+      // Measure the visible title text, not its box.
+      const ink = await page.locator(sel === '#btnEn' ? 'header h1.lbl-en' : 'header .header-urdu-title').evaluate(e => {
+        const r = document.createRange(); r.selectNodeContents(e); return r.getBoundingClientRect();
+      });
+      const hit = ink.left < pill.x + pill.width && pill.x < ink.right && ink.top < pill.y + pill.height && pill.y < ink.bottom;
+      expect(hit, `${sel} title ink overlaps the switch`).toBe(false);
+    }
+  });
+}

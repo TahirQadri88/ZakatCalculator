@@ -755,3 +755,27 @@ test('accordion headings keep their label as one piece (no stray flex items)', a
     .map(h => h.textContent.trim().slice(0, 30)));
   expect(bad).toEqual([]);
 });
+
+test('step 3 Urdu names sit above their boxes, as labels, box at full width', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#step-2 .btn-primary').click();
+  const rows = await page.evaluate(() => [...document.querySelectorAll('#step-3 .field-card')].map(card => {
+    const name = card.querySelector(':scope > .urdu-subtitle'), box = card.querySelector(':scope > input');
+    if (!name || !box) return null;
+    const n = name.getBoundingClientRect(), b = box.getBoundingClientRect(), cs = getComputedStyle(name);
+    return { t: name.textContent.trim().slice(0, 20), above: n.bottom <= b.top + 1,
+      lines: Math.round(n.height / parseFloat(cs.lineHeight)), fullWidth: b.width > 280, size: parseFloat(cs.fontSize) };
+  }).filter(Boolean));
+  expect(rows.length).toBe(6);
+  for (const r of rows) {
+    expect(r.above, r.t).toBe(true);
+    expect(r.lines, r.t).toBeLessThanOrEqual(2); // 1 with Mehr; the test fallback face is wider
+    expect(r.fullWidth, r.t).toBe(true);
+    expect(r.size, r.t).toBeGreaterThanOrEqual(14);
+  }
+});

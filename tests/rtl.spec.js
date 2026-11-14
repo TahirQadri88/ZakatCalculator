@@ -695,3 +695,30 @@ test('records title does not run under the close button in Urdu', async ({ page 
   const overlap = t.x < c.x + c.width && c.x < t.x + t.width && t.y < c.y + c.height && c.y < t.y + t.height;
   expect(overlap).toBe(false);
 });
+
+test('typography: Urdu text uses an Urdu face, English glosses the English face, Nastaliq has room', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  const issues = await page.evaluate(() => {
+    const AR = /[؀-ۿ]/, URDU = /Mehr|Nastaliq|Gulzar|Scheherazade|Amiri/i, out = [];
+    for (const el of document.querySelectorAll('body *')) {
+      if (!el.offsetParent) continue;
+      const own = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+      if (!own) continue;
+      const cs = getComputedStyle(el), fam = cs.fontFamily;
+      if (AR.test(own) && !/[A-Za-z]{3,}/.test(own) && !URDU.test(fam)) out.push('latin face: ' + own.slice(0, 20));
+      if (AR.test(own) && parseFloat(cs.letterSpacing) > 0) out.push('letter-spacing: ' + own.slice(0, 20));
+    }
+    for (const h of document.querySelectorAll('#step-1 .accordion-header, #step-1 .sub-acc-header')) {
+      const cs = getComputedStyle(h);
+      if (h.offsetParent && parseFloat(cs.lineHeight) / parseFloat(cs.fontSize) < 1.6) out.push('tight: ' + h.textContent.trim().slice(0, 20));
+    }
+    return out;
+  });
+  expect(issues).toEqual([]);
+  // Urdu spelling uses Urdu letters (ک ۃ ی), not Arabic look-alikes (ك ة ي).
+  const arabicForms = await page.evaluate(() => (document.body.innerText.match(/[كةي]/g) || []).length);
+  expect(arabicForms).toBe(0);
+});

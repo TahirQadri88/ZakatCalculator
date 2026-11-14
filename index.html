@@ -1540,6 +1540,31 @@
             header h1 { font-size: var(--fs-md); letter-spacing: 0.3px; }
         }
 
+
+        /* --- TOUCH AND READABILITY FLOOR --------------------------------
+           Measured on a 360px phone: the header language toggle was 20px
+           tall, the top nav 27px, the Hijri +/- 32px, accordions and buttons
+           38-39px. DESIGN.md sets 44px; the header pill gets 32px because it
+           shares a crowded row, with padding widening its hit area. */
+        .lang-pill { padding: 2px; }
+        .lbtn { min-height: 32px; min-width: 40px; padding: 4px 10px; font-size: var(--fs-xs); }
+        .top-back-btn, .top-home-btn { min-height: 40px; padding-block: 6px; }
+        .lang-choice { min-width: 48px; min-height: 44px; }
+        .btn { min-height: 46px; }
+        .accordion-header, .sub-acc-header { min-height: 44px; display: flex; align-items: center; }
+
+        /* 10.4px was below comfortable reading size. Caps and tracking go too,
+           which pays for the larger size in width on a five-step bar. */
+        .prog-label { font-size: var(--fs-2xs); text-transform: none; letter-spacing: 0; }
+        .zakat-split-label { font-size: var(--fs-2xs); text-transform: none; letter-spacing: 0; }
+
+        /* --- DESKTOP: keep the header's controls with the content ---------
+           The header background spans the screen, but at 1440px its emblem
+           and buttons sat in the far corners, ~450px from the 560px column. */
+        @media (min-width: 900px) {
+            .header-top-row { max-width: 760px; margin-inline: auto; width: 100%; box-sizing: border-box; }
+        }
+
         /* --- FAQ OVERLAY --- */
         #faqModal { display:none; position:fixed; z-index:1100; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
         #faqModal.open { display:flex; }
@@ -1619,7 +1644,7 @@
 
         /* --- HIJRI PANEL --- */
         .hijri-panel { background: var(--primary-dark); color: white; padding: 9px 12px; border-radius: 7px; display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
-        .adj-btn { background: var(--accent); border: none; color: var(--primary-dark); width: 32px; height: 32px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: var(--fs-lg); transition: background 0.15s; flex-shrink: 0; }
+        .adj-btn { background: var(--accent); border: none; color: var(--primary-dark); width: 40px; height: 40px; border-radius: 50%; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: var(--fs-lg); transition: background 0.15s; flex-shrink: 0; }
         .adj-btn:hover { background: #D4AF6A; }
 
         /* --- RTL LIST --- */
@@ -2400,7 +2425,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v82</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v83</span></div>
 </footer>
 
 <script>
@@ -2502,6 +2527,11 @@
         lang = l;
         document.getElementById('btnEn').classList.toggle('active', l === 'en');
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
+        // The home card has its own pair of choices; keep it in step with the
+        // header, or it shows EN selected while the app is in Urdu.
+        const lcEn = document.getElementById('lc-en'), lcUr = document.getElementById('lc-ur');
+        if (lcEn) lcEn.classList.toggle('selected', l === 'en');
+        if (lcUr) lcUr.classList.toggle('selected', l === 'ur');
         document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
         document.documentElement.lang = l === 'ur' ? 'ur' : 'en';
         // Translate input placeholders

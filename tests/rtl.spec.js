@@ -552,3 +552,18 @@ for (const lang of ['en', 'ur']) {
     expect(await over(), 'result').toBe(0);
   });
 }
+
+test('controls meet the touch floor on a 360px phone', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  const h = sel => page.locator(sel).first().evaluate(el => el.getBoundingClientRect().height);
+  expect(await h('#btnUr')).toBeGreaterThanOrEqual(32);          // was 20px
+  expect(await h('#step-1 .top-back-btn')).toBeGreaterThanOrEqual(40);   // was 27px
+  expect(await h('.adj-btn')).toBeGreaterThanOrEqual(40);         // was 32px
+  expect(await h('#step-1 .btn-primary')).toBeGreaterThanOrEqual(44);
+  expect(await h('#step-1 .accordion-header')).toBeGreaterThanOrEqual(44);
+  // Stepper labels were 10.4px.
+  const fs = await page.locator('.prog-label').first().evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+  expect(fs).toBeGreaterThanOrEqual(11.5);
+});

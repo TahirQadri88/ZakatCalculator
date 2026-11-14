@@ -183,3 +183,20 @@ test('historical rates modal opens and closes', async ({ page }) => {
   await page.locator('#histRatesModal .hist-close-btn').click();
   await expect(page.locator('#histRatesModal')).not.toBeVisible();
 });
+
+test('home language card follows a switch made in the header', async ({ page }) => {
+  // Both controls set the language, but only the card's own buttons used to
+  // update the card - so after a header switch it showed EN selected in Urdu.
+  await page.locator('#btnUr').click();
+  await expect(page.locator('#lc-ur')).toHaveClass(/selected/);
+  await expect(page.locator('#lc-en')).not.toHaveClass(/selected/);
+  await page.locator('#btnEn').click();
+  await expect(page.locator('#lc-en')).toHaveClass(/selected/);
+  await expect(page.locator('#lc-ur')).not.toHaveClass(/selected/);
+});
+
+test('desktop header keeps its controls with the content column', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const w = await page.locator('.header-top-row').evaluate(el => el.getBoundingClientRect().width);
+  expect(w).toBeLessThanOrEqual(760);
+});

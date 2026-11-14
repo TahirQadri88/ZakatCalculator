@@ -251,7 +251,7 @@ test('field labels are not styled as errors', async ({ page }) => {
   // --danger (#991B1B) means "money owed" or "something is wrong". Ordinary
   // Urdu field labels rendered in it once, making the form look like errors.
   const label = page.locator('#step-2 .urdu-label-main').first();
-  await expect(label).toHaveCSS('color', 'rgb(6, 78, 59)');   // --primary
+  await expect(label).toHaveCSS('color', 'rgb(12, 74, 85)');   // --primary
 });
 
 // ── RESULT PRESENTATION ───────────────────────────────────────────────────────
@@ -295,7 +295,7 @@ test('eligibility status box styles both outcomes', async ({ page }) => {
   await calculateInUrdu(page);
   const box = page.locator('#elig_status_box');
   await expect(box).toHaveClass('is-eligible');
-  await expect(box).toHaveCSS('background-color', 'rgb(209, 250, 229)');
+  await expect(box).toHaveCSS('background-color', 'rgb(213, 236, 235)');
   await expect(box).toContainText('صاحبِ نصاب');
 
   // Below Nisab -> not eligible. Go back and zero the assets out.

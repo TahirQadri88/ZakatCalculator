@@ -214,7 +214,7 @@ test('dark mode is off by default, toggles, and survives a reload', async ({ pag
   await expect(html).toHaveAttribute('data-theme', 'dark');
   // Surfaces follow the theme; text on the green header stays white.
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(bg).toBe('rgb(14, 21, 19)');
+  expect(bg).toBe('rgb(12, 21, 23)');
   await page.locator('#btnUr').click();
   const title = await page.locator('.header-urdu-title').evaluate(e => getComputedStyle(e).color);
   expect(title).toBe('rgb(255, 255, 255)');
@@ -256,10 +256,12 @@ for (const width of [320, 360]) {
   });
 }
 
-test('star pattern sits faintly on the header and the result card only', async ({ page }) => {
+test('rosette emblem sits faintly on the header only (no repeating tile)', async ({ page }) => {
   const hdr = await page.locator('header').evaluate(e => getComputedStyle(e).backgroundImage);
   expect(hdr).toContain('data:image/svg+xml');
-  expect(hdr).toContain("stroke-opacity='.06'");
+  expect(hdr).toContain("stroke-opacity='.08'");
+  const rep = await page.locator('header').evaluate(e => getComputedStyle(e).backgroundRepeat);
+  expect(rep.split(',')[0].trim()).toBe('no-repeat');
   const card = await page.locator('.home-card').first().evaluate(e => getComputedStyle(e).backgroundImage);
   expect(card).not.toContain('svg');
 });

@@ -292,7 +292,10 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            flex: 1;
+            /* Equal shares regardless of label width: with min-width:auto a long
+               label ("Receivables") widened its step and the dots spaced unevenly. */
+            flex: 1 1 0;
+            min-width: 0;
         }
 
         .prog-dot {
@@ -1337,6 +1340,12 @@
         .report-dateline .hijri {
             font-family: var(--font-urdu); direction: rtl; unicode-bidi: isolate;
         }
+        /* In English the Hijri string is Latin ("3 Jumada-II 1448 AH"); laid out
+           RTL its leading day jumped to the end. */
+        html[lang="en"] .report-dateline .hijri { font-family: var(--font-english); direction: ltr; }
+        /* In Urdu the line reads from the right: label, date, then Hijri. */
+        html[lang="ur"] .report-dateline { direction: rtl; }
+        #rpt_date_greg { direction: ltr; unicode-bidi: isolate; }
         #elig_status_box {
             text-align: center; margin-top: 12px; padding: 9px 12px;
             border-radius: 8px; font-weight: 700; font-size: var(--fs-md);
@@ -1369,6 +1378,12 @@
             margin-bottom: 15px; border-bottom: 2px solid var(--hairline); padding-bottom: 10px;
         }
         .hist-modal-header .urdu-label-main { font-size: var(--fs-xl); margin: 0; }
+        /* The close button is pinned top-right; keep the title clear of it. */
+        .hist-modal-header { padding-right: 40px; }
+        /* English text inside an Urdu-styled block (those blocks force the Urdu font). */
+        .urdu-subtitle.latin, .urdu-body.latin {
+            font-family: var(--font-english) !important; direction: ltr; unicode-bidi: isolate; text-align: center;
+        }
 
         .footer-presented { margin-bottom: 8px; }
         .footer-credit {
@@ -1532,6 +1547,8 @@
 
         .result-details-toggle { margin-bottom: 0; }
         .result-details-toggle .ur { font-family: var(--font-urdu); }
+        /* Unlike the Urdu-content accordions, this one has an English label. */
+        html[lang="en"] .result-details-toggle { direction: ltr; font-family: var(--font-english); }
         #resultDetails { padding: 0; border: 0; background: transparent; }
         #resultDetails .statement-table { margin-top: 10px; }
 
@@ -2241,7 +2258,7 @@
         </div>
 
         <h4 class="section-heading">Other Receivables</h4>
-        <div class="urdu-subtitle is-spaced">(With Deferred Zakat Payment Option)</div>
+        <div class="urdu-subtitle is-spaced latin">(With Deferred Zakat Payment Option)</div>
 
         <div class="field-card">
             <label>Amount in Committee / BC</label>
@@ -2269,7 +2286,7 @@
         <div class="field-card">
             <label>Security Deposit (Refundable)</label>
             <div class="urdu-subtitle">قابلِ واپسی سیکیورٹی ڈپازٹ</div>
-             <div class="urdu-body is-example">(e.g., Rental or Utility Deposit that will be returned)</div>
+             <div class="urdu-body is-example latin">(e.g., Rental or Utility Deposit that will be returned)</div>
             <input type="text" class="r-in num-fmt" id="v_sec" inputmode="decimal" placeholder="Enter Amount">
         </div>
 
@@ -2541,7 +2558,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v88</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v89</span></div>
 </footer>
 
 <script>

@@ -620,3 +620,78 @@ test('step inputs meet the 48px comfort height', async ({ page }) => {
   const hs = await page.locator('#step-1 .field-card > input').evaluateAll(els => els.filter(e => e.offsetParent).map(e => e.getBoundingClientRect().height));
   expect(Math.min(...hs)).toBeGreaterThanOrEqual(48);
 });
+
+// ── Owner's phone screenshot, English result screen ──────────────────────────
+async function toResultEn(page) {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  await expect(page.locator('#step-5')).toBeVisible();
+}
+
+test('English Hijri date on the result reads day first, not "… AH 3"', async ({ page }) => {
+  await toResultEn(page);
+  const el = page.locator('#rpt_date_hijri');
+  const text = await el.innerText();
+  const day = text.match(/^\d+/)[0];
+  // The day must be painted to the left of the month name.
+  const [dayX, monthX] = await el.evaluate((e, day) => {
+    const t = e.firstChild, r = document.createRange();
+    r.setStart(t, 0); r.setEnd(t, day.length); const a = r.getBoundingClientRect().left;
+    r.setStart(t, day.length + 1); r.setEnd(t, day.length + 3); const b = r.getBoundingClientRect().left;
+    return [a, b];
+  }, day);
+  expect(dayX).toBeLessThan(monthX);
+});
+
+test('step bar dots are evenly spaced whatever the label widths', async ({ page }) => {
+  for (const lang of ['en', 'ur']) {
+    await toResultEn(page);
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    const xs = await page.locator('.prog-dot').evaluateAll(d => d.map(e => { const r = e.getBoundingClientRect(); return r.left + r.width / 2; }));
+    const gaps = xs.slice(1).map((x, i) => Math.abs(x - xs[i]));
+    expect(Math.max(...gaps) - Math.min(...gaps)).toBeLessThanOrEqual(2);
+  }
+});
+
+test('result "Financial summary" toggle reads left-to-right in English', async ({ page }) => {
+  await toResultEn(page);
+  const h = page.locator('.result-details-toggle');
+  const box = await h.boundingBox();
+  const label = await h.locator('span.en').boundingBox();
+  expect(label.x - box.x).toBeLessThan(box.x + box.width - (label.x + label.width));
+});
+
+test('Urdu result date line reads label, date, then Hijri from the right', async ({ page }) => {
+  await toResultEn(page);
+  await page.locator('#btnUr').click();
+  const x = async s => { const b = await page.locator(s).boundingBox(); return b.x + b.width / 2; };
+  const label = await x('.report-dateline span.ur');
+  const greg = await x('#rpt_date_greg');
+  const hijri = await x('#rpt_date_hijri');
+  expect(label).toBeGreaterThan(greg);
+  expect(greg).toBeGreaterThan(hijri);
+});
+
+test('English asides inside Urdu blocks use the English font', async ({ page }) => {
+  await goUrdu(page);
+  const fams = await page.evaluate(() => [...document.querySelectorAll('.urdu-subtitle, .urdu-body')]
+    .filter(e => /^[\x00-\x7F]+$/.test(e.textContent.trim()) && e.textContent.trim())
+    .map(e => [e.textContent.trim().slice(0, 25), getComputedStyle(e).fontFamily.split(',')[0]]));
+  expect(fams.length).toBeGreaterThan(0);
+  for (const [t, f] of fams) expect(f, t).toContain('Outfit');
+});
+
+test('records title does not run under the close button in Urdu', async ({ page }) => {
+  await goUrdu(page);
+  await page.evaluate(() => openHistory());
+  const t = await page.locator('.hist-modal-header .urdu-label-main').boundingBox();
+  const c = await page.locator('.close-modal').boundingBox();
+  const overlap = t.x < c.x + c.width && c.x < t.x + t.width && t.y < c.y + c.height && c.y < t.y + t.height;
+  expect(overlap).toBe(false);
+});

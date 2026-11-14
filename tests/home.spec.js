@@ -16,7 +16,6 @@ test('home screen loads with bismillah and hero card', async ({ page }) => {
 
 test('all home cards visible', async ({ page }) => {
   await expect(page.locator('.calc-hero-card')).toBeVisible();        // Calculate Zakat hero
-  await expect(page.locator('.home-card').filter({ hasText: 'App Language' })).toBeVisible();
   await expect(page.locator('.home-card').filter({ hasText: 'My Zakat Records' })).toBeVisible();
   await expect(page.locator('.home-card').filter({ hasText: 'Zakat FAQs' })).toBeVisible();
   await expect(page.locator('.home-card').filter({ hasText: 'Historical Gold Rates' })).toBeVisible();
@@ -182,4 +181,85 @@ test('historical rates modal opens and closes', async ({ page }) => {
   await expect(page.locator('#histRatesModal')).toBeVisible();
   await page.locator('#histRatesModal .hist-close-btn').click();
   await expect(page.locator('#histRatesModal')).not.toBeVisible();
+});
+
+test('home has one primary action and no duplicate language control', async ({ page }) => {
+  // Language lives in the header; the old home card duplicated it and drifted.
+  await expect(page.locator('#lc-en, #lc-ur, .lang-card-inner')).toHaveCount(0);
+  await expect(page.locator('#home-screen .calc-hero-card')).toHaveCount(1);
+  // Records and FAQ sit side by side as an equal pair.
+  const rec = await page.locator('.home-card').filter({ hasText: 'My Zakat Records' }).boundingBox();
+  const faq = await page.locator('.home-card.gold-card').boundingBox();
+  expect(Math.abs(rec.y - faq.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(rec.height - faq.height)).toBeLessThanOrEqual(1);
+});
+
+test('desktop header keeps its controls with the content column', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  // The header's controls should line up with the content column's edges.
+  const hdr = await page.locator('.header-top-row').boundingBox();
+  const col = await page.locator('.container').boundingBox();
+  expect(Math.abs(hdr.x - col.x)).toBeLessThanOrEqual(2);
+  expect(Math.abs((hdr.x + hdr.width) - (col.x + col.width))).toBeLessThanOrEqual(2);
+});
+
+test('dark mode is off by default, toggles, and survives a reload', async ({ page }) => {
+  const html = page.locator('html');
+  await expect(html).not.toHaveAttribute('data-theme', 'dark');
+  await page.locator('#themeToggle').click();
+  await expect(html).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('#themeToggle')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#themeToggle')).toContainText('Light mode');
+  await page.reload();
+  await expect(html).toHaveAttribute('data-theme', 'dark');
+  // Surfaces follow the theme; text on the green header stays white.
+  const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(bg).toBe('rgb(14, 21, 19)');
+  await page.locator('#btnUr').click();
+  const title = await page.locator('.header-urdu-title').evaluate(e => getComputedStyle(e).color);
+  expect(title).toBe('rgb(255, 255, 255)');
+  await page.locator('#themeToggle').click();
+  await expect(html).not.toHaveAttribute('data-theme', 'dark');
+});
+
+test('Bismillah is calligraphy art with its text kept for screen readers, and credited', async ({ page, request }) => {
+  const b = page.locator('.home-greeting .bismillah');
+  await expect(b).toHaveAttribute('role', 'img');
+  await expect(b).toHaveAttribute('aria-label', /بِسْمِ/);
+  const mask = await b.evaluate(e => getComputedStyle(e).webkitMaskImage || getComputedStyle(e).maskImage);
+  expect(mask).toContain('bismillah.svg');
+  const box = await b.boundingBox();
+  expect(box.width).toBeGreaterThan(150);
+  expect(box.height).toBeGreaterThan(25);
+  const res = await request.get('/bismillah.svg');
+  expect(res.status()).toBe(200);
+  expect(await res.text()).toContain('<svg');
+  await expect(page.locator('.footer-license')).toContainText('CC BY-SA 3.0');
+});
+
+for (const width of [320, 360]) {
+  test(`header title clears the language switch at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 740 });
+    await page.reload();
+    for (const sel of ['#btnEn', '#btnUr']) {
+      await page.locator(sel).click();
+      const t = await page.locator('header .header-content').boundingBox();
+      const pill = await page.locator('.lang-pill').boundingBox();
+      const overlap = t.x < pill.x + pill.width && pill.x < t.x + t.width && t.y < pill.y + pill.height && pill.y < t.y + t.height;
+      // Measure the visible title text, not its box.
+      const ink = await page.locator(sel === '#btnEn' ? 'header h1.lbl-en' : 'header .header-urdu-title').evaluate(e => {
+        const r = document.createRange(); r.selectNodeContents(e); return r.getBoundingClientRect();
+      });
+      const hit = ink.left < pill.x + pill.width && pill.x < ink.right && ink.top < pill.y + pill.height && pill.y < ink.bottom;
+      expect(hit, `${sel} title ink overlaps the switch`).toBe(false);
+    }
+  });
+}
+
+test('star pattern sits faintly on the header and the result card only', async ({ page }) => {
+  const hdr = await page.locator('header').evaluate(e => getComputedStyle(e).backgroundImage);
+  expect(hdr).toContain('data:image/svg+xml');
+  expect(hdr).toContain("stroke-opacity='.06'");
+  const card = await page.locator('.home-card').first().evaluate(e => getComputedStyle(e).backgroundImage);
+  expect(card).not.toContain('svg');
 });

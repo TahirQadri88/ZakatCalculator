@@ -493,3 +493,205 @@ test('icon sprite is out of layout but its icons still render', async ({ page })
     expect(h).toBeGreaterThan(8);
   }
 });
+
+test('result: breakdown is folded away, answer and note stay visible, Save is the only filled action', async ({ page }) => {
+  await goUrdu(page);
+  await calculateInUrdu(page);
+
+  // The answer and the fiqh note are always on screen.
+  await expect(page.locator('#r_total')).toBeVisible();
+  await expect(page.locator('#step-5 .advice-box-single-line')).toBeVisible();
+
+  // The breakdown is behind a disclosure and opens on tap.
+  const details = page.locator('#resultDetails');
+  await expect(details).not.toBeVisible();
+  await page.locator('.result-details-toggle').click();
+  await expect(details).toBeVisible();
+  await expect(page.locator('#r_net')).toBeVisible();
+
+  // One filled button; Edit and Home are quiet text links.
+  await expect(page.locator('#step-5 .result-actions .btn-primary')).toHaveCount(1);
+  await expect(page.locator('#step-5 .result-links .link-btn')).toHaveCount(2);
+
+  // The status is a slim pill, not a full-width banner.
+  const w = await page.locator('#elig_status_box').evaluate(el => el.getBoundingClientRect().width);
+  const vw = await page.evaluate(() => document.documentElement.clientWidth);
+  expect(w).toBeLessThan(vw * 0.85);
+});
+
+// The narrowest phones still in use. A header that needed ~349px pushed the
+// whole page sideways at 320px in English; it had gone unnoticed because every
+// other check ran at 393-412px.
+for (const lang of ['en', 'ur']) {
+  test(`no horizontal scroll on any screen at 320px (${lang})`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto('/');
+    await page.waitForLoadState('domcontentloaded');
+    await page.locator(lang === 'ur' ? '#btnUr' : '#btnEn').click();
+
+    const over = () => page.evaluate(() => {
+      const d = document.documentElement;
+      return Math.max(0, d.scrollWidth - d.clientWidth);
+    });
+
+    expect(await over(), 'home').toBe(0);
+    await page.locator('.calc-hero-card').click();
+    expect(await over(), 'step 1').toBe(0);
+    await page.locator('#s_rate').fill('3000');
+    await page.locator('#s_rate').dispatchEvent('input');
+    await page.locator('#step-1 .btn-primary').click();
+    expect(await over(), 'step 2').toBe(0);
+    await page.locator('#v_gold').fill('5000000');
+    await page.locator('#step-2 .btn-primary').click();
+    expect(await over(), 'step 3').toBe(0);
+    await page.locator('#v_ds').fill('1232344');
+    await page.locator('#step-3 .btn-primary').click();
+    expect(await over(), 'step 4').toBe(0);
+    await page.locator('#l_per').fill('250000');
+    await page.locator('#step-4 .btn-primary').click();
+    expect(await over(), 'result').toBe(0);
+  });
+}
+
+test('controls meet the touch floor on a 360px phone', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  const h = sel => page.locator(sel).first().evaluate(el => el.getBoundingClientRect().height);
+  expect(await h('#btnUr')).toBeGreaterThanOrEqual(32);          // was 20px
+  expect(await h('#step-1 .top-back-btn')).toBeGreaterThanOrEqual(40);   // was 27px
+  expect(await h('.adj-btn')).toBeGreaterThanOrEqual(40);         // was 32px
+  expect(await h('#step-1 .btn-primary')).toBeGreaterThanOrEqual(44);
+  expect(await h('#step-1 .accordion-header')).toBeGreaterThanOrEqual(44);
+  // Stepper labels were 10.4px.
+  const fs = await page.locator('.prog-label').first().evaluate(el => parseFloat(getComputedStyle(el).fontSize));
+  expect(fs).toBeGreaterThanOrEqual(11.5);
+});
+
+test('only the step bar stays pinned while scrolling a step', async ({ page }) => {
+  // The whole header used to stay pinned: 189px, 26% of a 360x740 phone.
+  await page.setViewportSize({ width: 360, height: 740 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+
+  const pinned = () => page.evaluate(() =>
+    Math.max(0, document.querySelector('header').getBoundingClientRect().bottom));
+
+  expect(await pinned()).toBeGreaterThan(150);          // full header at the top
+  await page.evaluate(() => window.scrollTo(0, 700));
+  await expect.poll(pinned).toBeLessThan(80);            // just the step bar
+  await expect(page.locator('#progressBarWrap')).toBeInViewport();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect.poll(pinned).toBeGreaterThan(150);        // title and toggle return
+});
+
+test('desktop: steps use two aligned columns and accordions open from the keyboard', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+
+  // Two columns, and every input in a column shares one left and right edge.
+  const edges = await page.evaluate(() => {
+    const ins = [...document.querySelectorAll('#step-2 > .field-card > input')].map(e => e.getBoundingClientRect());
+    return { lefts: new Set(ins.map(r => Math.round(r.left))).size, rights: new Set(ins.map(r => Math.round(r.right))).size };
+  });
+  expect(edges.lefts).toBe(2);
+  expect(edges.rights).toBe(2);
+
+  // Clickable divs are reachable and operable without a mouse.
+  const acc = page.locator('#step-2 .accordion-header').first();
+  await expect(acc).toHaveAttribute('tabindex', '0');
+  await expect(acc).toHaveAttribute('role', 'button');
+  await acc.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#priceDef')).toBeVisible();
+});
+
+test('step inputs meet the 48px comfort height', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  const hs = await page.locator('#step-1 .field-card > input').evaluateAll(els => els.filter(e => e.offsetParent).map(e => e.getBoundingClientRect().height));
+  expect(Math.min(...hs)).toBeGreaterThanOrEqual(48);
+});
+
+// ── Owner's phone screenshot, English result screen ──────────────────────────
+async function toResultEn(page) {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  await expect(page.locator('#step-5')).toBeVisible();
+}
+
+test('English Hijri date on the result reads day first, not "… AH 3"', async ({ page }) => {
+  await toResultEn(page);
+  const el = page.locator('#rpt_date_hijri');
+  const text = await el.innerText();
+  const day = text.match(/^\d+/)[0];
+  // The day must be painted to the left of the month name.
+  const [dayX, monthX] = await el.evaluate((e, day) => {
+    const t = e.firstChild, r = document.createRange();
+    r.setStart(t, 0); r.setEnd(t, day.length); const a = r.getBoundingClientRect().left;
+    r.setStart(t, day.length + 1); r.setEnd(t, day.length + 3); const b = r.getBoundingClientRect().left;
+    return [a, b];
+  }, day);
+  expect(dayX).toBeLessThan(monthX);
+});
+
+test('step bar dots are evenly spaced whatever the label widths', async ({ page }) => {
+  for (const lang of ['en', 'ur']) {
+    await toResultEn(page);
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    const xs = await page.locator('.prog-dot').evaluateAll(d => d.map(e => { const r = e.getBoundingClientRect(); return r.left + r.width / 2; }));
+    const gaps = xs.slice(1).map((x, i) => Math.abs(x - xs[i]));
+    expect(Math.max(...gaps) - Math.min(...gaps)).toBeLessThanOrEqual(2);
+  }
+});
+
+test('result "Financial summary" toggle reads left-to-right in English', async ({ page }) => {
+  await toResultEn(page);
+  const h = page.locator('.result-details-toggle');
+  const box = await h.boundingBox();
+  const label = await h.locator('span.en').boundingBox();
+  expect(label.x - box.x).toBeLessThan(box.x + box.width - (label.x + label.width));
+});
+
+test('Urdu result date line reads label, date, then Hijri from the right', async ({ page }) => {
+  await toResultEn(page);
+  await page.locator('#btnUr').click();
+  const x = async s => { const b = await page.locator(s).boundingBox(); return b.x + b.width / 2; };
+  const label = await x('.report-dateline span.ur');
+  const greg = await x('#rpt_date_greg');
+  const hijri = await x('#rpt_date_hijri');
+  expect(label).toBeGreaterThan(greg);
+  expect(greg).toBeGreaterThan(hijri);
+});
+
+test('English asides inside Urdu blocks use the English font', async ({ page }) => {
+  await goUrdu(page);
+  const fams = await page.evaluate(() => [...document.querySelectorAll('.urdu-subtitle, .urdu-body')]
+    .filter(e => /^[\x00-\x7F]+$/.test(e.textContent.trim()) && e.textContent.trim())
+    .map(e => [e.textContent.trim().slice(0, 25), getComputedStyle(e).fontFamily.split(',')[0]]));
+  expect(fams.length).toBeGreaterThan(0);
+  for (const [t, f] of fams) expect(f, t).toContain('Outfit');
+});
+
+test('records title does not run under the close button in Urdu', async ({ page }) => {
+  await goUrdu(page);
+  await page.evaluate(() => openHistory());
+  const t = await page.locator('.hist-modal-header .urdu-label-main').boundingBox();
+  const c = await page.locator('.close-modal').boundingBox();
+  const overlap = t.x < c.x + c.width && c.x < t.x + t.width && t.y < c.y + c.height && c.y < t.y + t.height;
+  expect(overlap).toBe(false);
+});

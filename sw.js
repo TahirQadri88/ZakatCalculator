@@ -1,10 +1,11 @@
-const CACHE_NAME = 'zakat-calc-v80';
+const CACHE_NAME = 'zakat-calc-v91';
 
 const STATIC_ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './icon.png',
+  './bismillah.svg',
   './icon-192.png',
   './icon-512.png'
 ];

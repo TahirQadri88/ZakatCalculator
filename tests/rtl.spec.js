@@ -684,7 +684,7 @@ test('English asides inside Urdu blocks use the English font', async ({ page }) 
     .filter(e => /^[\x00-\x7F]+$/.test(e.textContent.trim()) && e.textContent.trim())
     .map(e => [e.textContent.trim().slice(0, 25), getComputedStyle(e).fontFamily.split(',')[0]]));
   expect(fams.length).toBeGreaterThan(0);
-  for (const [t, f] of fams) expect(f, t).toContain('Outfit');
+  for (const [t, f] of fams) expect(f, t).toContain('Newsreader'); // the English face
 });
 
 test('records title does not run under the close button in Urdu', async ({ page }) => {
@@ -821,21 +821,24 @@ test('records pop-up has a visible title in both languages', async ({ page }) =>
   await expect(page.locator('.hist-modal-title .ur')).toContainText('گزشتہ ریکارڈ');
 });
 
-test('English headings use Newsreader; labels and amounts stay in Outfit', async ({ page }) => {
+test('English text is Newsreader throughout; amounts and inputs stay in Outfit', async ({ page }) => {
   await page.goto('/');
   const fam = sel => page.locator(sel).first().evaluate(e => getComputedStyle(e).fontFamily);
-  for (const sel of ['header h1', '.calc-hero-card .card-title-en']) expect(await fam(sel), sel).toContain('Newsreader');
-  await page.evaluate(() => openFAQ());
-  expect(await fam('.faq-modal-title')).toContain('Newsreader');
-  await page.evaluate(() => closeFAQ());
-  await page.evaluate(() => openHistRates());
-  expect(await fam('.hist-rates-title')).toContain('Newsreader');
-  await page.evaluate(() => closeHistRates && closeHistRates());
-  await page.goto('/');
+  for (const sel of ['header h1', '.calc-hero-card .card-title-en', '.tagline-en', '.hero-sub', '.home-card .card-title-en', 'footer'])
+    expect(await fam(sel), sel).toContain('Newsreader');
   await page.locator('.calc-hero-card').click();
-  expect(await fam('#step-1 .step-title')).toContain('Newsreader');
-  expect(await fam('#step-1 .field-card > label')).toContain('Outfit');
-  expect(await fam('#s_rate')).toContain('Outfit');
+  for (const sel of ['#step-1 .step-title', '#step-1 .field-card > label', '#step-1 .btn-primary'])
+    expect(await fam(sel), sel).toContain('Newsreader');
+  expect(await fam('#s_rate'), 'input').toContain('Outfit');
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  expect(await fam('#nisabVal'), 'nisab amount').toContain('Outfit');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  for (const sel of ['#r_total', '#p_now', '#p_def', '#r_net'])
+    expect(await fam(sel), sel).toContain('Outfit');
+  expect(await fam('.zakat-hero-label-en'), 'hero label').toContain('Newsreader');
 });
 
 test('no CSS custom property is written as a broken nested var(--var(...))', async ({ request }) => {
@@ -877,4 +880,23 @@ test('saved record shows liabilities without a stray minus on zero', async ({ pa
   await page.locator('.result-actions .btn-primary').first().click();
   await page.evaluate(() => openHistory());
   await expect(page.locator('.hist-val.is-liab').first()).toHaveText('0');
+});
+
+test('English result header lines do not wrap at 360px', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#u_name').fill('Muhammad Tahir Qadri');
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  // Count rendered text lines (distinct line tops), not box height, which includes padding.
+  const lines = sel => page.locator(sel).evaluate(e => {
+    const r = document.createRange(); r.selectNodeContents(e);
+    return new Set([...r.getClientRects()].map(x => Math.round(x.top))).size;
+  });
+  expect(await lines('.report-dateline')).toBe(1);
+  expect(await lines('#elig_status_box')).toBe(1);
 });

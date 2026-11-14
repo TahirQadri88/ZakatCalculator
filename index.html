@@ -28,7 +28,7 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Gulzar&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..600&family=Gulzar&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Mehr Nastaleeq - Free font, Creative Commons license, by Zeeshan Nasar / ITU Punjab -->
     <style>
@@ -129,7 +129,10 @@
             --fs-4xl: 1.8rem;
             --fs-5xl: 2.0rem;
             --fs-hero: 2.8rem;
-            --font-english: 'Outfit', system-ui, sans-serif;
+            /* English text: Newsreader throughout (owner's choice, option E).
+               Amounts and inputs keep Outfit: plain sans digits scan best. */
+            --font-english: 'Newsreader', Georgia, serif;
+            --font-numeric: 'Outfit', system-ui, sans-serif;
             /* English headings only; numbers, inputs and labels stay in Outfit. */
             --font-display: 'Newsreader', Georgia, serif;
             /* Ornament: a 10-fold rosette made of ten overlapping hexagons turned
@@ -1938,6 +1941,22 @@
         .hist-rates-note { direction: ltr; text-align: left; unicode-bidi: isolate; }
         .hist-rates-note .ur, html[lang="ur"] .hist-rates-note span.ur { display: block !important; direction: rtl; text-align: right; margin-top: 6px; }
         .hist-val bdi { unicode-bidi: isolate; direction: ltr; }
+
+        /* Numbers stay in the sans face: inputs, every amount, Nisab, records,
+           historical rates, the step counter dots. */
+        input, select, .zakat-hero-amount, .zakat-split-amount, #nisabVal,
+        .statement-table .row-val, .statement-table td[id^="r_"], #r_total, #r_total_dup,
+        .hist-val, .hist-total-value, .hist-table .rate, .hist-table .yr, .prog-dot,
+        input::placeholder { font-family: var(--font-numeric); }
+        html[lang="ur"] input::placeholder { font-family: var(--font-urdu) !important; }
+
+        /* Newsreader is a touch wider than Outfit: the English date line and the
+           status pill wrapped at 360px. Half a step smaller in English only. */
+        html[lang="en"] .report-dateline { font-size: var(--fs-xs); }
+        html[lang="en"] #elig_status_box { font-size: var(--fs-sm); letter-spacing: 0; font-weight: 600; padding-inline: 8px; }
+        /* Record-card captions are data labels in small capitals; keep them in
+           the sans face with their numbers so they fit their tiles. */
+        .hist-lbl, .hist-total-label { font-family: var(--font-numeric); }
 </style>
 </head>
 <body>
@@ -2683,7 +2702,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v100</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v101</span></div>
 </footer>
 
 <script>

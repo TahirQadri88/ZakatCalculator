@@ -376,8 +376,8 @@
         .field-card {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 10px 12px;
-            margin-bottom: 8px;
+            padding: 12px 12px;
+            margin-bottom: 12px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
             transition: box-shadow 0.2s;
@@ -956,9 +956,10 @@
             flex: 0 0 auto;
             max-width: 42%;
             margin: 0 !important;
-            padding-bottom: 8px; /* room for Nastaliq descenders */
+            padding-bottom: 4px; /* room for Nastaliq descenders */
             overflow: visible;
-            line-height: 1.3;
+            /* Nastaliq stacks dots and tall letters; 1.3 crowded wrapped labels. */
+            line-height: 1.6;
             font-size: var(--fs-md);
             text-align: right;
             direction: rtl;
@@ -1534,6 +1535,8 @@
         .top-back-btn, .top-home-btn { min-height: 40px; padding-block: 6px; }
         .btn { min-height: 46px; }
         .accordion-header, .sub-acc-header { min-height: 44px; display: flex; align-items: center; }
+        /* Phase C: 48px inputs, the comfortable thumb size for amount entry. */
+        input:not([type="checkbox"]):not([type="radio"]), select { min-height: 48px; }
 
         /* 10.4px was below comfortable reading size. Caps and tracking go too,
            which pays for the larger size in width on a five-step bar. */
@@ -2432,7 +2435,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v86</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v87</span></div>
 </footer>
 
 <script>

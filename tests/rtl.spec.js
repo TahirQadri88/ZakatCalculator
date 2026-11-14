@@ -612,3 +612,11 @@ test('desktop: steps use two aligned columns and accordions open from the keyboa
   await page.keyboard.press('Enter');
   await expect(page.locator('#priceDef')).toBeVisible();
 });
+
+test('step inputs meet the 48px comfort height', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  const hs = await page.locator('#step-1 .field-card > input').evaluateAll(els => els.filter(e => e.offsetParent).map(e => e.getBoundingClientRect().height));
+  expect(Math.min(...hs)).toBeGreaterThanOrEqual(48);
+});

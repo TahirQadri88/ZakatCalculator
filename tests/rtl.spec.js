@@ -587,3 +587,28 @@ test('only the step bar stays pinned while scrolling a step', async ({ page }) =
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect.poll(pinned).toBeGreaterThan(150);        // title and toggle return
 });
+
+test('desktop: steps use two aligned columns and accordions open from the keyboard', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+
+  // Two columns, and every input in a column shares one left and right edge.
+  const edges = await page.evaluate(() => {
+    const ins = [...document.querySelectorAll('#step-2 > .field-card > input')].map(e => e.getBoundingClientRect());
+    return { lefts: new Set(ins.map(r => Math.round(r.left))).size, rights: new Set(ins.map(r => Math.round(r.right))).size };
+  });
+  expect(edges.lefts).toBe(2);
+  expect(edges.rights).toBe(2);
+
+  // Clickable divs are reachable and operable without a mouse.
+  const acc = page.locator('#step-2 .accordion-header').first();
+  await expect(acc).toHaveAttribute('tabindex', '0');
+  await expect(acc).toHaveAttribute('role', 'button');
+  await acc.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#priceDef')).toBeVisible();
+});

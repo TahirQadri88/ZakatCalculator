@@ -1568,7 +1568,46 @@
            The header background spans the screen, but at 1440px its emblem
            and buttons sat in the far corners, ~450px from the 560px column. */
         @media (min-width: 900px) {
-            .header-top-row { max-width: 760px; margin-inline: auto; width: 100%; box-sizing: border-box; }
+            .header-top-row { max-width: 920px; margin-inline: auto; width: 100%; box-sizing: border-box; }
+        }
+
+
+        /* --- DESKTOP LAYOUT (900px and up) ----------------------------------
+           At 1440px the calculator was a 560px strip with 60% of the screen
+           empty. The steps now use two columns of field cards; everything that
+           is not a field card (headings, explanations, accordions, nav,
+           buttons) spans the full width. Home and the result stay a single
+           focused column. Phones are untouched. */
+        @media (min-width: 900px) {
+            .container { max-width: 920px; }
+            #home-screen, #step-5 { max-width: 600px; margin-inline: auto; }
+
+            #step-1:not(.hidden), #step-2:not(.hidden),
+            #step-3:not(.hidden), #step-4:not(.hidden) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 16px;
+                align-items: start;
+            }
+            #step-1 > :not(.field-card), #step-2 > :not(.field-card),
+            #step-3 > :not(.field-card), #step-4 > :not(.field-card) {
+                grid-column: 1 / -1;
+            }
+
+            /* Urdu labels sit beside their inputs. Give them a fixed share so
+               every input in a column starts and ends on the same line instead
+               of following each label's length. */
+            html[lang="ur"] .field-card > .urdu-label-main { flex: 0 0 40%; max-width: 40%; }
+        }
+
+        /* --- KEYBOARD ACCESS -------------------------------------------------
+           Clickable <div>s are given tabindex and role=button by script; this
+           makes keyboard focus visible without affecting mouse or touch. */
+        [role="button"] { cursor: pointer; }
+        [role="button"]:focus-visible, button:focus-visible, a:focus-visible,
+        .lbtn:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
         }
 
         /* --- FAQ OVERLAY --- */
@@ -2431,7 +2470,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v84</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v85</span></div>
 </footer>
 
 <script>
@@ -2528,6 +2567,28 @@
         document.getElementById('btnEn').classList.toggle('active', l === 'en');
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
     }
+
+    // 20 clickable <div>s (accordions, home cards, Read-it-first, language
+    // choices) had no tabindex, so Tab skipped them and a keyboard user could
+    // not open a single explanation. Make every non-native onclick element
+    // focusable and announce it as a button; Enter and Space activate it.
+    (function keyboardReachable() {
+        const NATIVE = /^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/;
+        document.querySelectorAll('[onclick]').forEach(el => {
+            if (NATIVE.test(el.tagName)) return;
+            if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+            if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+        });
+        document.addEventListener('keydown', e => {
+            const t = e.target;
+            if ((e.key === 'Enter' || e.key === ' ') && t && t.getAttribute &&
+                t.getAttribute('role') === 'button' && t.hasAttribute('onclick') &&
+                !NATIVE.test(t.tagName)) {
+                e.preventDefault();
+                t.click();
+            }
+        });
+    })();
 
     (function pinStepBarOnly() {
         const row = document.querySelector('.header-top-row');

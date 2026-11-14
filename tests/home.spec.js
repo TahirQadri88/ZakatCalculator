@@ -197,6 +197,9 @@ test('home language card follows a switch made in the header', async ({ page }) 
 
 test('desktop header keeps its controls with the content column', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  const w = await page.locator('.header-top-row').evaluate(el => el.getBoundingClientRect().width);
-  expect(w).toBeLessThanOrEqual(760);
+  // The header's controls should line up with the content column's edges.
+  const hdr = await page.locator('.header-top-row').boundingBox();
+  const col = await page.locator('.container').boundingBox();
+  expect(Math.abs(hdr.x - col.x)).toBeLessThanOrEqual(2);
+  expect(Math.abs((hdr.x + hdr.width) - (col.x + col.width))).toBeLessThanOrEqual(2);
 });

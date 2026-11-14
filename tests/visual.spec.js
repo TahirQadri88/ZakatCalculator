@@ -43,6 +43,10 @@ async function freeze(page) {
       header, .sticky-header, .progress-bar-wrap {
         position: static !important;
       }
+      /* The footer prints the release number, which changes on every deploy and
+         would invalidate every baseline for no visual reason. Keep its space,
+         hide its ink. */
+      .footer-version { visibility: hidden !important; }
     `,
   });
 }

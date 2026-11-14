@@ -62,6 +62,10 @@
             --primary-ink: var(--primary);
             --primary-dark-ink: var(--primary-dark);
             --label-gold-ink: var(--label-gold);
+            /* Gold as text on light tints. --accent itself is 2.4:1 there. */
+            --accent-ink: #8A6420;
+            /* Input outlines must reach 3:1 to be seen (WCAG 1.4.11); #D1D5DB was 1.3:1. */
+            --input-line: #7D848E;
             /* Named surfaces, inks and lines - light values; dark mode redefines them. */
             --amber-ink: #92400E;
             --amber-ink-2: #78350F;
@@ -92,7 +96,7 @@
             --tint-orange: #FFF7ED;
             --tint-red: #FEE2E2;
             --slate: #1F2937;
-            --text-muted: #6B7280;
+            --text-muted: #5B6472; /* was #6B7280: 4.39:1 on the page grey, now 5.4:1 */
             --bg: #F3F4F6;
             --white: #FFFFFF;
             --border: #E5E7EB;
@@ -314,7 +318,7 @@
             justify-content: center;
             font-size: var(--fs-2xs);
             font-weight: 700;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.8);
             font-family: var(--font-english);
             transition: all 0.3s ease;
             position: relative;
@@ -331,14 +335,14 @@
         .prog-step.done .prog-dot {
             background: #10B981;
             border-color: #10B981;
-            color: white;
+            color: #043629; /* white on this green was 2.5:1; dark green is 5.3:1 */
         }
 
         .prog-label {
             font-family: var(--font-english);
             font-size: var(--fs-3xs);
             font-weight: 600;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.78);
             text-transform: uppercase;
             letter-spacing: 0.3px;
             margin-top: 3px;
@@ -356,7 +360,7 @@
         }
 
         .prog-step.active .prog-label { color: var(--accent); }
-        .prog-step.done .prog-label { color: rgba(255,255,255,0.65); }
+        .prog-step.done .prog-label { color: rgba(255,255,255,0.85); }
 
         .prog-line {
             flex: 1;
@@ -450,7 +454,7 @@
         input, select {
             width: 100%;
             padding: 9px 10px;
-            border: 1.5px solid var(--border-strong);
+            border: 1.5px solid var(--input-line);
             border-radius: 7px;
             font-size: var(--fs-base);
             text-align: center;
@@ -464,7 +468,7 @@
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--primary-ink);
             background: var(--white);
             box-shadow: 0 0 0 3px rgba(6,78,59,0.08);
         }
@@ -624,7 +628,7 @@
                here, so it stays. */
             font-size: var(--fs-3xl);
             font-weight: 600;
-            color: var(--accent);
+            color: var(--accent-ink);
             font-family: var(--font-english);
             letter-spacing: -0.5px;
         }
@@ -1283,9 +1287,9 @@
         .top-nav-row .ur { font-family: var(--font-urdu); }
         .step-counter {
             font-family: var(--font-english); font-size: var(--fs-2xs);
-            color: #9CA3AF; font-weight: 600;
+            color: var(--text-muted); font-weight: 600;
         }
-        .label-optional { font-size: var(--fs-2xs); color: #9CA3AF; font-weight: 400; }
+        .label-optional { font-size: var(--fs-2xs); color: var(--text-muted); font-weight: 400; }
 
         .rate-fetch-row { display: flex; gap: 8px; margin-bottom: 8px; }
         .btn-fetch-rate {
@@ -1685,7 +1689,7 @@
         .faq-inline-icon { font-size:1.2rem; flex-shrink:0; }
         .faq-inline-text { flex:1; font-family:var(--font-urdu); font-size: var(--fs-lg); color:var(--primary-ink); direction:rtl; text-align:start; line-height:1.6; }
         html[lang="en"] .faq-inline-text { font-family:var(--font-english); font-size: var(--fs-md); font-weight:700; direction:ltr; letter-spacing:0.3px; }
-        .faq-inline-arrow { font-size: var(--fs-2xl); color:#9CA3AF; flex-shrink:0; }
+        .faq-inline-arrow { font-size: var(--fs-2xl); color:var(--text-muted); flex-shrink:0; }
 
         #histRatesModal { display:none; position:fixed; z-index:200; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
         #histRatesModal.open { display:flex; }
@@ -1804,6 +1808,8 @@
             --red-line: #7F2A2A;
             --hairline: #2B3A35;
             --hairline-2: #3A4B45;
+            --accent-ink: var(--accent);
+            --input-line: #62746C;
         }
         html[data-theme="dark"] body { background: var(--bg); color: var(--slate); }
 
@@ -2590,7 +2596,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v91</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v92</span></div>
 </footer>
 
 <script>

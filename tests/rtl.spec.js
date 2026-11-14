@@ -722,3 +722,36 @@ test('typography: Urdu text uses an Urdu face, English glosses the English face,
   const arabicForms = await page.evaluate(() => (document.body.innerText.match(/[كةي]/g) || []).length);
   expect(arabicForms).toBe(0);
 });
+
+test('no English sentence is laid out right-to-left in Urdu mode (punctuation would jump ends)', async ({ page }) => {
+  await goUrdu(page);
+  const scan = () => page.evaluate(() => [...document.querySelectorAll('body *')].filter(el => {
+    if (!el.offsetParent) return false;
+    const own = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join(' ').trim();
+    return own.length > 12 && /[A-Za-z]{3,}/.test(own) && /[.,:)%]\s*$|\(/.test(own) &&
+      !/[؀-ۿ]/.test(own) && getComputedStyle(el).direction === 'rtl';
+  }).map(el => (el.getAttribute('class') || el.tagName) + ': ' + el.textContent.trim().slice(0, 30)));
+  const found = new Set((await scan()));
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('.read-first-btn').click();
+  (await scan()).forEach(x => found.add(x));
+  for (const s of [1, 2, 3, 4]) {
+    await page.locator(`#step-${s} .btn-primary`).click();
+    (await scan()).forEach(x => found.add(x));
+  }
+  await page.locator('.result-details-toggle').click();
+  (await scan()).forEach(x => found.add(x));
+  expect([...found]).toEqual([]);
+});
+
+test('accordion headings keep their label as one piece (no stray flex items)', async ({ page }) => {
+  await goUrdu(page);
+  // A flex header lays each child out separately; an inline <bdi> as a direct
+  // child pushed "(Shares)" to the middle of the bar.
+  const bad = await page.evaluate(() => [...document.querySelectorAll('.accordion-header, .sub-acc-header')]
+    .filter(h => [...h.children].some(c => getComputedStyle(c).display === 'inline' || c.tagName === 'BDI'))
+    .map(h => h.textContent.trim().slice(0, 30)));
+  expect(bad).toEqual([]);
+});

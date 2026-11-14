@@ -1871,11 +1871,21 @@
         html[lang="ur"] #history_list .ur {
             font-family: var(--font-urdu); letter-spacing: 0; font-weight: 400;
         }
-        html[lang="ur"] #elig_status_box { line-height: 1.8; }
+        html[lang="ur"] #elig_status_box { line-height: 1.8; font-size: var(--fs-lg); }
+        html[lang="ur"] .report-dateline span.ur { font-size: var(--fs-md); }
         /* English glosses inside Urdu paragraphs: English face, a touch smaller. */
         bdi.latin { font-family: var(--font-english); }
         .accordion-content bdi.latin, .sub-acc-body bdi.latin, [class*="urdu"] bdi.latin { font-size: 0.88em; }
         .footer-license { font-size: var(--fs-2xs); }
+
+        /* English blocks keep English direction in Urdu mode. Laid out RTL, a
+           trailing "." or ")" jumps to the front (".scholars", "(2.5%" ). */
+        footer, .zakat-hero-label-en, .zakat-split-label, .row-header, .warning-box { direction: ltr; unicode-bidi: isolate; }
+        .warning-box .urdu { direction: rtl; }
+        html[lang="ur"] .warning-box { text-align: left; }
+        .urdu-subtitle.latin, .urdu-body.latin,
+        html[lang="ur"] .field-card > .urdu-body.latin { direction: ltr !important; unicode-bidi: isolate; text-align: center; }
+        .urdu-body.is-example.latin { font-size: var(--fs-sm); line-height: 1.5; color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -2195,7 +2205,7 @@
         <div class="field-card"><label>Shares & Tradable Certificates</label><span class="urdu-label-main">شیئرز اور قابلِ فروخت انویسٹمنٹ سرٹیفیکیٹ کی مارکیٹ ویلیو</span><input type="text" class="c-in num-fmt" id="v_sh" inputmode="decimal" placeholder="Enter Market Value"></div>
         <div class="field-card"><label>Private Business Share</label><span class="urdu-label-main">پرائیویٹ کاروبارمیں آپ کے حصّے کے قابلِ زکوٰۃ اثاثے</span><input type="text" class="c-in num-fmt" id="v_pb" inputmode="decimal" placeholder="Enter Market Value"></div>
 
-        <div class="accordion-header is-spaced-y" onclick="toggleAccordion('sharesFiqh', this)">حِصص (Shares) کی زکوٰۃ کا حکم</div>
+        <div class="accordion-header is-spaced-y" onclick="toggleAccordion('sharesFiqh', this)"><span>حِصص <bdi class="latin">(Shares)</bdi> کی زکوٰۃ کا حکم</span></div>
         <div class="accordion-content" id="sharesFiqh">
             <div class="fiqh-glance">
                 <div class="fiqh-glance-title">آسان الفاظ میں</div>
@@ -2219,9 +2229,9 @@
 
             <p class="fiqh-attrib">شیئرز کی زکوٰۃ سے متعلق مفتی منیب الرحمٰن صاحب لکھتے ہیں:</p>
             <blockquote class="fiqh-quote">
-            <p>پبلک لمیٹڈ کمپنیوں کے حِصص (Shares) کی خرید و فروخت بازارِ حِصص (Stock Market/Stock Exchange) میں ہوتی ہے۔ حِصص خریدنے والے دو طرح کے لوگ ہوتے ہیں:</p>
-            <p>(۱) وہ لوگ جو کمپنی کے شریک بن کر رہنا چاہتے ہیں۔ Dividend کی صورت میں کمپنی جو منافع شرکاء میں تقسیم کرتی ہے، وہ اس کے حق دار ہوتے ہیں اور اپنی شراکت داری کمپنی کے ساتھ جاری رکھنا چاہتے ہیں۔ ایسی صورت میں دیکھا جائے گا کہ کمپنی کے جامد اثاثہ جات (Fixed Assets) کی مالیت کا فیصد تناسب کمپنی کے کل اثاثہ جات کے ساتھ کیا ہے؟ فرض کیجئے کہ جامد اثاثہ جات کا تناسب کمپنی کے کل اثاثوں کا چالیس فیصد ہے، تو ایسی صورت میں شیئر کی Face Value نہیں بلکہ بازاری قیمتِ فروخت (Market Value) نکال کر اس کا چالیس فیصد منہا کر کے بقیہ رقم پر زکوٰۃ واجب ہوگی۔</p>
-            <p>(۲) وہ لوگ جو کمپنی کے شیئرز کاروباری مقصد کے لئے خریدتے ہیں، جیسا کہ عام طور پہ Stock Exchange میں ہوتا ہے، تو یہ مالِ تجارت ہے اور اس کی کل بازاری قیمتِ فروخت (Market Value) پر زکوٰۃ شراکت دار (Share Holder) پر واجب ہوگی۔</p>
+            <p>پبلک لمیٹڈ کمپنیوں کے حِصص <bdi class="latin">(Shares)</bdi> کی خرید و فروخت بازارِ حِصص <bdi class="latin">(Stock Market/Stock Exchange)</bdi> میں ہوتی ہے۔ حِصص خریدنے والے دو طرح کے لوگ ہوتے ہیں:</p>
+            <p>(۱) وہ لوگ جو کمپنی کے شریک بن کر رہنا چاہتے ہیں۔ <bdi class="latin">Dividend</bdi> کی صورت میں کمپنی جو منافع شرکاء میں تقسیم کرتی ہے، وہ اس کے حق دار ہوتے ہیں اور اپنی شراکت داری کمپنی کے ساتھ جاری رکھنا چاہتے ہیں۔ ایسی صورت میں دیکھا جائے گا کہ کمپنی کے جامد اثاثہ جات <bdi class="latin">(Fixed Assets)</bdi> کی مالیت کا فیصد تناسب کمپنی کے کل اثاثہ جات کے ساتھ کیا ہے؟ فرض کیجئے کہ جامد اثاثہ جات کا تناسب کمپنی کے کل اثاثوں کا چالیس فیصد ہے، تو ایسی صورت میں شیئر کی <bdi class="latin">Face Value</bdi> نہیں بلکہ بازاری قیمتِ فروخت <bdi class="latin">(Market Value)</bdi> نکال کر اس کا چالیس فیصد منہا کر کے بقیہ رقم پر زکوٰۃ واجب ہوگی۔</p>
+            <p>(۲) وہ لوگ جو کمپنی کے شیئرز کاروباری مقصد کے لئے خریدتے ہیں، جیسا کہ عام طور پہ <bdi class="latin">Stock Exchange</bdi> میں ہوتا ہے، تو یہ مالِ تجارت ہے اور اس کی کل بازاری قیمتِ فروخت <bdi class="latin">(Market Value)</bdi> پر زکوٰۃ شراکت دار <bdi class="latin">(Share Holder)</bdi> پر واجب ہوگی۔</p>
             <p class="fiqh-source">(کتاب الزکوٰۃ، مفتی منیب الرحمٰن، ضیاء القرآن پبلی کیشنز، لاہور)</p>
             </blockquote>
 
@@ -2609,7 +2619,7 @@
     <div class="modal-content">
         <span class="close-modal" onclick="closeHistory()">&times;</span>
         <div class="hist-modal-header">
-            <span class="urdu-label-main">گزشتہ ریکارڈ (History)</span>
+            <span class="urdu-label-main">گزشتہ ریکارڈ <bdi class="latin">(History)</bdi></span>
             <button type="button" class="btn-clear" onclick="clearAllHistory()">Clear All</button>
         </div>
         <div id="history_list"></div>
@@ -2621,7 +2631,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v95</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v96</span></div>
 </footer>
 
 <script>

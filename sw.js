@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zakat-calc-v87';
+const CACHE_NAME = 'zakat-calc-v88';
 
 const STATIC_ASSETS = [
   './',

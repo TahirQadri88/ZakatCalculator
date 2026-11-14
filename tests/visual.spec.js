@@ -130,3 +130,12 @@ for (const lang of ['en', 'ur']) {
     await expect(page).toHaveScreenshot(`${lang}-overlay-rates.png`);
   });
 }
+
+// Dark mode: Urdu only (the primary surface), home and the result screen.
+test('ur dark: home and result', async ({ page }) => {
+  await page.addInitScript(() => { try { localStorage.setItem('z_theme', 'dark'); } catch (e) {} });
+  await open(page, 'ur');
+  await expect(page).toHaveScreenshot('ur-dark-home.png', { fullPage: true });
+  await fillAll(page);
+  await expect(page).toHaveScreenshot('ur-dark-step5-result.png', { fullPage: true });
+});

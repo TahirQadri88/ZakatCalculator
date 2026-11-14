@@ -202,3 +202,22 @@ test('desktop header keeps its controls with the content column', async ({ page 
   expect(Math.abs(hdr.x - col.x)).toBeLessThanOrEqual(2);
   expect(Math.abs((hdr.x + hdr.width) - (col.x + col.width))).toBeLessThanOrEqual(2);
 });
+
+test('dark mode is off by default, toggles, and survives a reload', async ({ page }) => {
+  const html = page.locator('html');
+  await expect(html).not.toHaveAttribute('data-theme', 'dark');
+  await page.locator('#themeToggle').click();
+  await expect(html).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('#themeToggle')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#themeToggle')).toContainText('Light mode');
+  await page.reload();
+  await expect(html).toHaveAttribute('data-theme', 'dark');
+  // Surfaces follow the theme; text on the green header stays white.
+  const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(bg).toBe('rgb(14, 21, 19)');
+  await page.locator('#btnUr').click();
+  const title = await page.locator('.header-urdu-title').evaluate(e => getComputedStyle(e).color);
+  expect(title).toBe('rgb(255, 255, 255)');
+  await page.locator('#themeToggle').click();
+  await expect(html).not.toHaveAttribute('data-theme', 'dark');
+});

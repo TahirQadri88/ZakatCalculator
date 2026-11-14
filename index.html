@@ -1165,7 +1165,7 @@
         }
         .home-card.gold-card .card-title-en { color: white; }
         .home-card.gold-card .card-title-ur { color: rgba(255,255,255,0.9); }
-        .home-card.gold-card .card-icon { background: rgba(255,255,255,0.15); }
+        .home-card.gold-card .card-icon { background: rgba(255,255,255,0.15); color: #fff; }
 
         .card-icon {
             width: 50px;
@@ -1193,26 +1193,6 @@
             line-height: 1.3;
         }
 
-        .lang-card-inner {
-            display: flex;
-            gap: 8px;
-            margin-top: 4px;
-        }
-        .lang-choice {
-            flex: 1;
-            padding: 8px 4px;
-            border-radius: 10px;
-            border: 2px solid var(--border);
-            background: #F9FAFB;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: var(--fs-sm);
-            color: var(--text-muted);
-            transition: all 0.15s;
-            font-family: var(--font-english);
-        }
-        .lang-choice.ur-opt { font-family: var(--font-urdu); font-size: var(--fs-base); }
-        .lang-choice.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
 
         /* Hide progress bar on home screen */
         body.on-home .progress-bar-wrap { display: none; }
@@ -1242,16 +1222,13 @@
             font-family: var(--font-english); margin-top: 4px; text-align: start;
         }
 
-        .home-card.gold-card { gap: 16px; padding: 16px 20px; }
-        .home-card.gold-card .card-icon { background: rgba(255,255,255,0.18); }
-        .home-card.gold-card .card-body .card-title-en { color: #fff; }
-        .home-card.gold-card .card-body .card-title-ur { color: rgba(255,255,255,0.9); }
-        .home-card.gold-card .card-arrow {
-            font-size: var(--fs-2xl); color: rgba(255,255,255,0.6);
-            align-self: center; flex-shrink: 0;
+        /* A quiet row, not a third card: it is reference material, used rarely. */
+        .home-card.hist-rates-card {
+            gap: 12px; padding: 10px 8px;
+            background: transparent; border-color: transparent; box-shadow: none;
         }
-
-        .home-card.hist-rates-card { gap: 14px; padding: 16px; }
+        .home-card.hist-rates-card:hover { border-color: var(--border); box-shadow: none; }
+        .home-card.hist-rates-card .card-icon { width: 40px; height: 40px; }
         .home-card.hist-rates-card .card-icon { font-size: 1.5rem; }
         .home-card.hist-rates-card .card-body .card-title-ur {
             font-size: var(--fs-base); margin-top: 2px; line-height: 1.5;
@@ -1555,7 +1532,6 @@
         .lang-pill { padding: 2px; }
         .lbtn { min-height: 32px; min-width: 40px; padding: 4px 10px; font-size: var(--fs-xs); }
         .top-back-btn, .top-home-btn { min-height: 40px; padding-block: 6px; }
-        .lang-choice { min-width: 48px; min-height: 44px; }
         .btn { min-height: 46px; }
         .accordion-header, .sub-acc-header { min-height: 44px; display: flex; align-items: center; }
 
@@ -1804,17 +1780,6 @@
         </div>
 
         <div class="home-cards">
-            <!-- Language -->
-            <div class="home-card" onclick="">
-                <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg></div>
-                <div class="card-title-en">App Language</div>
-                <div class="card-title-ur">زبان منتخب کریں</div>
-                <div class="lang-card-inner">
-                    <div class="lang-choice selected" id="lc-en" onclick="event.stopPropagation(); homeLang('en')">EN</div>
-                    <div class="lang-choice ur-opt" id="lc-ur" onclick="event.stopPropagation(); homeLang('ur')">اردو</div>
-                </div>
-            </div>
-
             <!-- My Records -->
             <div class="home-card" onclick="openHistory()">
                 <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-records"/></svg></div>
@@ -1822,14 +1787,11 @@
                 <div class="card-title-ur">میرا ریکارڈ</div>
             </div>
 
-            <!-- FAQs — full width -->
-            <div class="home-card gold-card is-wide" onclick="openFAQ()">
+            <!-- FAQs — paired with My Records -->
+            <div class="home-card gold-card" onclick="openFAQ()">
                 <div class="card-icon"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></div>
-                <div class="card-body">
-                    <div class="card-title-en">Zakat FAQs</div>
-                    <div class="card-title-ur">زکوٰۃ کے عام سوالات</div>
-                </div>
-                <div class="card-arrow">›</div>
+                <div class="card-title-en">Zakat FAQs</div>
+                <div class="card-title-ur">زکوٰۃ کے عام سوالات</div>
             </div>
 
             <!-- Historical Rates -->
@@ -2470,7 +2432,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v85</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v86</span></div>
 </footer>
 
 <script>
@@ -2559,15 +2521,6 @@
         if (e.key === 'Escape' && document.getElementById('faqModal').classList.contains('open')) closeFAQ();
     });
 
-    function homeLang(l) {
-        document.getElementById('lc-en').classList.toggle('selected', l === 'en');
-        document.getElementById('lc-ur').classList.toggle('selected', l === 'ur');
-        setLang(l);
-        // Also sync header toggle buttons
-        document.getElementById('btnEn').classList.toggle('active', l === 'en');
-        document.getElementById('btnUr').classList.toggle('active', l === 'ur');
-    }
-
     // 20 clickable <div>s (accordions, home cards, Read-it-first, language
     // choices) had no tabindex, so Tab skipped them and a keyboard user could
     // not open a single explanation. Make every non-native onclick element
@@ -2603,11 +2556,6 @@
         lang = l;
         document.getElementById('btnEn').classList.toggle('active', l === 'en');
         document.getElementById('btnUr').classList.toggle('active', l === 'ur');
-        // The home card has its own pair of choices; keep it in step with the
-        // header, or it shows EN selected while the app is in Urdu.
-        const lcEn = document.getElementById('lc-en'), lcUr = document.getElementById('lc-ur');
-        if (lcEn) lcEn.classList.toggle('selected', l === 'en');
-        if (lcUr) lcUr.classList.toggle('selected', l === 'ur');
         document.documentElement.dir = l === 'ur' ? 'rtl' : 'ltr';
         document.documentElement.lang = l === 'ur' ? 'ur' : 'en';
         // Translate input placeholders

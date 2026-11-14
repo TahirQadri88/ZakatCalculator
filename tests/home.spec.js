@@ -16,7 +16,6 @@ test('home screen loads with bismillah and hero card', async ({ page }) => {
 
 test('all home cards visible', async ({ page }) => {
   await expect(page.locator('.calc-hero-card')).toBeVisible();        // Calculate Zakat hero
-  await expect(page.locator('.home-card').filter({ hasText: 'App Language' })).toBeVisible();
   await expect(page.locator('.home-card').filter({ hasText: 'My Zakat Records' })).toBeVisible();
   await expect(page.locator('.home-card').filter({ hasText: 'Zakat FAQs' })).toBeVisible();
   await expect(page.locator('.home-card').filter({ hasText: 'Historical Gold Rates' })).toBeVisible();
@@ -184,15 +183,15 @@ test('historical rates modal opens and closes', async ({ page }) => {
   await expect(page.locator('#histRatesModal')).not.toBeVisible();
 });
 
-test('home language card follows a switch made in the header', async ({ page }) => {
-  // Both controls set the language, but only the card's own buttons used to
-  // update the card - so after a header switch it showed EN selected in Urdu.
-  await page.locator('#btnUr').click();
-  await expect(page.locator('#lc-ur')).toHaveClass(/selected/);
-  await expect(page.locator('#lc-en')).not.toHaveClass(/selected/);
-  await page.locator('#btnEn').click();
-  await expect(page.locator('#lc-en')).toHaveClass(/selected/);
-  await expect(page.locator('#lc-ur')).not.toHaveClass(/selected/);
+test('home has one primary action and no duplicate language control', async ({ page }) => {
+  // Language lives in the header; the old home card duplicated it and drifted.
+  await expect(page.locator('#lc-en, #lc-ur, .lang-card-inner')).toHaveCount(0);
+  await expect(page.locator('#home-screen .calc-hero-card')).toHaveCount(1);
+  // Records and FAQ sit side by side as an equal pair.
+  const rec = await page.locator('.home-card').filter({ hasText: 'My Zakat Records' }).boundingBox();
+  const faq = await page.locator('.home-card.gold-card').boundingBox();
+  expect(Math.abs(rec.y - faq.y)).toBeLessThanOrEqual(1);
+  expect(Math.abs(rec.height - faq.height)).toBeLessThanOrEqual(1);
 });
 
 test('desktop header keeps its controls with the content column', async ({ page }) => {

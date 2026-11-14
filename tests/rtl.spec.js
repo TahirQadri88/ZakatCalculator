@@ -518,3 +518,37 @@ test('result: breakdown is folded away, answer and note stay visible, Save is th
   const vw = await page.evaluate(() => document.documentElement.clientWidth);
   expect(w).toBeLessThan(vw * 0.85);
 });
+
+// The narrowest phones still in use. A header that needed ~349px pushed the
+// whole page sideways at 320px in English; it had gone unnoticed because every
+// other check ran at 393-412px.
+for (const lang of ['en', 'ur']) {
+  test(`no horizontal scroll on any screen at 320px (${lang})`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto('/');
+    await page.waitForLoadState('domcontentloaded');
+    await page.locator(lang === 'ur' ? '#btnUr' : '#btnEn').click();
+
+    const over = () => page.evaluate(() => {
+      const d = document.documentElement;
+      return Math.max(0, d.scrollWidth - d.clientWidth);
+    });
+
+    expect(await over(), 'home').toBe(0);
+    await page.locator('.calc-hero-card').click();
+    expect(await over(), 'step 1').toBe(0);
+    await page.locator('#s_rate').fill('3000');
+    await page.locator('#s_rate').dispatchEvent('input');
+    await page.locator('#step-1 .btn-primary').click();
+    expect(await over(), 'step 2').toBe(0);
+    await page.locator('#v_gold').fill('5000000');
+    await page.locator('#step-2 .btn-primary').click();
+    expect(await over(), 'step 3').toBe(0);
+    await page.locator('#v_ds').fill('1232344');
+    await page.locator('#step-3 .btn-primary').click();
+    expect(await over(), 'step 4').toBe(0);
+    await page.locator('#l_per').fill('250000');
+    await page.locator('#step-4 .btn-primary').click();
+    expect(await over(), 'result').toBe(0);
+  });
+}

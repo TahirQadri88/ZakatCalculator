@@ -255,3 +255,11 @@ for (const width of [320, 360]) {
     }
   });
 }
+
+test('star pattern sits faintly on the header and the result card only', async ({ page }) => {
+  const hdr = await page.locator('header').evaluate(e => getComputedStyle(e).backgroundImage);
+  expect(hdr).toContain('data:image/svg+xml');
+  expect(hdr).toContain("stroke-opacity='.06'");
+  const card = await page.locator('.home-card').first().evaluate(e => getComputedStyle(e).backgroundImage);
+  expect(card).not.toContain('svg');
+});

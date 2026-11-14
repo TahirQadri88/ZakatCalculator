@@ -1494,6 +1494,39 @@
            on the same baseline needs nudging rather than vertical-align:middle. */
         .icon-inline { width: 1.05em; height: 1.05em; vertical-align: -0.16em; }
 
+
+        /* --- RESULT SCREEN HIERARCHY ------------------------------------
+           The answer is the amount. Everything else is quieter: the status is
+           a small pill, the breakdown is folded away, and Save is the only
+           filled button. */
+        .zakat-hero { padding: 28px 16px 20px; margin-bottom: 16px; }
+        .zakat-hero-amount { margin: 6px 0 4px; }
+        .zakat-hero-divider { margin: 18px 0 14px; }
+        .zakat-split-item { background: rgba(255,255,255,0.07); }
+
+        #elig_status_box {
+            display: block; width: fit-content; max-width: 100%;
+            margin: 10px auto 0; padding: 5px 14px;
+            border-radius: 999px; font-size: var(--fs-sm);
+        }
+        .result-section-wrap.is-header { margin-bottom: 12px; }
+
+        .result-details-toggle { margin-bottom: 0; }
+        .result-details-toggle .ur { font-family: var(--font-urdu); }
+        #resultDetails { padding: 0; border: 0; background: transparent; }
+        #resultDetails .statement-table { margin-top: 10px; }
+
+        .result-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+        .result-actions .btn { width: 100%; margin: 0; }
+        .result-links { display: flex; justify-content: center; gap: 28px; padding: 6px 0 14px; }
+        .link-btn {
+            background: none; border: 0; cursor: pointer; padding: 10px 4px;
+            color: var(--primary); font-size: var(--fs-base);
+            font-family: var(--font-english); text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .link-btn .ur { font-family: var(--font-urdu); }
+
         /* --- FAQ OVERLAY --- */
         #faqModal { display:none; position:fixed; z-index:1100; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); align-items:center; justify-content:center; }
         #faqModal.open { display:flex; }
@@ -2171,7 +2204,10 @@
 
         <!-- Financial Summary Table -->
         <div class="result-section-wrap">
-            <div class="result-section-title">Financial Summary — تفصیلات</div>
+            <div class="accordion-header result-details-toggle" onclick="toggleAccordion('resultDetails', this)">
+                <span class="en">Financial summary</span><span class="ur">تفصیلات</span>
+            </div>
+            <div class="accordion-content" id="resultDetails">
             <table class="statement-table">
                 <tbody>
                     <tr>
@@ -2215,18 +2251,21 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
 
             <div class="advice-box-single-line is-tight">
                 نوٹ: مستند اہل علم کے مطابق واجب الوصول رقوم کی زکوٰۃ اگرچہ وصولی تک مؤخر کرنے کے مسائل موجود ہیں لیکن سال بہ سال ادا کر دینا بہتر ہے تاکہ حساب کتاب میں پیچیدگی نہ رہے۔
             </div>
         </div>
 
-        <div class="btn-row">
-            <button type="button" class="btn btn-prev" onclick="nav(4)"><span class="en">Edit Data</span><span class="ur">تبدیل کریں</span></button>
+        <div class="result-actions">
             <button type="button" class="btn btn-primary" onclick="saveToHistory()"><span class="en">💾 Save Record</span><span class="ur">محفوظ کریں</span></button>
+            <button type="button" class="btn btn-gold" onclick="shareWhatsApp()"><span class="en"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-share"/></svg> Share Detailed Report</span><span class="ur"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-share"/></svg> واٹس ایپ پر شیئر کریں</span></button>
+            <div class="result-links">
+                <button type="button" class="link-btn" onclick="nav(4)"><span class="en">Edit data</span><span class="ur">تبدیل کریں</span></button>
+                <button type="button" class="link-btn" onclick="goHome()"><span class="en">Back to home</span><span class="ur">ہوم پر واپس</span></button>
+            </div>
         </div>
-        <button type="button" class="btn btn-gold" onclick="shareWhatsApp()"><span class="en"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-share"/></svg> Share Detailed Report</span><span class="ur"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-share"/></svg> واٹس ایپ پر شیئر کریں</span></button>
-        <button type="button" class="btn btn-prev btn-home-wide" onclick="goHome()"><span class="en"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> Back to Home</span><span class="ur"><svg class="icon icon-inline" aria-hidden="true"><use href="#i-home"/></svg> ہوم پر واپس</span></button>
     </div>
 </div>
 
@@ -2348,7 +2387,7 @@
 
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v80</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v81</span></div>
 </footer>
 
 <script>

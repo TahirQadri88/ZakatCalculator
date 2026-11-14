@@ -493,3 +493,28 @@ test('icon sprite is out of layout but its icons still render', async ({ page })
     expect(h).toBeGreaterThan(8);
   }
 });
+
+test('result: breakdown is folded away, answer and note stay visible, Save is the only filled action', async ({ page }) => {
+  await goUrdu(page);
+  await calculateInUrdu(page);
+
+  // The answer and the fiqh note are always on screen.
+  await expect(page.locator('#r_total')).toBeVisible();
+  await expect(page.locator('#step-5 .advice-box-single-line')).toBeVisible();
+
+  // The breakdown is behind a disclosure and opens on tap.
+  const details = page.locator('#resultDetails');
+  await expect(details).not.toBeVisible();
+  await page.locator('.result-details-toggle').click();
+  await expect(details).toBeVisible();
+  await expect(page.locator('#r_net')).toBeVisible();
+
+  // One filled button; Edit and Home are quiet text links.
+  await expect(page.locator('#step-5 .result-actions .btn-primary')).toHaveCount(1);
+  await expect(page.locator('#step-5 .result-links .link-btn')).toHaveCount(2);
+
+  // The status is a slim pill, not a full-width banner.
+  const w = await page.locator('#elig_status_box').evaluate(el => el.getBoundingClientRect().width);
+  const vw = await page.evaluate(() => document.documentElement.clientWidth);
+  expect(w).toBeLessThan(vw * 0.85);
+});

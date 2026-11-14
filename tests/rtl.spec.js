@@ -690,7 +690,7 @@ test('English asides inside Urdu blocks use the English font', async ({ page }) 
 test('records title does not run under the close button in Urdu', async ({ page }) => {
   await goUrdu(page);
   await page.evaluate(() => openHistory());
-  const t = await page.locator('.hist-modal-header .urdu-label-main').boundingBox();
+  const t = await page.locator('.hist-modal-title').boundingBox();
   const c = await page.locator('.close-modal').boundingBox();
   const overlap = t.x < c.x + c.width && c.x < t.x + t.width && t.y < c.y + c.height && c.y < t.y + t.height;
   expect(overlap).toBe(false);
@@ -802,4 +802,74 @@ test('type hierarchy: label > placeholder, headings distinct from labels, icons 
     expect(m.phC, `${lang}: placeholder colour differs from label`).not.toBe(m.labC);
     expect(m.accC, `${lang}: section heading colour differs from label`).not.toBe(m.labC);
   }
+});
+
+test('records pop-up has a visible title in both languages', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => openHistory());
+  await expect(page.locator('.hist-modal-title .en')).toBeVisible();
+  await expect(page.locator('.hist-modal-title .en')).toHaveText('My Zakat Records');
+  await page.evaluate(() => closeHistory());
+  await page.locator('#btnUr').click();
+  await page.evaluate(() => openHistory());
+  await expect(page.locator('.hist-modal-title .ur')).toBeVisible();
+  await expect(page.locator('.hist-modal-title .ur')).toContainText('گزشتہ ریکارڈ');
+});
+
+test('English headings use Newsreader; labels and amounts stay in Outfit', async ({ page }) => {
+  await page.goto('/');
+  const fam = sel => page.locator(sel).first().evaluate(e => getComputedStyle(e).fontFamily);
+  for (const sel of ['header h1', '.calc-hero-card .card-title-en']) expect(await fam(sel), sel).toContain('Newsreader');
+  await page.evaluate(() => openFAQ());
+  expect(await fam('.faq-modal-title')).toContain('Newsreader');
+  await page.evaluate(() => closeFAQ());
+  await page.evaluate(() => openHistRates());
+  expect(await fam('.hist-rates-title')).toContain('Newsreader');
+  await page.evaluate(() => closeHistRates && closeHistRates());
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  expect(await fam('#step-1 .step-title')).toContain('Newsreader');
+  expect(await fam('#step-1 .field-card > label')).toContain('Outfit');
+  expect(await fam('#s_rate')).toContain('Outfit');
+});
+
+test('no CSS custom property is written as a broken nested var(--var(...))', async ({ request }) => {
+  // A token refactor once produced var(--var(--white)); the declaration is
+  // invalid, so field cards, record cards and the footer silently lost
+  // their background.
+  const html = await (await request.get('/')).text();
+  expect(html.match(/var\(--var\(/g) || []).toEqual([]);
+});
+
+test('gold-rates pop-up: title clear of the close button, English note left-to-right', async ({ page }) => {
+  for (const lang of ['en', 'ur']) {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto('/');
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    await page.evaluate(() => openHistRates());
+    const t = await page.locator('.hist-rates-title').evaluate(e => {
+      const r = document.createRange(); r.selectNodeContents(e); return r.getBoundingClientRect();
+    });
+    const c = await page.locator('#histRatesModal .hist-close-btn').boundingBox();
+    const hit = t.left < c.x + c.width && c.x < t.right && t.top < c.y + c.height && c.y < t.bottom;
+    expect(hit, `${lang}: title ink under the close button`).toBe(false);
+    expect(await page.locator('.hist-rates-note').evaluate(e => getComputedStyle(e).direction)).toBe('ltr');
+    if (lang === 'ur') {
+      // The Urdu translation is its own right-to-left block, not run into the English line.
+      expect(await page.locator('.hist-rates-note .ur').evaluate(e => getComputedStyle(e).display)).toBe('block');
+    }
+  }
+});
+
+test('saved record shows liabilities without a stray minus on zero', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  await page.locator('.result-actions .btn-primary').first().click();
+  await page.evaluate(() => openHistory());
+  await expect(page.locator('.hist-val.is-liab').first()).toHaveText('0');
 });

@@ -62,6 +62,16 @@ for (const theme of ['light', 'dark']) {
       await check('step4');
       await page.locator('#step-4 .btn-primary').click();
       await check('result');
+      // Overlays: save a record first so the records list is checked too.
+      await page.locator('.result-actions .btn-primary').first().click();
+      await page.evaluate(() => openFAQ());
+      await check('faq');
+      await page.evaluate(() => closeFAQ());
+      await page.evaluate(() => openHistory());
+      await check('records');
+      await page.evaluate(() => closeHistory());
+      await page.evaluate(() => openHistRates());
+      await check('gold-rates');
       expect([...new Set(fails)]).toEqual([]);
     });
   }

@@ -214,7 +214,7 @@ test('dark mode is off by default, toggles, and survives a reload', async ({ pag
   await expect(html).toHaveAttribute('data-theme', 'dark');
   // Surfaces follow the theme; text on the green header stays white.
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(bg).toBe('rgb(14, 21, 19)');
+  expect(bg).toBe('rgb(12, 21, 23)');
   await page.locator('#btnUr').click();
   const title = await page.locator('.header-urdu-title').evaluate(e => getComputedStyle(e).color);
   expect(title).toBe('rgb(255, 255, 255)');

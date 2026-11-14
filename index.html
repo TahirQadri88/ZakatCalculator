@@ -13,7 +13,7 @@
   gtag('config', 'G-K3SJB4NF0L');
 </script>
     <!-- PWA SETTINGS -->
-    <meta name="theme-color" content="#064E3B">
+    <meta name="theme-color" content="#08303A">
     <script>try{if(localStorage.getItem('z_theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Zakat Calculator">
@@ -51,17 +51,20 @@
     <style>
         /* --- 2. DESIGN TOKENS --- */
         :root {
-            --primary: #064E3B;
-            --primary-dark: #043629;
-            --primary-light: #ECFDF5;
-            --accent: #C5A059;
+            --primary: #0C4A55;          /* deep teal (T2) */
+            --primary-mid: #0F5A66;
+            --primary-dark: #08303A;
+            --primary-light: #E6F2F2;
+            --accent: #F2C14E;           /* bright gold: for dark teal surfaces */
+            --amount-ink: #FCEFD2;       /* ivory: the Zakat amount on teal */
+            --bismillah-ink: #A87B22;    /* deeper gold: calligraphy on the light page */
             --accent-dark: #A07840;
             --label-gold: #B45309;
             /* Text versions of the brand colours. Same values in light mode; dark
                mode lightens these without touching the surfaces that use the base. */
             --primary-ink: var(--primary);
             --primary-dark-ink: var(--primary-dark);
-            --label-gold-ink: var(--label-gold);
+            --label-gold-ink: #7C4306;   /* labels and names: 7.3:1 (was 4.7:1) */
             /* Gold as text on light tints. --accent itself is 2.4:1 there. */
             --accent-ink: #8A6420;
             /* Input outlines must reach 3:1 to be seen (WCAG 1.4.11); #D1D5DB was 1.3:1. */
@@ -91,15 +94,15 @@
             --tint-amber: #FFFBEB;
             --tint-amber-2: #FEF3C7;
             --tint-blue: #F0F9FF;
-            --tint-green: #F0FDF4;
-            --tint-green-2: #D1FAE5;
+            --tint-green: #EAF4F4;
+            --tint-green-2: #D5ECEB;
             --tint-orange: #FFF7ED;
             --tint-red: #FEE2E2;
             --slate: #1F2937;
-            --text-muted: #5B6472; /* was #6B7280: 4.39:1 on the page grey, now 5.4:1 */
-            --bg: #F3F4F6;
+            --text-muted: #4A5361; /* hints, footer, subtitles: 7.2:1 on the page */
+            --bg: #F3F7F7;
             --white: #FFFFFF;
-            --border: #E5E7EB;
+            --border: #D5E2E4;
             --danger: #991B1B;
             --danger-light: #FEF2F2;
             --blue: #1E40AF;
@@ -112,8 +115,8 @@
                values already carrying the most weight, so most text does not
                move. font-size on an icon box is a dimension, not type, and is
                left as an explicit value. */
-            --fs-3xs: 0.65rem;
-            --fs-2xs: 0.72rem;
+            --fs-3xs: 0.7rem;   /* was 0.65: 10.4px was below comfortable reading */
+            --fs-2xs: 0.76rem;
             --fs-xs: 0.78rem;
             --fs-sm: 0.85rem;
             --fs-md: 0.92rem;
@@ -184,7 +187,7 @@
 
         /* --- HEADER --- */
         header {
-            background: var(--rosette) right -36px center / 180px no-repeat, linear-gradient(150deg, var(--primary-dark) 0%, #0A6B52 100%);
+            background: var(--rosette) right -36px center / 180px no-repeat, linear-gradient(150deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
             color: white;
             border-bottom: 3px solid var(--accent);
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
@@ -211,7 +214,7 @@
         .header-emblem {
             width: 40px;
             height: 40px;
-            border: 2px solid rgba(197,160,89,0.6);
+            border: 2px solid rgba(242,193,78,0.6);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -330,7 +333,7 @@
             background: var(--accent);
             border-color: var(--accent);
             color: var(--primary-dark);
-            box-shadow: 0 0 0 3px rgba(197,160,89,0.3);
+            box-shadow: 0 0 0 3px rgba(242,193,78,0.3);
         }
 
         .prog-step.done .prog-dot {
@@ -384,7 +387,7 @@
 
         /* --- STEP HEADER --- */
         .step-header-card {
-            background: linear-gradient(135deg, var(--primary) 0%, #0A6B52 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
             border-radius: var(--radius);
             padding: 10px 14px;
             margin-bottom: 10px;
@@ -432,7 +435,7 @@
         }
 
         .field-card:focus-within {
-            box-shadow: 0 0 0 2px rgba(6,78,59,0.12), var(--shadow-sm);
+            box-shadow: 0 0 0 2px rgba(8,48,58,0.12), var(--shadow-sm);
             border-color: var(--green-line-2);
         }
 
@@ -471,7 +474,7 @@
             outline: none;
             border-color: var(--primary-ink);
             background: var(--white);
-            box-shadow: 0 0 0 3px rgba(6,78,59,0.08);
+            box-shadow: 0 0 0 3px rgba(8,48,58,0.08);
         }
 
         input::placeholder { color: var(--text-muted); font-weight: 400; font-size: var(--fs-sm); opacity: 1; }
@@ -663,7 +666,7 @@
 
         /* --- ZAKAT AMOUNT HERO --- */
         .zakat-hero {
-            background: var(--rosette) right -70px top -50px / 280px no-repeat, linear-gradient(135deg, var(--primary-dark), #0A6B52);
+            background: var(--rosette) right -70px top -50px / 280px no-repeat, linear-gradient(135deg, var(--primary-dark), var(--primary-mid));
             border-radius: var(--radius);
             padding: 20px 16px;
             text-align: center;
@@ -675,7 +678,7 @@
             font-family: var(--font-english);
             font-size: var(--fs-xs);
             font-weight: 700;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.9);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -683,7 +686,7 @@
         .zakat-hero-label-ur {
             font-family: var(--font-urdu);
             font-size: var(--fs-lg);
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.92);
             direction: rtl;
             display: block;
             margin-bottom: 8px;
@@ -693,7 +696,7 @@
             font-family: var(--font-english);
             font-size: var(--fs-hero);
             font-weight: 700;
-            color: var(--accent);
+            color: var(--amount-ink);
             line-height: 1;
             letter-spacing: -1px;
         }
@@ -721,7 +724,7 @@
             font-family: var(--font-english);
             font-size: var(--fs-3xs);
             font-weight: 700;
-            color: rgba(255,255,255,0.65);
+            color: rgba(255,255,255,0.88);
             text-transform: uppercase;
             letter-spacing: 0.4px;
             display: block;
@@ -730,7 +733,7 @@
         .zakat-split-ur {
             font-family: var(--font-urdu);
             font-size: var(--fs-sm);
-            color: rgba(255,255,255,0.6);
+            color: rgba(255,255,255,0.88);
             display: block;
             direction: rtl;
             line-height: 1.3;
@@ -783,9 +786,9 @@
         .btn-primary {
             background: var(--primary);
             color: white;
-            box-shadow: 0 3px 8px rgba(6,78,59,0.3);
+            box-shadow: 0 3px 8px rgba(8,48,58,0.3);
         }
-        .btn-primary:hover { background: #0A6B52; box-shadow: 0 4px 12px rgba(6,78,59,0.35); }
+        .btn-primary:hover { background: var(--primary-mid); box-shadow: 0 4px 12px rgba(8,48,58,0.35); }
 
         .btn-prev {
             background: var(--bg);
@@ -800,9 +803,9 @@
             width: 100%;
             margin-top: 10px;
             font-weight: 700;
-            box-shadow: 0 3px 8px rgba(197,160,89,0.35);
+            box-shadow: 0 3px 8px rgba(242,193,78,0.35);
         }
-        .btn-gold:hover { box-shadow: 0 4px 14px rgba(197,160,89,0.45); }
+        .btn-gold:hover { box-shadow: 0 4px 14px rgba(242,193,78,0.45); }
 
         .btn-clear {
             background: var(--danger-light);
@@ -1049,7 +1052,7 @@
         .lbtn {
             background: none;
             border: none;
-            color: rgba(255,255,255,0.65);
+            color: rgba(255,255,255,0.88);
             font-size: var(--fs-2xs);
             font-weight: 700;
             cursor: pointer;
@@ -1139,9 +1142,9 @@
             border-radius: 16px;
             width: 100%;
             cursor: pointer;
-            background: linear-gradient(135deg, var(--primary) 0%, #0A7A5A 60%, #0E9268 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%);
             border: none;
-            box-shadow: 0 6px 20px rgba(6,78,59,0.35);
+            box-shadow: 0 6px 20px rgba(8,48,58,0.35);
             transition: transform 0.15s, box-shadow 0.15s;
             -webkit-tap-highlight-color: transparent;
             position: relative;
@@ -1154,7 +1157,7 @@
             background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.08) 0%, transparent 70%);
             pointer-events: none;
         }
-        .calc-hero-card:hover { box-shadow: 0 8px 28px rgba(6,78,59,0.45); transform: translateY(-1px); }
+        .calc-hero-card:hover { box-shadow: 0 8px 28px rgba(8,48,58,0.45); transform: translateY(-1px); }
         .calc-hero-card:active { transform: scale(0.98); }
         .calc-hero-card .card-icon {
             width: 58px; height: 58px; font-size: 1.85rem; flex-shrink: 0;
@@ -1206,10 +1209,10 @@
             -webkit-tap-highlight-color: transparent;
         }
         .home-card:active { transform: scale(0.96); }
-        .home-card:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(6,78,59,0.12); }
+        .home-card:hover { border-color: var(--primary); box-shadow: 0 4px 14px rgba(8,48,58,0.12); }
 
 .home-card.gold-card {
-            background: linear-gradient(145deg, #92400E, var(--label-gold));
+            background: linear-gradient(145deg, #8A5A12, #B47A1E);
             border-color: transparent;
         }
         .home-card.gold-card .card-title-en { color: white; }
@@ -1295,7 +1298,7 @@
         .rate-fetch-row { display: flex; gap: 8px; margin-bottom: 8px; }
         .btn-fetch-rate {
             flex: 1; padding: 10px;
-            background: linear-gradient(135deg, var(--primary), #0A6B52);
+            background: linear-gradient(135deg, var(--primary), var(--primary-mid));
             color: #fff; border: none; border-radius: 8px;
             font-weight: 700; font-size: var(--fs-md); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
@@ -1662,7 +1665,7 @@
         .faq-modal-head {
             display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
             padding:16px 18px 12px; border-bottom:1px solid var(--border);
-            background:linear-gradient(135deg, var(--primary) 0%, #0A7A5A 100%); flex-shrink:0;
+            background:linear-gradient(135deg, var(--primary) 0%, var(--primary-mid) 100%); flex-shrink:0;
         }
         .faq-modal-title { font-family:var(--font-english); font-size: var(--fs-base); font-weight: 600; color:white; letter-spacing:0.3px; }
         .faq-modal-title-ur { font-family:var(--font-urdu); font-size: var(--fs-xl); color:rgba(255,255,255,0.92); direction:rtl; text-align:start; margin-top:3px; line-height:1.5; }
@@ -1685,7 +1688,7 @@
             transition:background 0.15s, box-shadow 0.15s;
             -webkit-tap-highlight-color:transparent;
         }
-        .faq-inline-link:hover { background:var(--primary-light); box-shadow:0 3px 10px rgba(6,78,59,0.1); }
+        .faq-inline-link:hover { background:var(--primary-light); box-shadow:0 3px 10px rgba(8,48,58,0.1); }
         .faq-inline-link:active { transform:scale(0.985); }
         .faq-inline-icon { font-size:1.2rem; flex-shrink:0; }
         .faq-inline-text { flex:1; font-family:var(--font-urdu); font-size: var(--fs-lg); color:var(--primary-ink); direction:rtl; text-align:start; line-height:1.6; }
@@ -1766,14 +1769,14 @@
            surfaces (green header, buttons, gold card) keep their colours. */
         html[data-theme="dark"] {
             color-scheme: dark;
-            --bg: #0E1513;
-            --white: #17211E;
-            --border: #2B3A35;
+            --bg: #0C1517;
+            --white: #152226;
+            --border: #2A3B40;
             --slate: #E6ECEA;
             --text-muted: #A3B1AC;
-            --primary-light: #12302A;
-            --primary-ink: #6EE7B7;
-            --primary-dark-ink: #A7F3D0;
+            --primary-light: #10333A;
+            --primary-ink: #8EDBD3;
+            --primary-dark-ink: #B5E8E2;
             --label-gold-ink: #FBBF24;
             --danger: #FCA5A5;
             --danger-light: #2B1416;
@@ -1781,18 +1784,18 @@
             --blue-light: #13203A;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
             --shadow-md: 0 4px 10px rgba(0,0,0,0.5);
-            --input-bg: #0F1916;
+            --input-bg: #0E1A1D;
             --input-ink: #F1F5F3;
             --tint-amber: #2A2110;
             --tint-amber-2: #3A2D12;
             --tint-orange: #2C1E12;
-            --tint-green: #12302A;
-            --tint-green-2: #164036;
+            --tint-green: #10333A;
+            --tint-green-2: #15424A;
             --tint-blue: #13203A;
             --tint-red: #2B1416;
-            --surface-2: #1B2622;
-            --surface-2b: #1B2622;
-            --surface-2c: #1B2622;
+            --surface-2: #1A292D;
+            --surface-2b: #1A292D;
+            --surface-2c: #1A292D;
             --ink-2: #D3DDD9;
             --ink-3: #C2CDC9;
             --ink-4: #B3BFBA;
@@ -1807,10 +1810,11 @@
             --green-line: #1F5A47;
             --green-line-2: #2D7A60;
             --red-line: #7F2A2A;
-            --hairline: #2B3A35;
+            --hairline: #2A3B40;
             --hairline-2: #3A4B45;
             --accent-ink: var(--accent);
-            --input-line: #62746C;
+            --input-line: #62767C;
+            --bismillah-ink: var(--accent);
         }
         html[data-theme="dark"] body { background: var(--bg); color: var(--slate); }
 
@@ -1834,7 +1838,7 @@
             text-transform: none;
         }
         header h1 { font-size: var(--fs-xl); font-weight: 600; }
-        .zakat-hero-label-en { font-size: var(--fs-sm); font-weight: 500; }
+        .zakat-hero-label-en { font-size: var(--fs-md); font-weight: 600; }
         .zakat-hero-label-ur { margin-top: 4px; }
         .header-urdu-title { font-family: 'Gulzar', var(--font-urdu-title); font-weight: 400; }
         /* Gulzar's tall strokes rise well above its line box; under the English
@@ -1846,7 +1850,7 @@
         .home-greeting .bismillah {
             width: min(300px, 82%); aspect-ratio: 17168 / 3372; height: auto;
             margin: 6px auto 10px; font-size: 0; line-height: 0;
-            background: var(--accent);
+            background: var(--bismillah-ink);
             -webkit-mask: url('bismillah.svg') center / contain no-repeat;
                     mask: url('bismillah.svg') center / contain no-repeat;
         }
@@ -2597,7 +2601,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v93</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v94</span></div>
 </footer>
 
 <script>
@@ -2662,7 +2666,7 @@
         const b = document.getElementById('themeToggle');
         if (b) b.setAttribute('aria-pressed', String(dark));
         const m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.setAttribute('content', dark ? '#0E1513' : '#064E3B');
+        if (m) m.setAttribute('content', dark ? '#0C1517' : '#08303A');
     }
     document.addEventListener('DOMContentLoaded', syncThemeToggle);
 

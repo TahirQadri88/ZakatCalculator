@@ -695,3 +695,63 @@ test('records title does not run under the close button in Urdu', async ({ page 
   const overlap = t.x < c.x + c.width && c.x < t.x + t.width && t.y < c.y + c.height && c.y < t.y + t.height;
   expect(overlap).toBe(false);
 });
+
+test('typography: Urdu text uses an Urdu face, English glosses the English face, Nastaliq has room', async ({ page }) => {
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  const issues = await page.evaluate(() => {
+    const AR = /[؀-ۿ]/, URDU = /Mehr|Nastaliq|Gulzar|Scheherazade|Amiri/i, out = [];
+    for (const el of document.querySelectorAll('body *')) {
+      if (!el.offsetParent) continue;
+      const own = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
+      if (!own) continue;
+      const cs = getComputedStyle(el), fam = cs.fontFamily;
+      if (AR.test(own) && !/[A-Za-z]{3,}/.test(own) && !URDU.test(fam)) out.push('latin face: ' + own.slice(0, 20));
+      if (AR.test(own) && parseFloat(cs.letterSpacing) > 0) out.push('letter-spacing: ' + own.slice(0, 20));
+    }
+    for (const h of document.querySelectorAll('#step-1 .accordion-header, #step-1 .sub-acc-header')) {
+      const cs = getComputedStyle(h);
+      if (h.offsetParent && parseFloat(cs.lineHeight) / parseFloat(cs.fontSize) < 1.6) out.push('tight: ' + h.textContent.trim().slice(0, 20));
+    }
+    return out;
+  });
+  expect(issues).toEqual([]);
+  // Urdu spelling uses Urdu letters (ک ۃ ی), not Arabic look-alikes (ك ة ي).
+  const arabicForms = await page.evaluate(() => (document.body.innerText.match(/[كةي]/g) || []).length);
+  expect(arabicForms).toBe(0);
+});
+
+test('no English sentence is laid out right-to-left in Urdu mode (punctuation would jump ends)', async ({ page }) => {
+  await goUrdu(page);
+  const scan = () => page.evaluate(() => [...document.querySelectorAll('body *')].filter(el => {
+    if (!el.offsetParent) return false;
+    const own = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join(' ').trim();
+    return own.length > 12 && /[A-Za-z]{3,}/.test(own) && /[.,:)%]\s*$|\(/.test(own) &&
+      !/[؀-ۿ]/.test(own) && getComputedStyle(el).direction === 'rtl';
+  }).map(el => (el.getAttribute('class') || el.tagName) + ': ' + el.textContent.trim().slice(0, 30)));
+  const found = new Set((await scan()));
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('.read-first-btn').click();
+  (await scan()).forEach(x => found.add(x));
+  for (const s of [1, 2, 3, 4]) {
+    await page.locator(`#step-${s} .btn-primary`).click();
+    (await scan()).forEach(x => found.add(x));
+  }
+  await page.locator('.result-details-toggle').click();
+  (await scan()).forEach(x => found.add(x));
+  expect([...found]).toEqual([]);
+});
+
+test('accordion headings keep their label as one piece (no stray flex items)', async ({ page }) => {
+  await goUrdu(page);
+  // A flex header lays each child out separately; an inline <bdi> as a direct
+  // child pushed "(Shares)" to the middle of the bar.
+  const bad = await page.evaluate(() => [...document.querySelectorAll('.accordion-header, .sub-acc-header')]
+    .filter(h => [...h.children].some(c => getComputedStyle(c).display === 'inline' || c.tagName === 'BDI'))
+    .map(h => h.textContent.trim().slice(0, 30)));
+  expect(bad).toEqual([]);
+});

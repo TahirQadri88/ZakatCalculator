@@ -100,10 +100,10 @@ const CONTROLS = () => {
   return out;
 };
 
-for (const lang of ['en', 'ur']) {
-  test(`dark mode: buttons and controls stand out (${lang})`, async ({ page }) => {
+for (const [theme, lang] of [['dark', 'en'], ['dark', 'ur'], ['light', 'en'], ['light', 'ur']]) {
+  test(`${theme} mode: buttons and controls stand out (${lang})`, async ({ page }) => {
     test.setTimeout(45000);
-    await page.addInitScript(() => { try { localStorage.setItem('z_theme', 'dark'); } catch (e) {} });
+    await page.addInitScript(t => { try { localStorage.setItem('z_theme', t); } catch (e) {} }, theme);
     await page.setViewportSize({ width: 360, height: 740 });
     await page.goto('/');
     if (lang === 'ur') await page.locator('#btnUr').click();

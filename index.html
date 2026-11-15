@@ -70,7 +70,7 @@
             /* Input outlines must reach 3:1 to be seen (WCAG 1.4.11); #D1D5DB was 1.3:1. */
             --input-line: #7D848E;
             --placeholder: #687180;      /* 4.7:1: readable, clearly lighter than text */
-            --control-line: var(--border);
+            --control-line: var(--input-line); /* 3.4-3.8:1: secondary controls are findable */
             /* Named surfaces, inks and lines - light values; dark mode redefines them. */
             --amber-ink: #92400E;
             --amber-ink-2: #78350F;
@@ -1967,30 +1967,31 @@
            headings 1.4-1.6:1, close/home/toggle 1.4-1.9:1, record actions ~1:1.
            Controls now carry an outline (dark mode) and the button teal is
            brighter, so every control is at least 3:1 against its surroundings. */
-        html[data-theme="dark"] .btn-prev,
-        html[data-theme="dark"] .accordion-header,
-        html[data-theme="dark"] .sub-acc-header,
-        html[data-theme="dark"] .close-modal,
-        html[data-theme="dark"] .hist-close-btn,
-        html[data-theme="dark"] .faq-close-btn,
-        html[data-theme="dark"] .theme-row,
-        html[data-theme="dark"] .top-home-btn,
-        html[data-theme="dark"] .hist-btn-top,
-        html[data-theme="dark"] .btn-clear,
-        html[data-theme="dark"] .btn-rate-history,
-        html[data-theme="dark"] .h-btn,
-        html[data-theme="dark"] .home-card,
-        html[data-theme="dark"] .read-first-btn,
-        html[data-theme="dark"] .header-emblem,
-        html[data-theme="dark"] .btn-fetch-rate { border: 1px solid var(--control-line) !important; }
-        html[data-theme="dark"] .home-card.gold-card { border-color: transparent !important; }
+        .btn-prev,
+        .accordion-header,
+        .sub-acc-header,
+        .close-modal,
+        .hist-close-btn,
+        .faq-close-btn,
+        .theme-row,
+        .top-home-btn,
+        .hist-btn-top,
+        .btn-clear,
+        .btn-rate-history,
+        .h-btn,
+        .home-card,
+        .read-first-btn,
+        .header-emblem,
+        .btn-fetch-rate, .faq-inline-link { border: 1px solid var(--control-line) !important; }
+        html:not([data-theme="dark"]) .btn-gold { border: 1px solid var(--accent-ink) !important; }
+        .home-card.gold-card { border-color: transparent !important; }
         /* The brighter dark-mode teal needs solid white text on it. */
         html[data-theme="dark"] .step-urdu-label, html[data-theme="dark"] .step-header-note,
         html[data-theme="dark"] .step-title-sub, html[data-theme="dark"] .hero-sub,
         html[data-theme="dark"] .calc-hero-arrow, html[data-theme="dark"] .faq-close-btn { color: #fff !important; }
         html[data-theme="dark"] .faq-close-btn { background: rgba(0,0,0,0.25) !important; }
         /* On the teal header / FAQ heading a grey line vanishes; use a light one. */
-        html[data-theme="dark"] .header-emblem, html[data-theme="dark"] .hist-btn-top, html[data-theme="dark"] .faq-close-btn { border-color: rgba(255,255,255,0.85) !important; }
+        .header-emblem, .hist-btn-top, .faq-close-btn { border-color: rgba(255,255,255,0.85) !important; }
         /* Both themes: white on the lighter end of the amber FAQ card was 3.1:1,
            dark text on the darker end of the gold Share button 3.5:1. */
         .home-card.gold-card { background: linear-gradient(145deg, #76490C, #946112) !important; }
@@ -2740,7 +2741,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v102</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v103</span></div>
 </footer>
 
 <script>

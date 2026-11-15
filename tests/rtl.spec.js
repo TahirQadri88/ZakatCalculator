@@ -684,13 +684,13 @@ test('English asides inside Urdu blocks use the English font', async ({ page }) 
     .filter(e => /^[\x00-\x7F]+$/.test(e.textContent.trim()) && e.textContent.trim())
     .map(e => [e.textContent.trim().slice(0, 25), getComputedStyle(e).fontFamily.split(',')[0]]));
   expect(fams.length).toBeGreaterThan(0);
-  for (const [t, f] of fams) expect(f, t).toContain('Outfit');
+  for (const [t, f] of fams) expect(f, t).toContain('Newsreader'); // the English face
 });
 
 test('records title does not run under the close button in Urdu', async ({ page }) => {
   await goUrdu(page);
   await page.evaluate(() => openHistory());
-  const t = await page.locator('.hist-modal-header .urdu-label-main').boundingBox();
+  const t = await page.locator('.hist-modal-title').boundingBox();
   const c = await page.locator('.close-modal').boundingBox();
   const overlap = t.x < c.x + c.width && c.x < t.x + t.width && t.y < c.y + c.height && c.y < t.y + t.height;
   expect(overlap).toBe(false);
@@ -754,4 +754,149 @@ test('accordion headings keep their label as one piece (no stray flex items)', a
     .filter(h => [...h.children].some(c => getComputedStyle(c).display === 'inline' || c.tagName === 'BDI'))
     .map(h => h.textContent.trim().slice(0, 30)));
   expect(bad).toEqual([]);
+});
+
+test('step 3 Urdu names sit above their boxes, as labels, box at full width', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await goUrdu(page);
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#step-2 .btn-primary').click();
+  const rows = await page.evaluate(() => [...document.querySelectorAll('#step-3 .field-card')].map(card => {
+    const name = card.querySelector(':scope > .urdu-subtitle'), box = card.querySelector(':scope > input');
+    if (!name || !box) return null;
+    const n = name.getBoundingClientRect(), b = box.getBoundingClientRect(), cs = getComputedStyle(name);
+    return { t: name.textContent.trim().slice(0, 20), above: n.bottom <= b.top + 1,
+      lines: Math.round(n.height / parseFloat(cs.lineHeight)), fullWidth: b.width > 280, size: parseFloat(cs.fontSize) };
+  }).filter(Boolean));
+  expect(rows.length).toBe(6);
+  for (const r of rows) {
+    expect(r.above, r.t).toBe(true);
+    expect(r.lines, r.t).toBeLessThanOrEqual(2); // 1 with Mehr; the test fallback face is wider
+    expect(r.fullWidth, r.t).toBe(true);
+    expect(r.size, r.t).toBeGreaterThanOrEqual(14);
+  }
+});
+
+test('type hierarchy: label > placeholder, headings distinct from labels, icons contrast', async ({ page }) => {
+  for (const lang of ['ur', 'en']) {
+    await page.goto('/');
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    const icon = await page.locator('.calc-hero-card .card-icon').evaluate(e => getComputedStyle(e).color);
+    expect(icon, 'hero icon is light on the teal button').toBe('rgb(255, 255, 255)');
+    await page.locator('.calc-hero-card').click();
+    await page.locator('#s_rate').fill('3000');
+    await page.locator('#s_rate').dispatchEvent('input');
+    await page.locator('#step-1 .btn-primary').click();
+    const m = await page.evaluate(lang => {
+      const lab = document.querySelector(lang === 'ur' ? '#step-2 .field-card > .urdu-label-main' : '#step-2 .field-card > label');
+      const inp = document.querySelector('#v_silver');
+      const acc = document.querySelector('#step-2 .accordion-header');
+      const px = (e, p) => parseFloat(getComputedStyle(e, p).fontSize);
+      const phSupported = getComputedStyle(inp, '::placeholder').color !== getComputedStyle(inp).color;
+      return { phSupported, label: px(lab), ph: px(inp, '::placeholder'), labC: getComputedStyle(lab).color,
+               phC: getComputedStyle(inp, '::placeholder').color, accC: getComputedStyle(acc).color };
+    }, lang);
+    // Older Chromium (the CI runner's) cannot read ::placeholder styles and
+    // returns the input's own; only compare sizes where the browser can.
+    if (m.phSupported) {
+      expect(m.label, `${lang}: label larger than placeholder`).toBeGreaterThan(m.ph);
+      expect(m.phC, `${lang}: placeholder colour differs from label`).not.toBe(m.labC);
+    }
+    expect(m.accC, `${lang}: section heading colour differs from label`).not.toBe(m.labC);
+  }
+});
+
+test('records pop-up has a visible title in both languages', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => openHistory());
+  await expect(page.locator('.hist-modal-title .en')).toBeVisible();
+  await expect(page.locator('.hist-modal-title .en')).toHaveText('My Zakat Records');
+  await page.evaluate(() => closeHistory());
+  await page.locator('#btnUr').click();
+  await page.evaluate(() => openHistory());
+  await expect(page.locator('.hist-modal-title .ur')).toBeVisible();
+  await expect(page.locator('.hist-modal-title .ur')).toContainText('گزشتہ ریکارڈ');
+});
+
+test('English text is Newsreader throughout; amounts and inputs stay in Outfit', async ({ page }) => {
+  await page.goto('/');
+  const fam = sel => page.locator(sel).first().evaluate(e => getComputedStyle(e).fontFamily);
+  for (const sel of ['header h1', '.calc-hero-card .card-title-en', '.tagline-en', '.hero-sub', '.home-card .card-title-en', 'footer'])
+    expect(await fam(sel), sel).toContain('Newsreader');
+  await page.locator('.calc-hero-card').click();
+  for (const sel of ['#step-1 .step-title', '#step-1 .field-card > label', '#step-1 .btn-primary'])
+    expect(await fam(sel), sel).toContain('Newsreader');
+  expect(await fam('#s_rate'), 'input').toContain('Outfit');
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  expect(await fam('#nisabVal'), 'nisab amount').toContain('Outfit');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  for (const sel of ['#r_total', '#p_now', '#p_def', '#r_net'])
+    expect(await fam(sel), sel).toContain('Outfit');
+  expect(await fam('.zakat-hero-label-en'), 'hero label').toContain('Newsreader');
+});
+
+test('no CSS custom property is written as a broken nested var(--var(...))', async ({ request }) => {
+  // A token refactor once produced var(--var(--white)); the declaration is
+  // invalid, so field cards, record cards and the footer silently lost
+  // their background.
+  const html = await (await request.get('/')).text();
+  expect(html.match(/var\(--var\(/g) || []).toEqual([]);
+});
+
+test('gold-rates pop-up: title clear of the close button, English note left-to-right', async ({ page }) => {
+  for (const lang of ['en', 'ur']) {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto('/');
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    await page.evaluate(() => openHistRates());
+    const t = await page.locator('.hist-rates-title').evaluate(e => {
+      const r = document.createRange(); r.selectNodeContents(e); return r.getBoundingClientRect();
+    });
+    const c = await page.locator('#histRatesModal .hist-close-btn').boundingBox();
+    const hit = t.left < c.x + c.width && c.x < t.right && t.top < c.y + c.height && c.y < t.bottom;
+    expect(hit, `${lang}: title ink under the close button`).toBe(false);
+    expect(await page.locator('.hist-rates-note').evaluate(e => getComputedStyle(e).direction)).toBe('ltr');
+    if (lang === 'ur') {
+      // The Urdu translation is its own right-to-left block, not run into the English line.
+      expect(await page.locator('.hist-rates-note .ur').evaluate(e => getComputedStyle(e).display)).toBe('block');
+    }
+  }
+});
+
+test('saved record shows liabilities without a stray minus on zero', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  await page.locator('.result-actions .btn-primary').first().click();
+  await page.evaluate(() => openHistory());
+  await expect(page.locator('.hist-val.is-liab').first()).toHaveText('0');
+});
+
+test('English result header lines do not wrap at 360px', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('/');
+  await page.locator('.calc-hero-card').click();
+  await page.locator('#u_name').fill('Muhammad Tahir Qadri');
+  await page.locator('#s_rate').fill('3000');
+  await page.locator('#s_rate').dispatchEvent('input');
+  await page.locator('#step-1 .btn-primary').click();
+  await page.locator('#v_gold').fill('5000000');
+  for (const s of [2, 3, 4]) await page.locator(`#step-${s} .btn-primary`).click();
+  // Count rendered text lines (distinct line tops), not box height, which includes padding.
+  const lines = sel => page.locator(sel).evaluate(e => {
+    const r = document.createRange(); r.selectNodeContents(e);
+    return new Set([...r.getClientRects()].map(x => Math.round(x.top))).size;
+  });
+  expect(await lines('.report-dateline')).toBe(1);
+  expect(await lines('#elig_status_box')).toBe(1);
 });

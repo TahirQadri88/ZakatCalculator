@@ -28,7 +28,7 @@
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Gulzar&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Scheherazade+New:wght@400;700&family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..600&family=Gulzar&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Mehr Nastaleeq - Free font, Creative Commons license, by Zeeshan Nasar / ITU Punjab -->
     <style>
@@ -69,6 +69,8 @@
             --accent-ink: #8A6420;
             /* Input outlines must reach 3:1 to be seen (WCAG 1.4.11); #D1D5DB was 1.3:1. */
             --input-line: #7D848E;
+            --placeholder: #687180;      /* 4.7:1: readable, clearly lighter than text */
+            --control-line: var(--input-line); /* 3.4-3.8:1: secondary controls are findable */
             /* Named surfaces, inks and lines - light values; dark mode redefines them. */
             --amber-ink: #92400E;
             --amber-ink-2: #78350F;
@@ -128,9 +130,12 @@
             --fs-4xl: 1.8rem;
             --fs-5xl: 2.0rem;
             --fs-hero: 2.8rem;
-            --font-english: 'Outfit', system-ui, sans-serif;
+            /* English text: Newsreader throughout (owner's choice, option E).
+               Amounts and inputs keep Outfit: plain sans digits scan best. */
+            --font-english: 'Newsreader', Georgia, serif;
+            --font-numeric: 'Outfit', system-ui, sans-serif;
             /* English headings only; numbers, inputs and labels stay in Outfit. */
-            --font-display: 'Fraunces', Georgia, serif;
+            --font-display: 'Newsreader', Georgia, serif;
             /* Ornament: a 10-fold rosette made of ten overlapping hexagons turned
                about a centre - traditional construction, drawn here. Used as one
                large, faint emblem rather than a repeating tile. */
@@ -425,7 +430,7 @@
 
         /* --- FIELD CARDS --- */
         .field-card {
-            background: var(--var(--white));
+            background: var(--white);
             border-radius: var(--radius);
             padding: 12px 12px;
             margin-bottom: 12px;
@@ -884,7 +889,7 @@
         #toast {
             visibility: hidden;
             min-width: 220px;
-            background: var(--slate);
+            background: #1F2937; /* fixed dark chip: --slate turns light in dark mode */
             color: #fff;
             text-align: center;
             border-radius: 25px;
@@ -908,7 +913,7 @@
         .close-modal:hover { background: var(--border); }
 
         .history-card {
-            background: var(--var(--white));
+            background: var(--white);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 15px;
@@ -1708,7 +1713,7 @@
             color:var(--primary-ink); margin-bottom:4px;
         }
         .hist-rates-ur {
-            font-family:var(--font-urdu); font-size: var(--fs-lg); color:var(--accent);
+            font-family:var(--font-urdu); font-size: var(--fs-lg); color:var(--accent-ink);
             direction:rtl; display:block; text-align:start; margin-bottom:12px; line-height:1.5;
         }
         .hist-rates-note {
@@ -1722,13 +1727,13 @@
         .hist-table tbody tr:nth-child(even) { background:var(--surface-2); }
         .hist-table tbody td { padding:7px 10px; border-bottom:1px solid var(--bg); vertical-align:middle; }
         .hist-table .yr { font-weight:700; color:var(--primary-dark-ink); white-space:nowrap; }
-        .hist-table .rate { font-weight: 600; color:var(--accent); text-align:right; white-space:nowrap; }
+        .hist-table .rate { font-weight: 600; color:var(--accent-ink); text-align:right; white-space:nowrap; }
         .hist-table .note-col { font-size: var(--fs-2xs); color:var(--text-muted); font-family:var(--font-urdu); direction:rtl; text-align:start; line-height:1.4; }
-        .hist-src { font-size: var(--fs-2xs); color:#9CA3AF; text-align:center; margin-top:12px; font-family:var(--font-english); }
+        .hist-src { font-size: var(--fs-2xs); color:var(--text-muted); text-align:center; margin-top:12px; font-family:var(--font-english); }
         .hist-close-btn { position:absolute; top:14px; right:14px; background:var(--bg); border:1px solid var(--border); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size: var(--fs-base); }
 
         /* --- FOOTER --- */
-        footer { text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: var(--fs-xs); background: var(--var(--white)); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
+        footer { text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: var(--fs-xs); background: var(--white); border-top: 1px solid var(--border); margin-top: 20px; font-family: var(--font-english); }
         footer strong { color: var(--label-gold-ink); font-weight: 700; }
 
         /* --- HIJRI PANEL --- */
@@ -1815,6 +1820,10 @@
             --accent-ink: var(--accent);
             --input-line: #62767C;
             --bismillah-ink: var(--accent);
+            --placeholder: #8C9AA0;
+            --primary: #1A7A88;          /* button teal that stands out on the dark page (3.7:1) */
+            --primary-mid: #1D8290;
+            --control-line: #6E8288;     /* outline for secondary controls: 4.0:1 on cards */
         }
         html[data-theme="dark"] body { background: var(--bg); color: var(--slate); }
 
@@ -1832,7 +1841,9 @@
         html[data-theme="dark"] .theme-row .to-dark { display: none; }
 
         /* --- TYPE: display serif + calligraphy (see ASSETS.md for licences) --- */
-        header h1, .card-title-en, .step-title, #rpt_name, .zakat-hero-label-en {
+        header h1, .card-title-en, .step-title, #rpt_name, .zakat-hero-label-en,
+        .faq-modal-title, .hist-rates-title, .hist-modal-title .en, .section-heading,
+        html[lang="en"] .result-details-toggle .en {
             font-family: var(--font-display);
             letter-spacing: 0;
             text-transform: none;
@@ -1886,6 +1897,105 @@
         .urdu-subtitle.latin, .urdu-body.latin,
         html[lang="ur"] .field-card > .urdu-body.latin { direction: ltr !important; unicode-bidi: isolate; text-align: center; }
         .urdu-body.is-example.latin { font-size: var(--fs-sm); line-height: 1.5; color: var(--text-muted); }
+
+        /* Step 3 (Urdu): the names are too long to sit beside the box (the box
+           would shrink from 312 to 171px and bracketed terms would split), so
+           they go ABOVE it, styled like the labels on steps 2 and 4 instead of
+           the small grey caption they were under the box. */
+        html[lang="ur"] #step-3 .field-card > .urdu-subtitle {
+            order: 0; margin: 0 0 6px !important;
+            font-size: var(--fs-md); line-height: 1.7;
+            color: var(--primary-ink); text-align: right;
+        }
+        html[lang="ur"] #step-3 .field-card > input { order: 1; }
+        html[lang="ur"] #step-3 .field-card > :not(.urdu-subtitle):not(input):not(label) { order: 2; }
+
+        /* --- TYPE HIERARCHY ---
+           Measured before: Urdu labels and section headings were identical
+           (14.7px teal) and placeholders were LARGER (16px) and nearly as dark
+           as text, so everything read at one level. Now each role differs. */
+        /* 1. Field label: the strongest text in a card. */
+        html[lang="ur"] .field-card > .urdu-label-main { font-size: var(--fs-base); color: var(--primary-ink); }
+        .field-card > label { font-size: var(--fs-md); font-weight: 700; }
+        /* 2. Placeholder: smaller and lighter than the label - a hint, not text. */
+        input::placeholder, html[lang="ur"] input::placeholder { color: var(--placeholder); }
+        html[lang="ur"] input::placeholder { font-size: var(--fs-md); }
+        input::placeholder { font-size: var(--fs-xs); }
+        /* 3. Typed amount: bold and dark, clearly the user's own entry. */
+        input:not(:placeholder-shown) { font-size: var(--fs-lg); font-weight: 700; }
+        /* 4. Expandable explanations: secondary - neutral ink, slightly smaller,
+              so they don't compete with the field label above them. */
+        .accordion-header, .sub-acc-header { color: var(--slate); font-size: var(--fs-sm); }
+        html[lang="ur"] .accordion-header, html[lang="ur"] .sub-acc-header { font-size: var(--fs-md); }
+        .accordion-header.active, .sub-acc-header.active { color: var(--primary-dark-ink); }
+
+        /* --- ICON CONTRAST on the home buttons --- */
+        .calc-hero-card .card-icon { color: #fff; }
+        .home-card .card-icon, .hist-rates-card .card-icon { color: var(--primary-ink); }
+        .home-card.gold-card .card-icon { color: #fff; }
+
+        /* Records pop-up title: English and Urdu (it used to exist only in Urdu). */
+        .hist-modal-title { font-size: var(--fs-xl); color: var(--primary-ink); line-height: 1.5; }
+        .hist-modal-title .ur { font-family: var(--font-urdu); direction: rtl; }
+
+        /* Gold-rates pop-up: keep the title clear of the close button (Newsreader
+           is a little wider and the title ran under it), and keep the English note
+           left-to-right with its Urdu translation as a separate RTL block. */
+        .hist-rates-title { padding-right: 40px; }
+        .hist-rates-note { direction: ltr; text-align: left; unicode-bidi: isolate; }
+        .hist-rates-note .ur, html[lang="ur"] .hist-rates-note span.ur { display: block !important; direction: rtl; text-align: right; margin-top: 6px; }
+        .hist-val bdi { unicode-bidi: isolate; direction: ltr; }
+
+        /* Numbers stay in the sans face: inputs, every amount, Nisab, records,
+           historical rates, the step counter dots. */
+        input, select, .zakat-hero-amount, .zakat-split-amount, #nisabVal,
+        .statement-table .row-val, .statement-table td[id^="r_"], #r_total, #r_total_dup,
+        .hist-val, .hist-total-value, .hist-table .rate, .hist-table .yr, .prog-dot,
+        input::placeholder { font-family: var(--font-numeric); }
+        html[lang="ur"] input::placeholder { font-family: var(--font-urdu) !important; }
+
+        /* Newsreader is a touch wider than Outfit: the English date line and the
+           status pill wrapped at 360px. Half a step smaller in English only. */
+        html[lang="en"] .report-dateline { font-size: var(--fs-xs); }
+        html[lang="en"] #elig_status_box { font-size: var(--fs-sm); letter-spacing: 0; font-weight: 600; padding-inline: 8px; }
+        /* Record-card captions are data labels in small capitals; keep them in
+           the sans face with their numbers so they fit their tiles. */
+        .hist-lbl, .hist-total-label { font-family: var(--font-numeric); }
+
+        /* --- CONTROL VISIBILITY ---
+           Measured in dark mode: main buttons 1.9:1 against the page, section
+           headings 1.4-1.6:1, close/home/toggle 1.4-1.9:1, record actions ~1:1.
+           Controls now carry an outline (dark mode) and the button teal is
+           brighter, so every control is at least 3:1 against its surroundings. */
+        .btn-prev,
+        .accordion-header,
+        .sub-acc-header,
+        .close-modal,
+        .hist-close-btn,
+        .faq-close-btn,
+        .theme-row,
+        .top-home-btn,
+        .hist-btn-top,
+        .btn-clear,
+        .btn-rate-history,
+        .h-btn,
+        .home-card,
+        .read-first-btn,
+        .header-emblem,
+        .btn-fetch-rate, .faq-inline-link { border: 1px solid var(--control-line) !important; }
+        html:not([data-theme="dark"]) .btn-gold { border: 1px solid var(--accent-ink) !important; }
+        .home-card.gold-card { border-color: transparent !important; }
+        /* The brighter dark-mode teal needs solid white text on it. */
+        html[data-theme="dark"] .step-urdu-label, html[data-theme="dark"] .step-header-note,
+        html[data-theme="dark"] .step-title-sub, html[data-theme="dark"] .hero-sub,
+        html[data-theme="dark"] .calc-hero-arrow, html[data-theme="dark"] .faq-close-btn { color: #fff !important; }
+        html[data-theme="dark"] .faq-close-btn { background: rgba(0,0,0,0.25) !important; }
+        /* On the teal header / FAQ heading a grey line vanishes; use a light one. */
+        .header-emblem, .hist-btn-top, .faq-close-btn { border-color: rgba(255,255,255,0.85) !important; }
+        /* Both themes: white on the lighter end of the amber FAQ card was 3.1:1,
+           dark text on the darker end of the gold Share button 3.5:1. */
+        .home-card.gold-card { background: linear-gradient(145deg, #76490C, #946112) !important; }
+        .btn-gold { background: linear-gradient(135deg, var(--accent), #E2B347) !important; }
 </style>
 </head>
 <body>
@@ -2619,7 +2729,7 @@
     <div class="modal-content">
         <span class="close-modal" onclick="closeHistory()">&times;</span>
         <div class="hist-modal-header">
-            <span class="urdu-label-main">گزشتہ ریکارڈ <bdi class="latin">(History)</bdi></span>
+            <span class="hist-modal-title"><span class="en">My Zakat Records</span><span class="ur">گزشتہ ریکارڈ <bdi class="latin">(History)</bdi></span></span>
             <button type="button" class="btn-clear" onclick="clearAllHistory()">Clear All</button>
         </div>
         <div id="history_list"></div>
@@ -2631,7 +2741,7 @@
 <footer>
     <div class="footer-presented">Presented by: <strong>Darul Ifta An Noor</strong><br>(Jamiat e Ishaat e Ahlesunnat, Pakistan)</div>
     <div class="footer-license">Bismillah calligraphy: Baba66, Wikimedia Commons, <a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener">CC BY-SA 3.0</a></div>
-    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v96</span></div>
+    <div class="footer-credit">Developed by: <strong>Abul Laith Muhammad Tahir Qadri</strong> <span class="footer-version">v103</span></div>
 </footer>
 
 <script>
@@ -3388,7 +3498,7 @@
                     </div>
                     <div class="hist-item">
                         <span class="hist-lbl">C: Liabilities</span>
-                        <span class="hist-val is-liab">-${formatNumber(liab)}</span>
+                        <span class="hist-val is-liab"><bdi>${Number(liab) > 0 ? '-' : ''}${formatNumber(liab)}</bdi></span>
                     </div>
                     <div class="hist-item">
                         <span class="hist-lbl">D: Net Wealth</span>
@@ -3434,7 +3544,7 @@
             `📊 *Financial Summary:*\n` +
             `A: Core Assets = ${p}${formatNumber(core)}\n` +
             `B: Receivables = ${p}${formatNumber(recv)}\n` +
-            `C: Liabilities = -${p}${formatNumber(liab)}\n` +
+            `C: Liabilities = ${Number(liab) > 0 ? '-' : ''}${p}${formatNumber(liab)}\n` +
             `----------------------------------\n` +
             `💵 *D: Net Zakatable Wealth:* ${p}${formatNumber(i.net)}\n\n` +
             `🕌 *E: TOTAL ZAKAT PAYABLE:* \n` +

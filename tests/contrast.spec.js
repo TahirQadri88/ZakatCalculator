@@ -62,7 +62,64 @@ for (const theme of ['light', 'dark']) {
       await check('step4');
       await page.locator('#step-4 .btn-primary').click();
       await check('result');
+      // Overlays: save a record first so the records list is checked too.
+      await page.locator('.result-actions .btn-primary').first().click();
+      await page.evaluate(() => openFAQ());
+      await check('faq');
+      await page.evaluate(() => closeFAQ());
+      await page.evaluate(() => openHistory());
+      await check('records');
+      await page.evaluate(() => closeHistory());
+      await page.evaluate(() => openHistRates());
+      await check('gold-rates');
       expect([...new Set(fails)]).toEqual([]);
     });
   }
+}
+
+
+// Controls must be findable, not just readable: in dark mode every button and
+// tappable control needs its fill or its outline at 3:1 against what is around
+// it (WCAG 1.4.11). Text-only links (.top-back-btn, .link-btn, footer links)
+// are exempt - their text is the affordance and is covered by the text check.
+const CONTROLS = () => {
+  const parse = c => { const m = c && c.match(/rgba?\(([^)]+)\)/); if (!m) return null; const p = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; };
+  const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
+  const blend = (t, b) => [0, 1, 2].map(i => t[i] * t[3] + b[i] * (1 - t[3])).concat(1);
+  const bgOf = el => { const L = []; for (let e = el; e; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.backgroundImage && cs.backgroundImage.includes('gradient')) { const m = cs.backgroundImage.match(/rgba?\([^)]+\)/g); if (m) { L.push(parse(m[m.length > 1 ? 1 : 0])); break; } } const c = parse(cs.backgroundColor); if (c && c[3] > 0) { L.push(c); if (c[3] >= 1) break; } } let col = [255, 255, 255, 1]; for (let i = L.length - 1; i >= 0; i--) col = blend(L[i], col); return col; };
+  const cr = (a, b) => { const A = lum(a), B = lum(b); return (Math.max(A, B) + .05) / (Math.min(A, B) + .05); };
+  const out = [];
+  for (const el of document.querySelectorAll('button, .btn, [role="button"], .lbtn, select')) {
+    if (!el.offsetParent || el.getBoundingClientRect().width < 8) continue;
+    if (el.matches('.top-back-btn, .link-btn, .lbtn')) continue;
+    const cs = getComputedStyle(el), outer = bgOf(el.parentElement), fill = bgOf(el);
+    const bw = parseFloat(cs.borderTopWidth) || 0;
+    const edge = Math.max(cr(fill, outer), bw > 0 ? cr(blend(parse(cs.borderTopColor), outer), outer) : 0);
+    if (edge < 3) out.push(`${edge.toFixed(2)} ${(el.getAttribute('class') || el.tagName).split(' ')[0]}: ${el.textContent.trim().replace(/\s+/g, ' ').slice(0, 24)}`);
+  }
+  return out;
+};
+
+for (const [theme, lang] of [['dark', 'en'], ['dark', 'ur'], ['light', 'en'], ['light', 'ur']]) {
+  test(`${theme} mode: buttons and controls stand out (${lang})`, async ({ page }) => {
+    test.setTimeout(45000);
+    await page.addInitScript(t => { try { localStorage.setItem('z_theme', t); } catch (e) {} }, theme);
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto('/');
+    if (lang === 'ur') await page.locator('#btnUr').click();
+    await page.addStyleTag({ content: '*{transition:none!important}' });
+    const found = new Set();
+    const check = async () => (await page.evaluate(CONTROLS)).forEach(x => found.add(x));
+    await check();
+    await page.locator('.calc-hero-card').click();
+    await page.locator('#s_rate').fill('3000');
+    await page.locator('#s_rate').dispatchEvent('input');
+    await check();
+    for (const s of [1, 2, 3, 4]) { await page.locator(`#step-${s} .btn-primary`).click(); await check(); }
+    await page.locator('.result-actions .btn-primary').first().click();
+    await page.evaluate(() => openHistory()); await check(); await page.evaluate(() => closeHistory());
+    await page.evaluate(() => openHistRates()); await check(); await page.evaluate(() => closeHistRates());
+    await page.evaluate(() => openFAQ()); await check();
+    expect([...found].sort()).toEqual([]);
+  });
 }
